@@ -1,0 +1,13 @@
+package com.example.passwordmanagerclient.api.authorization;
+
+import lombok.Data;
+
+import java.util.UUID;
+
+@Data
+public class LoginStartResp {
+    private String encryptedPrivateKey;
+    private String keyIv;
+    private String keySalt;
+    private UUID nonce;
+}

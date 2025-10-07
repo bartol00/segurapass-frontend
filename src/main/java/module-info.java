@@ -7,6 +7,20 @@ module com.example.passwordmanagerclient {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
 
+    requires java.net.http;
+    requires com.fasterxml.jackson.databind;
+
+    requires static lombok;
+    requires com.fasterxml.jackson.datatype.jsr310;
+
     opens com.example.passwordmanagerclient to javafx.fxml;
+    opens com.example.passwordmanagerclient.controller.authorization to javafx.fxml;
+
+    opens com.example.passwordmanagerclient.api.authorization to com.fasterxml.jackson.databind;
+    opens com.example.passwordmanagerclient.api.credentials to com.fasterxml.jackson.databind;
+    opens com.example.passwordmanagerclient.api.error to com.fasterxml.jackson.databind;
+
     exports com.example.passwordmanagerclient;
+    exports com.example.passwordmanagerclient.controller.authorization;
+    exports com.example.passwordmanagerclient.api.authorization;
 }

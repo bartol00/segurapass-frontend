@@ -1,0 +1,12 @@
+package com.example.passwordmanagerclient.api.authorization;
+
+import lombok.Data;
+
+import java.time.Instant;
+
+@Data
+public class LoginCompleteResp {
+    private String accessToken;
+    private String refreshToken;
+    private Instant refreshTokenExpiryTime;
+}

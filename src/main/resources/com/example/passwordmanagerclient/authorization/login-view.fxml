@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.passwordmanagerclient.controller.authorization.LoginController"
+      alignment="CENTER" spacing="15" style="-fx-background-color: #f5f5f5;" prefWidth="400" prefHeight="300">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Login" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="emailField" promptText="Email" maxWidth="250"/>
+    <PasswordField fx:id="masterPasswordField" promptText="Master Password" maxWidth="250"/>
+
+    <Button text="Login" fx:id="loginButton" onAction="#onLoginClick" maxWidth="120"/>
+    <Button text="Switch to Register" onAction="#onSwitchToRegister" style="-fx-font-size: 11px;"/>
+
+    <Label fx:id="statusLabel" textFill="red"/>
+</VBox>
