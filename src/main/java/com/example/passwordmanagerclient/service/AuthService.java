@@ -7,6 +7,7 @@ import com.example.passwordmanagerclient.util.*;
 
 import java.net.http.HttpResponse;
 import java.security.PrivateKey;
+import java.time.Instant;
 import java.util.UUID;
 
 public class AuthService {
@@ -54,13 +55,15 @@ public class AuthService {
             System.out.println(loginCompleteResp.getRefreshToken());
             System.out.println(loginCompleteResp.getRefreshTokenExpiryTime());
 
+            AppContext.setEmail(email);
             AppContext.setJwtToken(loginCompleteResp.getAccessToken());
             AppContext.setRefreshToken(loginCompleteResp.getRefreshToken());
             AppContext.setRefreshTokenExpiry(loginCompleteResp.getRefreshTokenExpiryTime());
+            AppContext.setMasterPassword(masterPassword);
 
             return "Login successful";
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             return "Login failed";
         }
     }
@@ -98,14 +101,50 @@ public class AuthService {
             System.out.println(loginCompleteResp.getRefreshToken());
             System.out.println(loginCompleteResp.getRefreshTokenExpiryTime());
 
+            AppContext.setEmail(email);
             AppContext.setJwtToken(loginCompleteResp.getAccessToken());
             AppContext.setRefreshToken(loginCompleteResp.getRefreshToken());
             AppContext.setRefreshTokenExpiry(loginCompleteResp.getRefreshTokenExpiryTime());
+            AppContext.setMasterPassword(masterPassword);
 
             return "Registration successful";
         } catch (Exception e) {
             // e.printStackTrace();
             return "Registration failed";
+        }
+    }
+
+    public static boolean refreshJwt() {
+        try {
+            // TODO: ovo cak stavit u neku check metodu prije samog poziva ove metode
+            Instant refreshTokenExpiry = AppContext.getRefreshTokenExpiry();
+            if (refreshTokenExpiry.isBefore(Instant.now())) {
+                System.out.println("refresh token is expired");
+                return false;
+            }
+
+            RefreshReq refreshReq = new RefreshReq();
+            refreshReq.setEmail(AppContext.getEmail());
+            refreshReq.setDeviceId(AppContext.getDeviceId());
+            refreshReq.setRefreshToken(AppContext.getRefreshToken());
+
+            HttpResponse<String> response = HttpComms.sendPostRequest(refreshReq, "/api/authorization/refresh");
+
+            if (response.statusCode() != 200) {
+                System.out.println("status code is not 200 but " + response.statusCode());
+                return false;
+            }
+
+            RefreshResp refreshResp = DtoHandler.parseToDto(response, RefreshResp.class);
+
+            AppContext.setJwtToken(refreshResp.getAccessToken());
+
+            System.out.println("Refresh endpoint: new JWT=" + refreshResp.getAccessToken());
+
+            return true;
+        } catch (Exception e) {
+            // e.printStackTrace();
+            return false;
         }
     }
 }
