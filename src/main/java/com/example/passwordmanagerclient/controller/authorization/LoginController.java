@@ -1,7 +1,7 @@
 package com.example.passwordmanagerclient.controller.authorization;
 
 import com.example.passwordmanagerclient.service.AuthService;
-import com.example.passwordmanagerclient.util.AuthResult;
+import com.example.passwordmanagerclient.util.OperationResult;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -24,10 +24,10 @@ public class LoginController {
             return;
         }
 
-        AuthResult authResult = AuthService.login(email, password);
-        statusLabel.setText(authResult.getMessage());
+        OperationResult operationResult = AuthService.login(email, password);
+        statusLabel.setText(operationResult.getMessage());
 
-        if (authResult.isPassed()) {
+        if (operationResult.isPassed()) {
             switchToCredentialsView();
         }
     }

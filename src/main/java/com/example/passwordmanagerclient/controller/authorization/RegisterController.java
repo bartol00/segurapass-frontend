@@ -24,10 +24,10 @@ public class RegisterController {
             return;
         }
 
-        AuthResult authResult = AuthService.register(email, password);
-        statusLabel.setText(authResult.getMessage());
+        OperationResult operationResult = AuthService.register(email, password);
+        statusLabel.setText(operationResult.getMessage());
 
-        if (authResult.isPassed()) {
+        if (operationResult.isPassed()) {
             switchToCredentialsView();
         }
     }

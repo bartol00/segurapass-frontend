@@ -27,6 +27,10 @@ public class AppContext {
     @Setter
     private static Instant refreshTokenExpiry;
 
+    @Getter
+    @Setter
+    private static String keySalt;
+
     private static char[] masterPassword;
 
 

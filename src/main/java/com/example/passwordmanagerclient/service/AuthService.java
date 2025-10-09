@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class AuthService {
 
-    public static AuthResult login(String email, String masterPassword) {
+    public static OperationResult login(String email, String masterPassword) {
         try {
             LoginStartReq loginStartReq = new LoginStartReq();
 
@@ -22,7 +22,7 @@ public class AuthService {
 
             if (responseStart.statusCode() != 200) {
                 ApiError apiError = DtoHandler.parseToDto(responseStart, ApiError.class);
-                return new AuthResult(apiError.getMessage(), false);
+                return new OperationResult(apiError.getMessage(), false);
             }
 
             LoginStartResp loginStartResp = DtoHandler.parseToDto(responseStart, LoginStartResp.class);
@@ -43,7 +43,7 @@ public class AuthService {
 
             if (responseComplete.statusCode() != 200) {
                 ApiError apiError = DtoHandler.parseToDto(responseComplete, ApiError.class);
-                return new AuthResult(apiError.getMessage(), false);
+                return new OperationResult(apiError.getMessage(), false);
             }
 
             LoginCompleteResp loginCompleteResp = DtoHandler.parseToDto(responseComplete, LoginCompleteResp.class);
@@ -53,15 +53,16 @@ public class AuthService {
             AppContext.setRefreshToken(loginCompleteResp.getRefreshToken());
             AppContext.setRefreshTokenExpiry(loginCompleteResp.getRefreshTokenExpiryTime());
             AppContext.setMasterPassword(masterPassword);
+            AppContext.setKeySalt(salt);
 
-            return new AuthResult("Login successful", true);
+            return new OperationResult("Login successful", true);
         } catch (Exception e) {
             // e.printStackTrace();
-            return new AuthResult("Login failed", false);
+            return new OperationResult("Login failed", false);
         }
     }
 
-    public static AuthResult register(String email, String masterPassword) {
+    public static OperationResult register(String email, String masterPassword) {
         try {
             KeyManager.KeyPairWithEncryptedPrivate keyPairWithEncryptedPrivate = KeyManager.generateKeyPair(masterPassword);
 
@@ -85,7 +86,7 @@ public class AuthService {
 
             if (response.statusCode() != 200) {
                 ApiError apiError = DtoHandler.parseToDto(response, ApiError.class);
-                return new AuthResult(apiError.getMessage(), false);
+                return new OperationResult(apiError.getMessage(), false);
             }
 
             LoginCompleteResp loginCompleteResp = DtoHandler.parseToDto(response, LoginCompleteResp.class);
@@ -95,11 +96,12 @@ public class AuthService {
             AppContext.setRefreshToken(loginCompleteResp.getRefreshToken());
             AppContext.setRefreshTokenExpiry(loginCompleteResp.getRefreshTokenExpiryTime());
             AppContext.setMasterPassword(masterPassword);
+            AppContext.setKeySalt(privateKeySalt);
 
-            return new AuthResult("Registration successful", true);
+            return new OperationResult("Registration successful", true);
         } catch (Exception e) {
             // e.printStackTrace();
-            return new AuthResult("Registration failed", false);
+            return new OperationResult("Registration failed", false);
         }
     }
 
