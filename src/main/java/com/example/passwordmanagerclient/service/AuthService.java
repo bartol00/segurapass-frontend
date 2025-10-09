@@ -2,7 +2,6 @@ package com.example.passwordmanagerclient.service;
 
 import com.example.passwordmanagerclient.api.authorization.*;
 import com.example.passwordmanagerclient.api.error.ApiError;
-import com.example.passwordmanagerclient.config.AppConfig;
 import com.example.passwordmanagerclient.util.*;
 
 import java.net.http.HttpResponse;
@@ -12,9 +11,7 @@ import java.util.UUID;
 
 public class AuthService {
 
-    private static final String backendUrl = AppConfig.getBackendUrl();
-
-    public static String login(String email, String masterPassword) {
+    public static AuthResult login(String email, String masterPassword) {
         try {
             LoginStartReq loginStartReq = new LoginStartReq();
 
@@ -25,7 +22,7 @@ public class AuthService {
 
             if (responseStart.statusCode() != 200) {
                 ApiError apiError = DtoHandler.parseToDto(responseStart, ApiError.class);
-                return apiError.getMessage();
+                return new AuthResult(apiError.getMessage(), false);
             }
 
             LoginStartResp loginStartResp = DtoHandler.parseToDto(responseStart, LoginStartResp.class);
@@ -46,14 +43,10 @@ public class AuthService {
 
             if (responseComplete.statusCode() != 200) {
                 ApiError apiError = DtoHandler.parseToDto(responseComplete, ApiError.class);
-                return apiError.getMessage();
+                return new AuthResult(apiError.getMessage(), false);
             }
 
             LoginCompleteResp loginCompleteResp = DtoHandler.parseToDto(responseComplete, LoginCompleteResp.class);
-
-            System.out.println(loginCompleteResp.getAccessToken());
-            System.out.println(loginCompleteResp.getRefreshToken());
-            System.out.println(loginCompleteResp.getRefreshTokenExpiryTime());
 
             AppContext.setEmail(email);
             AppContext.setJwtToken(loginCompleteResp.getAccessToken());
@@ -61,14 +54,14 @@ public class AuthService {
             AppContext.setRefreshTokenExpiry(loginCompleteResp.getRefreshTokenExpiryTime());
             AppContext.setMasterPassword(masterPassword);
 
-            return "Login successful";
+            return new AuthResult("Login successful", true);
         } catch (Exception e) {
             // e.printStackTrace();
-            return "Login failed";
+            return new AuthResult("Login failed", false);
         }
     }
 
-    public static String register(String email, String masterPassword) {
+    public static AuthResult register(String email, String masterPassword) {
         try {
             KeyManager.KeyPairWithEncryptedPrivate keyPairWithEncryptedPrivate = KeyManager.generateKeyPair(masterPassword);
 
@@ -92,14 +85,10 @@ public class AuthService {
 
             if (response.statusCode() != 200) {
                 ApiError apiError = DtoHandler.parseToDto(response, ApiError.class);
-                return apiError.getMessage();
+                return new AuthResult(apiError.getMessage(), false);
             }
 
             LoginCompleteResp loginCompleteResp = DtoHandler.parseToDto(response, LoginCompleteResp.class);
-
-            System.out.println(loginCompleteResp.getAccessToken());
-            System.out.println(loginCompleteResp.getRefreshToken());
-            System.out.println(loginCompleteResp.getRefreshTokenExpiryTime());
 
             AppContext.setEmail(email);
             AppContext.setJwtToken(loginCompleteResp.getAccessToken());
@@ -107,10 +96,10 @@ public class AuthService {
             AppContext.setRefreshTokenExpiry(loginCompleteResp.getRefreshTokenExpiryTime());
             AppContext.setMasterPassword(masterPassword);
 
-            return "Registration successful";
+            return new AuthResult("Registration successful", true);
         } catch (Exception e) {
             // e.printStackTrace();
-            return "Registration failed";
+            return new AuthResult("Registration failed", false);
         }
     }
 

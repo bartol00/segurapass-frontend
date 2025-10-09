@@ -18,4 +18,22 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
+    @Override
+    public void stop() throws Exception {
+        AppContext.clearSensitiveData();
+        super.stop();
+    }
+
+    public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                AppContext.clearSensitiveData();
+            } catch (Throwable t) {
+                // n/a
+            }
+        }));
+
+        launch(args);
+    }
 }
