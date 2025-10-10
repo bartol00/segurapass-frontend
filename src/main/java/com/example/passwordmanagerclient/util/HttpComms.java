@@ -1,6 +1,7 @@
 package com.example.passwordmanagerclient.util;
 
 import com.example.passwordmanagerclient.config.AppConfig;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -48,6 +49,42 @@ public class HttpComms {
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
+
+    public static HttpResponse<String> sendPostRequestWithAuth(Object dto, String endpoint, String jwtToken) throws IOException, InterruptedException {
+        String jsonBody = mapper.writeValueAsString(dto);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(AppConfig.getBackendUrl() + endpoint))
+                .header("Authorization", "Bearer " + jwtToken)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    public static HttpResponse<String> sendPutRequestWithAuth(Object dto, String endpoint, String jwtToken) throws IOException, InterruptedException {
+        String jsonBody = mapper.writeValueAsString(dto);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(AppConfig.getBackendUrl() + endpoint))
+                .header("Authorization", "Bearer " + jwtToken)
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    public static HttpResponse<String> sendDeleteRequestWithAuth(String endpoint, String jwtToken) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(AppConfig.getBackendUrl() + endpoint))
+                .header("Authorization", "Bearer " + jwtToken)
+                .DELETE()
+                .build();
+
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    }
 
     public static HttpResponse<String> sendPostRequest(Object dto, String endpoint) throws IOException, InterruptedException {
         String jsonBody = mapper.writeValueAsString(dto);

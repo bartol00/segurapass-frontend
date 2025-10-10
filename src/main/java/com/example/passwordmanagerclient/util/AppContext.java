@@ -62,5 +62,6 @@ public class AppContext {
         refreshToken = null;
         refreshTokenExpiry = null;
         email = null;
+        keySalt = null;
     }
 }

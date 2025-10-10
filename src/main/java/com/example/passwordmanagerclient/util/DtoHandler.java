@@ -1,7 +1,5 @@
 package com.example.passwordmanagerclient.util;
 
-import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
-import com.example.passwordmanagerclient.api.credentials.PagedResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
