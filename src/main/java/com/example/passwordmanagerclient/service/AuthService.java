@@ -190,4 +190,18 @@ public class AuthService {
             return new OperationResult("Could not refresh JWT", false);
         }
     }
+
+    public static void logout() {
+        try {
+            RefreshReq refreshReq = new RefreshReq();
+
+            refreshReq.setEmail(AppContext.getEmail());
+            refreshReq.setDeviceId(AppContext.getDeviceId());
+            refreshReq.setRefreshToken(AppContext.getRefreshToken());
+
+            HttpComms.sendPostRequest(refreshReq, "/api/authorization/logout");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

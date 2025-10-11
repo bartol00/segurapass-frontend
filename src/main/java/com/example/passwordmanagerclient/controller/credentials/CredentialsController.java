@@ -1,6 +1,7 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
 import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
+import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
@@ -232,6 +233,7 @@ public class CredentialsController {
     @FXML
     private void onLogout() {
         try {
+            AuthService.logout();
             AppContext.clearSensitiveData();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/authorization/login-view.fxml"));
             Stage stage = (Stage) credentialsTable.getScene().getWindow();

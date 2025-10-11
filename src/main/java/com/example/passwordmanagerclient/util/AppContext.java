@@ -61,11 +61,11 @@ public class AppContext {
 
     public static void clearSensitiveData() {
         clearMasterPassword();
+        email = null;
         jwtToken = null;
         jwtExpiry = null;
         refreshToken = null;
         refreshTokenExpiry = null;
-        email = null;
         saltKey = null;
     }
 }

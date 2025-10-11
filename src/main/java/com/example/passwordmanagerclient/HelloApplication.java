@@ -1,5 +1,6 @@
 package com.example.passwordmanagerclient;
 
+import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.util.AppContext;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,7 @@ public class HelloApplication extends Application {
 
     @Override
     public void stop() throws Exception {
+        AuthService.logout();
         AppContext.clearSensitiveData();
         super.stop();
     }
