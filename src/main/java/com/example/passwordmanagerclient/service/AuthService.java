@@ -12,12 +12,9 @@ import org.bouncycastle.crypto.agreement.srp.SRP6StandardGroups;
 import java.math.BigInteger;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.UUID;
 
 public class AuthService {
 
@@ -65,8 +62,14 @@ public class AuthService {
 
             RegistrationResp registrationResp = DtoHandler.parseToDto(response, RegistrationResp.class);
 
+            Instant jwtExpiry = TokenManager.getJwtExpiry(registrationResp.getAccessToken());
+            if (jwtExpiry == null) {
+                return new OperationResult("Could not get expiry time from JWT", false);
+            }
+
             AppContext.setEmail(email);
             AppContext.setJwtToken(registrationResp.getAccessToken());
+            AppContext.setJwtExpiry(jwtExpiry);
             AppContext.setRefreshToken(registrationResp.getRefreshToken());
             AppContext.setRefreshTokenExpiry(registrationResp.getRefreshTokenExpiryTime());
             AppContext.setMasterPassword(masterPassword);
@@ -139,8 +142,14 @@ public class AuthService {
                 return new OperationResult("M2 mismatch, cannot verify server authenticity", false);
             }
 
+            Instant jwtExpiry = TokenManager.getJwtExpiry(loginCompleteResp.getAccessToken());
+            if (jwtExpiry == null) {
+                return new OperationResult("Could not get expiry time from JWT", false);
+            }
+
             AppContext.setEmail(email);
             AppContext.setJwtToken(loginCompleteResp.getAccessToken());
+            AppContext.setJwtExpiry(jwtExpiry);
             AppContext.setRefreshToken(loginCompleteResp.getRefreshToken());
             AppContext.setRefreshTokenExpiry(loginCompleteResp.getRefreshTokenExpiryTime());
             AppContext.setMasterPassword(masterPassword);
@@ -153,66 +162,8 @@ public class AuthService {
         }
     }
 
-//    public static OperationResult login(String email, String masterPassword) {
-//        try {
-//            LoginStartReq loginStartReq = new LoginStartReq();
-//
-//            loginStartReq.setEmail(email);
-//            loginStartReq.setDeviceId(AppContext.getDeviceId());
-//
-//            HttpResponse<String> responseStart = HttpComms.sendPostRequest(loginStartReq, "/api/authorization/login/start");
-//
-//            if (responseStart.statusCode() != 200) {
-//                ApiError apiError = DtoHandler.parseToDto(responseStart, ApiError.class);
-//                return new OperationResult(apiError.getMessage(), false);
-//            }
-//
-//            LoginStartResp loginStartResp = DtoHandler.parseToDto(responseStart, LoginStartResp.class);
-//            String encryptedPrivateKey = loginStartResp.getEncryptedPrivateKey();
-//            String iv = loginStartResp.getKeyIv();
-//            String salt = loginStartResp.getKeySalt();
-//            UUID nonce = loginStartResp.getNonce();
-//
-//            PrivateKey pk = PrivateKeyLoader.decryptPrivateKey(encryptedPrivateKey, iv, salt, masterPassword);
-//            String signedNonce = PrivateKeyLoader.signNonceWithPrivateKey(pk, nonce);
-//
-//            LoginCompleteReq loginCompleteReq = new LoginCompleteReq();
-//            loginCompleteReq.setEmail(email);
-//            loginCompleteReq.setDeviceId(AppContext.getDeviceId());
-//            loginCompleteReq.setSignedNonce(signedNonce);
-//
-//            HttpResponse<String> responseComplete = HttpComms.sendPostRequest(loginCompleteReq, "/api/authorization/login/end");
-//
-//            if (responseComplete.statusCode() != 200) {
-//                ApiError apiError = DtoHandler.parseToDto(responseComplete, ApiError.class);
-//                return new OperationResult(apiError.getMessage(), false);
-//            }
-//
-//            LoginCompleteResp loginCompleteResp = DtoHandler.parseToDto(responseComplete, LoginCompleteResp.class);
-//
-//            AppContext.setEmail(email);
-//            AppContext.setJwtToken(loginCompleteResp.getAccessToken());
-//            AppContext.setRefreshToken(loginCompleteResp.getRefreshToken());
-//            AppContext.setRefreshTokenExpiry(loginCompleteResp.getRefreshTokenExpiryTime());
-//            AppContext.setMasterPassword(masterPassword);
-//            AppContext.setSaltKey(salt);
-//
-//            return new OperationResult("Login successful", true);
-//        } catch (Exception e) {
-//            // e.printStackTrace();
-//            return new OperationResult("Login failed", false);
-//        }
-//    }
-
-    public static boolean refreshJwt() {
+    public static OperationResult refreshJwt() {
         try {
-            // TODO: ovo cak stavit u neku check metodu prije samog poziva ove metode
-            Instant refreshTokenExpiry = AppContext.getRefreshTokenExpiry();
-            if (refreshTokenExpiry.isBefore(Instant.now())) {
-                System.out.println("refresh token is expired");
-                return false;
-            }
-
             RefreshReq refreshReq = new RefreshReq();
             refreshReq.setEmail(AppContext.getEmail());
             refreshReq.setDeviceId(AppContext.getDeviceId());
@@ -221,20 +172,22 @@ public class AuthService {
             HttpResponse<String> response = HttpComms.sendPostRequest(refreshReq, "/api/authorization/refresh");
 
             if (response.statusCode() != 200) {
-                System.out.println("status code is not 200 but " + response.statusCode());
-                return false;
+                return new OperationResult("Could not get valid JWT from server", false);
             }
 
             RefreshResp refreshResp = DtoHandler.parseToDto(response, RefreshResp.class);
 
+            Instant jwtExpiry = TokenManager.getJwtExpiry(refreshResp.getAccessToken());
+            if (jwtExpiry == null) {
+                return new OperationResult("Could not get expiry time from JWT", false);
+            }
+
             AppContext.setJwtToken(refreshResp.getAccessToken());
+            AppContext.setJwtExpiry(jwtExpiry);
 
-            System.out.println("Refresh endpoint: new JWT=" + refreshResp.getAccessToken());
-
-            return true;
+            return new OperationResult("Successfully refreshed JWT", true);
         } catch (Exception e) {
-            // e.printStackTrace();
-            return false;
+            return new OperationResult("Could not refresh JWT", false);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.passwordmanagerclient.controller.credentials;
 
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.OperationResult;
+import com.example.passwordmanagerclient.util.TokenManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -19,6 +20,13 @@ public class AddCredentialController {
 
     @FXML
     private void onSaveClick() {
+        try {
+            TokenManager.ensureValidJwt();
+        } catch (Exception e) {
+            parentController.handleChildExceptions();
+            return;
+        }
+
         String website = websiteField.getText();
         String username = usernameField.getText();
         String password = passwordField.getText();

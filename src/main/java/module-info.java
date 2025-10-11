@@ -14,6 +14,7 @@ module com.example.passwordmanagerclient {
     requires com.fasterxml.jackson.datatype.jsr310;
     requires javafx.graphics;
     requires org.bouncycastle.provider;
+    requires org.json;
 
     opens com.example.passwordmanagerclient to javafx.fxml;
     opens com.example.passwordmanagerclient.controller.authorization to javafx.fxml;

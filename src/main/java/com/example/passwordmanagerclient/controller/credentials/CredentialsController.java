@@ -3,6 +3,7 @@ package com.example.passwordmanagerclient.controller.credentials;
 import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
+import com.example.passwordmanagerclient.util.TokenManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -99,6 +100,13 @@ public class CredentialsController {
     }
 
     private void loadCredentialsAsync(int page, int size) {
+        try {
+            TokenManager.ensureValidJwt();
+        } catch (Exception e) {
+            onLogout();
+            return;
+        }
+
         setLoadingState(true);
 
         CompletableFuture.supplyAsync(() -> CredentialsService.getCredentials(page, size)).whenComplete((pagedResponse, ex) -> {
@@ -140,6 +148,8 @@ public class CredentialsController {
     @FXML
     private void onAddCredential() {
         try {
+            TokenManager.ensureValidJwt();
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/add-credentials-view.fxml"));
 
             Stage dialogStage = new Stage();
@@ -157,12 +167,15 @@ public class CredentialsController {
             dialogStage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
+            onLogout();
         }
     }
 
     @FXML
     private void onUpdateCredential(String credentialId, String website, String username) {
         try {
+            TokenManager.ensureValidJwt();
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/credential-edit-view.fxml"));
 
             Stage dialogStage = new Stage();
@@ -181,12 +194,15 @@ public class CredentialsController {
             dialogStage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
+            onLogout();
         }
     }
 
     @FXML
     private void onDeleteCredential(String credentialId) {
         try {
+            TokenManager.ensureValidJwt();
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/delete-confirmation-view.fxml"));
 
             Stage dialogStage = new Stage();
@@ -205,9 +221,13 @@ public class CredentialsController {
             dialogStage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
+            onLogout();
         }
     }
 
+    public void handleChildExceptions() {
+        onLogout();
+    }
 
     @FXML
     private void onLogout() {

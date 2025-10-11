@@ -1,6 +1,7 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
 import com.example.passwordmanagerclient.service.CredentialsService;
+import com.example.passwordmanagerclient.util.TokenManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
@@ -21,6 +22,13 @@ public class DeleteConfirmationController {
 
     @FXML
     private void onYesDelete() {
+        try {
+            TokenManager.ensureValidJwt();
+        } catch (Exception e) {
+            parentController.handleChildExceptions();
+            return;
+        }
+
         CredentialsService.deleteCredentials(credentialId);
         this.credentialId = null;
 

@@ -21,6 +21,10 @@ public class AppContext {
 
     @Getter
     @Setter
+    private static Instant jwtExpiry;
+
+    @Getter
+    @Setter
     private static String refreshToken;
 
     @Getter
@@ -36,7 +40,6 @@ public class AppContext {
 
     public static void init() {
         deviceId = UUID.fromString(DeviceIdManager.getDeviceId());
-        // System.out.println("Device ID initialized: " + deviceId);
     }
 
     public static void setMasterPassword(String pwd) {
@@ -59,6 +62,7 @@ public class AppContext {
     public static void clearSensitiveData() {
         clearMasterPassword();
         jwtToken = null;
+        jwtExpiry = null;
         refreshToken = null;
         refreshTokenExpiry = null;
         email = null;

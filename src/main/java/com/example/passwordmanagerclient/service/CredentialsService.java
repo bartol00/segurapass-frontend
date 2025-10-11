@@ -53,29 +53,6 @@ public class CredentialsService {
         }
     }
 
-    public static CredentialsResp getCredentialById(String credentialId) {
-        try {
-            HttpResponse<String> response = HttpComms.sendGetRequestWithAuth("/api/credentials/get/" + credentialId, AppContext.getJwtToken());
-
-            if (response.statusCode() != 200) {
-                ApiError apiError = DtoHandler.parseToDto(response, ApiError.class);
-                System.out.println("API error: " + apiError.getMessage());
-                return null;
-            }
-
-            CredentialsResp encryptedCredentials = DtoHandler.parseToDto(response, CredentialsResp.class);
-
-            return PrivateKeyLoader.decryptCredential(
-                    encryptedCredentials,
-                    AppContext.getMasterPassword(),
-                    AppContext.getSaltKey()
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public static OperationResult addCredential(String website, String username, String password) {
         try {
             PrivateKeyLoader.EncryptionResult encryptionResult = PrivateKeyLoader.encryptCredential(
