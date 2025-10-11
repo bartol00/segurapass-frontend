@@ -24,7 +24,7 @@ public class RegisterController {
             return;
         }
 
-        OperationResult operationResult = AuthService.register(email, password);
+        OperationResult operationResult = AuthService.registerSrp(email, password);
         statusLabel.setText(operationResult.getMessage());
 
         if (operationResult.isPassed()) {

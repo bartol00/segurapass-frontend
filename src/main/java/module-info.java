@@ -13,6 +13,7 @@ module com.example.passwordmanagerclient {
     requires static lombok;
     requires com.fasterxml.jackson.datatype.jsr310;
     requires javafx.graphics;
+    requires org.bouncycastle.provider;
 
     opens com.example.passwordmanagerclient to javafx.fxml;
     opens com.example.passwordmanagerclient.controller.authorization to javafx.fxml;

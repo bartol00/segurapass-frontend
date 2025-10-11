@@ -29,7 +29,7 @@ public class AppContext {
 
     @Getter
     @Setter
-    private static String keySalt;
+    private static String saltKey;
 
     private static char[] masterPassword;
 
@@ -62,6 +62,6 @@ public class AppContext {
         refreshToken = null;
         refreshTokenExpiry = null;
         email = null;
-        keySalt = null;
+        saltKey = null;
     }
 }

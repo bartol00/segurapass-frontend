@@ -24,7 +24,7 @@ public class LoginController {
             return;
         }
 
-        OperationResult operationResult = AuthService.login(email, password);
+        OperationResult operationResult = AuthService.loginSrp(email, password);
         statusLabel.setText(operationResult.getMessage());
 
         if (operationResult.isPassed()) {

@@ -7,7 +7,6 @@ import com.example.passwordmanagerclient.api.error.ApiError;
 import com.example.passwordmanagerclient.util.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import javax.crypto.SecretKey;
 import java.net.http.HttpResponse;
 import java.util.*;
 
@@ -41,7 +40,7 @@ public class CredentialsService {
             List<CredentialsResp> decryptedCredentials = PrivateKeyLoader.decryptList(
                     encryptedCredentials,
                     AppContext.getMasterPassword(),
-                    AppContext.getKeySalt()
+                    AppContext.getSaltKey()
             );
 
             pagedResponse.setContent(decryptedCredentials);
@@ -69,7 +68,7 @@ public class CredentialsService {
             return PrivateKeyLoader.decryptCredential(
                     encryptedCredentials,
                     AppContext.getMasterPassword(),
-                    AppContext.getKeySalt()
+                    AppContext.getSaltKey()
             );
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,7 +82,7 @@ public class CredentialsService {
                     username,
                     password,
                     AppContext.getMasterPassword(),
-                    AppContext.getKeySalt()
+                    AppContext.getSaltKey()
             );
 
             PrivateKeyLoader.EncryptionFieldResult usernameResult = encryptionResult.getUsernameField();
@@ -121,7 +120,7 @@ public class CredentialsService {
                 PrivateKeyLoader.EncryptionFieldResult encryptedUsername = PrivateKeyLoader.encryptFieldUpdate(
                         username,
                         AppContext.getMasterPassword(),
-                        AppContext.getKeySalt()
+                        AppContext.getSaltKey()
                 );
                 credentialsReq.setUsername(encryptedUsername.getCipherB64());
                 credentialsReq.setIvEmail(encryptedUsername.getIvB64());
@@ -130,7 +129,7 @@ public class CredentialsService {
                 PrivateKeyLoader.EncryptionFieldResult encryptedPassword = PrivateKeyLoader.encryptFieldUpdate(
                         password,
                         AppContext.getMasterPassword(),
-                        AppContext.getKeySalt()
+                        AppContext.getSaltKey()
                 );
                 credentialsReq.setPassword(encryptedPassword.getCipherB64());
                 credentialsReq.setIvPassword(encryptedPassword.getIvB64());
