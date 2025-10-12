@@ -2,6 +2,8 @@ package com.example.passwordmanagerclient.util;
 
 import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
 import lombok.Getter;
+import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
+import org.bouncycastle.crypto.params.Argon2Parameters;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -17,8 +19,11 @@ import java.util.*;
 public final class PrivateKeyLoader {
 
     private static final int AES_KEY_SIZE = 256;
-    private static final int PBKDF2_ITERATIONS = 65536;
     private static final int GCM_TAG_LENGTH = 128; // bits
+
+    private static final int ARGON2_ITERATIONS = 3;
+    private static final int ARGON2_MEMORY_KB = 64 * 1024;
+    private static final int ARGON2_PARALLELISM = 1;
 
     private PrivateKeyLoader() {}
 
@@ -42,37 +47,6 @@ public final class PrivateKeyLoader {
             this.usernameField = usernameField;
             this.passwordField = passwordField;
         }
-    }
-
-    public static PrivateKey decryptPrivateKey(String cipherTextB64,
-                                               String ivB64,
-                                               String saltB64,
-                                               String masterPassword) throws Exception {
-        byte[] cipherText = Base64.getDecoder().decode(cipherTextB64);
-        byte[] iv = Base64.getDecoder().decode(ivB64);
-        byte[] salt = Base64.getDecoder().decode(saltB64);
-
-        SecretKey aesKey = deriveKeyFromPassword(masterPassword.toCharArray(), salt);
-
-        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-        GCMParameterSpec gcmSpec = new GCMParameterSpec(GCM_TAG_LENGTH, iv);
-        cipher.init(Cipher.DECRYPT_MODE, aesKey, gcmSpec);
-        byte[] privateKeyDer = cipher.doFinal(cipherText);
-
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyDer);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-
-        return kf.generatePrivate(keySpec);
-    }
-
-    public static String signNonceWithPrivateKey(PrivateKey privateKey, UUID nonce) throws Exception {
-        byte[] message = nonce.toString().getBytes(StandardCharsets.UTF_8);
-
-        Signature sig = Signature.getInstance("SHA256withRSA");
-        sig.initSign(privateKey);
-        sig.update(message);
-        byte[] signatureBytes = sig.sign();
-        return Base64.getEncoder().encodeToString(signatureBytes);
     }
 
     public static EncryptionResult encryptCredential(String usernamePlaintext, String passwordPlaintext, char[] masterPassword, String salt) throws Exception {
@@ -103,21 +77,7 @@ public final class PrivateKeyLoader {
 
     public static EncryptionFieldResult encryptFieldUpdate(String plaintext, char[] masterPassword, String salt) throws Exception {
         SecretKey secretKey = deriveKeyFromPassword(masterPassword, salt.getBytes());
-
-        byte[] iv = new byte[12];
-        SecureRandom random = new SecureRandom();
-        random.nextBytes(iv);
-
-        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-        GCMParameterSpec gcmSpec = new GCMParameterSpec(GCM_TAG_LENGTH, iv);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec);
-
-        byte[] cipherText = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
-
-        return new EncryptionFieldResult(
-                Base64.getEncoder().encodeToString(cipherText),
-                Base64.getEncoder().encodeToString(iv)
-        );
+        return encryptField(plaintext, secretKey);
     }
 
     public static List<CredentialsResp> decryptList(List<CredentialsResp> encryptedCredentials, char[] masterPassword, String salt) throws Exception {
@@ -173,11 +133,34 @@ public final class PrivateKeyLoader {
         return new String(plaintext, StandardCharsets.UTF_8);
     }
 
-    private static SecretKey deriveKeyFromPassword(char[] password, byte[] salt) throws Exception {
-        PBEKeySpec spec = new PBEKeySpec(password, salt, PBKDF2_ITERATIONS, AES_KEY_SIZE);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-        byte[] keyBytes = skf.generateSecret(spec).getEncoded();
-        return new SecretKeySpec(keyBytes, "AES");
+    private static SecretKey deriveKeyFromPassword(char[] password, byte[] salt) {
+        final int keyLenBytes = AES_KEY_SIZE / 8;
+        byte[] pwdBytes = null;
+        byte[] keyBytes = new byte[keyLenBytes];
+
+        try {
+            pwdBytes = StandardCharsets.UTF_8.encode(java.nio.CharBuffer.wrap(password)).array();
+            byte[] exactPwd = Arrays.copyOf(pwdBytes, pwdBytes.length);
+            Arrays.fill(pwdBytes, (byte) 0);
+            pwdBytes = exactPwd;
+
+            Argon2Parameters.Builder builder = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id)
+                    .withSalt(salt)
+                    .withParallelism(ARGON2_PARALLELISM)
+                    .withMemoryAsKB(ARGON2_MEMORY_KB)
+                    .withIterations(ARGON2_ITERATIONS);
+
+            Argon2BytesGenerator gen = new Argon2BytesGenerator();
+            gen.init(builder.build());
+            gen.generateBytes(pwdBytes, keyBytes);
+
+            byte[] keyCopy = Arrays.copyOf(keyBytes, keyLenBytes);
+            Arrays.fill(keyBytes, (byte) 0);
+            return new SecretKeySpec(keyCopy, "AES");
+        } finally {
+            if (pwdBytes != null) Arrays.fill(pwdBytes, (byte) 0);
+            Arrays.fill(keyBytes, (byte) 0);
+        }
     }
 }
 

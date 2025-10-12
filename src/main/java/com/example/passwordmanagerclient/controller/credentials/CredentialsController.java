@@ -85,7 +85,7 @@ public class CredentialsController {
     private void preloadCredentials() {
         List<CredentialsResp> allCredentials = new ArrayList<>();
         int page = 0;
-        int size = 3;
+        int size = 100;
 
         while (true) {
             PagedResponse<CredentialsResp> response = CredentialsService.getCredentials(page, size);
