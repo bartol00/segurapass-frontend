@@ -14,7 +14,7 @@ public class HelloApplication extends Application {
         AppContext.init();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/authorization/login-view.fxml"));
-        Scene scene = new Scene(loader.load(), 400, 300);
+        Scene scene = new Scene(loader.load());
         stage.setTitle("Password Manager");
         stage.setScene(scene);
         stage.show();

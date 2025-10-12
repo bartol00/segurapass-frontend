@@ -37,7 +37,7 @@ public class LoginController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/authorization/register-view.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(loader.load(), 400, 300));
+            stage.setScene(new Scene(loader.load()));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.passwordmanagerclient.controller.authorization.LoginController"
-      alignment="CENTER" spacing="15" style="-fx-background-color: #f5f5f5;" prefWidth="400" prefHeight="300">
+      alignment="CENTER" spacing="15" style="-fx-background-color: #f5f5f5;" prefWidth="700" prefHeight="600">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
