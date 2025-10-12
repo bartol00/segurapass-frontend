@@ -1,9 +1,12 @@
 package com.example.passwordmanagerclient.util;
 
+import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class AppContext {
@@ -34,6 +37,10 @@ public class AppContext {
     @Getter
     @Setter
     private static String saltKey;
+
+    @Getter
+    @Setter
+    private static List<CredentialsResp> credentialsCache = new ArrayList<>();
 
     private static char[] masterPassword;
 
@@ -67,5 +74,9 @@ public class AppContext {
         refreshToken = null;
         refreshTokenExpiry = null;
         saltKey = null;
+        if (credentialsCache != null) {
+            credentialsCache.clear();
+        }
+        credentialsCache = null;
     }
 }

@@ -1,12 +1,18 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
+import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
 import com.example.passwordmanagerclient.service.CredentialsService;
+import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.OperationResult;
 import com.example.passwordmanagerclient.util.TokenManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import lombok.Setter;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 
 public class AddCredentialController {
 
@@ -36,17 +42,21 @@ public class AddCredentialController {
             return;
         }
 
-        OperationResult result = CredentialsService.addCredential(website, username, password);
+        CredentialsResp credentialsResp = CredentialsService.addCredential(website, username, password);
 
-        statusLabel.setText(result.getMessage());
+        if (credentialsResp != null) {
+            List<CredentialsResp> cache = AppContext.getCredentialsCache();
+            cache.add(credentialsResp);
+            cache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
 
-        if (result.isPassed()) {
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             stage.close();
 
             if (parentController != null) {
                 parentController.refreshTable();
             }
+        } else {
+            statusLabel.setText("Failed to add credentials");
         }
     }
 

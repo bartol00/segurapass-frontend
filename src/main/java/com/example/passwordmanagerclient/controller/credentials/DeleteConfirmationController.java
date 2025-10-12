@@ -1,11 +1,17 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
+import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
 import com.example.passwordmanagerclient.service.CredentialsService;
+import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import lombok.Setter;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 
 public class DeleteConfirmationController {
 
@@ -30,6 +36,11 @@ public class DeleteConfirmationController {
         }
 
         CredentialsService.deleteCredentials(credentialId);
+
+        List<CredentialsResp> cache = AppContext.getCredentialsCache();
+        cache.removeIf(c -> c.getCredentialsId().equals(UUID.fromString(credentialId)));
+        cache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
+
         this.credentialId = null;
 
         Stage stage = (Stage) yesButton.getScene().getWindow();

@@ -13,6 +13,7 @@ import java.util.*;
 public class CredentialsService {
 
     public static PagedResponse<CredentialsResp> getCredentials(int page, int size) {
+        System.out.println("get credentials pinged");
         try {
             Map<String,String> params = Map.of(
                     "page", String.valueOf(page),
@@ -53,7 +54,7 @@ public class CredentialsService {
         }
     }
 
-    public static OperationResult addCredential(String website, String username, String password) {
+    public static CredentialsResp addCredential(String website, String username, String password) {
         try {
             PrivateKeyLoader.EncryptionResult encryptionResult = PrivateKeyLoader.encryptCredential(
                     username,
@@ -76,17 +77,23 @@ public class CredentialsService {
 
             if (response.statusCode() != 200) {
                 ApiError apiError = DtoHandler.parseToDto(response, ApiError.class);
-                return new OperationResult(apiError.getMessage(), false);
+                System.out.println(apiError.getMessage());
+                return null;
             }
 
-            return new OperationResult("Successfully added credential", true);
+            CredentialsResp encryptedCredentials = DtoHandler.parseToDto(response, CredentialsResp.class);
+            return PrivateKeyLoader.decryptCredential(
+                    encryptedCredentials,
+                    AppContext.getMasterPassword(),
+                    AppContext.getSaltKey()
+            );
         } catch (Exception e) {
             e.printStackTrace();
-            return new OperationResult("Failed to add credential", false);
+            return null;
         }
     }
 
-    public static OperationResult updateCredentials(String credentialId, String website, String username, String password) {
+    public static CredentialsResp updateCredentials(String credentialId, String website, String username, String password) {
         try {
             CredentialsReq credentialsReq = new CredentialsReq();
 
@@ -116,13 +123,19 @@ public class CredentialsService {
 
             if (response.statusCode() != 200) {
                 ApiError apiError = DtoHandler.parseToDto(response, ApiError.class);
-                return new OperationResult(apiError.getMessage(), false);
+                System.out.println(apiError.getMessage());
+                return null;
             }
 
-            return new OperationResult("Successfully updated credential", true);
+            CredentialsResp encryptedCredentials = DtoHandler.parseToDto(response, CredentialsResp.class);
+            return PrivateKeyLoader.decryptCredential(
+                    encryptedCredentials,
+                    AppContext.getMasterPassword(),
+                    AppContext.getSaltKey()
+            );
         } catch (Exception e) {
             e.printStackTrace();
-            return new OperationResult("Failed to update credential", false);
+            return null;
         }
     }
 

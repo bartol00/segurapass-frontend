@@ -1,7 +1,8 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
+import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
 import com.example.passwordmanagerclient.service.CredentialsService;
-import com.example.passwordmanagerclient.util.OperationResult;
+import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -9,6 +10,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import lombok.Setter;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class CredentialEditController {
 
@@ -37,22 +41,31 @@ public class CredentialEditController {
             return;
         }
 
-        OperationResult result = CredentialsService.updateCredentials(
+        CredentialsResp credentialsResp = CredentialsService.updateCredentials(
                 credentialId,
                 websiteField.getText(),
                 usernameField.getText(),
                 passwordField.getText()
         );
 
-        statusLabel.setText(result.getMessage());
+        if (credentialsResp != null) {
+            List<CredentialsResp> cache = AppContext.getCredentialsCache();
+            List<CredentialsResp> updatedCache = cache.stream()
+                    .map(c -> c.getCredentialsId().equals(credentialsResp.getCredentialsId()) ? credentialsResp : c)
+                    .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
 
-        if (result.isPassed()) {
+            AppContext.setCredentialsCache(updatedCache);
+            updatedCache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
+
+
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             stage.close();
 
             if (parentController != null) {
                 parentController.refreshTable();
             }
+        } else {
+            statusLabel.setText("Failed to update credentials");
         }
     }
 
