@@ -16,6 +16,7 @@ public class RegisterController {
 
     @FXML private TextField emailField;
     @FXML private PasswordField masterPasswordField;
+    @FXML private PasswordField confirmPasswordField;
     @FXML private ProgressBar strengthBar;
     @FXML private Label strengthLabel;
     @FXML private Label lengthReq;
@@ -23,6 +24,7 @@ public class RegisterController {
     @FXML private Label uppercaseReq;
     @FXML private Label numberReq;
     @FXML private Label specialReq;
+    @FXML private Label passwordMatchReq;
     @FXML private Button registerButton;
     @FXML private Label statusLabel;
 
@@ -35,6 +37,8 @@ public class RegisterController {
     @FXML
     public void initialize() {
         masterPasswordField.textProperty().addListener((obs, oldVal, newVal) -> updateStrength(newVal));
+        masterPasswordField.textProperty().addListener((obs, oldVal, newVal) -> checkPasswordMatch());
+        confirmPasswordField.textProperty().addListener((obs, oldVal, newVal) -> checkPasswordMatch());
     }
 
     private void updateStrength(String password) {
@@ -82,6 +86,14 @@ public class RegisterController {
         registerButton.setDisable(score < 5);
     }
 
+    private void checkPasswordMatch() {
+        String password = masterPasswordField.getText();
+        String confirmPassword = confirmPasswordField.getText();
+        boolean passwordMatches = confirmPassword.equals(password);
+        updateLabel(passwordMatchReq, passwordMatches);
+        registerButton.setDisable(!passwordMatches);
+    }
+
     private void updateLabel(Label label, boolean valid) {
         label.setTextFill(valid ? Color.GREEN : Color.GRAY);
     }
@@ -114,9 +126,6 @@ public class RegisterController {
     @FXML
     protected void onSwitchToLogin() {
         try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/authorization/login-view.fxml"));
-//            Stage stage = (Stage) emailField.getScene().getWindow();
-//            stage.setScene(new Scene(loader.load()));
             Stage stage = (Stage) emailField.getScene().getWindow();
             SceneManager.switchScene(stage, "/com/example/passwordmanagerclient/authorization/login-view.fxml");
         } catch (Exception e) {
@@ -126,9 +135,6 @@ public class RegisterController {
 
     private void switchToCredentialsView() {
         try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/credentials-view.fxml"));
-//            Stage stage = (Stage) emailField.getScene().getWindow();
-//            stage.setScene(new Scene(loader.load(), 800, 600));
             Stage stage = (Stage) emailField.getScene().getWindow();
             SceneManager.switchScene(stage, "/com/example/passwordmanagerclient/credentials/credentials-view.fxml");
         } catch (Exception e) {

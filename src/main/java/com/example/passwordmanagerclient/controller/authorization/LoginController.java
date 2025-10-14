@@ -36,9 +36,6 @@ public class LoginController {
     @FXML
     protected void onSwitchToRegister() {
         try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/authorization/register-view.fxml"));
-//            Stage stage = (Stage) emailField.getScene().getWindow();
-//            stage.setScene(new Scene(loader.load()));
             Stage stage = (Stage) emailField.getScene().getWindow();
             SceneManager.switchScene(stage, "/com/example/passwordmanagerclient/authorization/register-view.fxml");
         } catch (Exception e) {
@@ -48,9 +45,6 @@ public class LoginController {
 
     private void switchToCredentialsView() {
         try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/credentials-view.fxml"));
-//            Stage stage = (Stage) emailField.getScene().getWindow();
-//            stage.setScene(new Scene(loader.load()));
             Stage stage = (Stage) emailField.getScene().getWindow();
             SceneManager.switchScene(stage, "/com/example/passwordmanagerclient/credentials/credentials-view.fxml");
         } catch (Exception e) {

@@ -20,6 +20,7 @@
 
     <TextField fx:id="emailField" promptText="Email" maxWidth="250"/>
     <PasswordField fx:id="masterPasswordField" promptText="Master Password" maxWidth="250"/>
+    <PasswordField fx:id="confirmPasswordField" promptText="Confirm Master Password" maxWidth="250"/>
 
     <VBox spacing="5" maxWidth="250" alignment="CENTER_LEFT">
         <ProgressBar fx:id="strengthBar" prefWidth="250" progress="0.0"/>
@@ -32,6 +33,7 @@
         <Label fx:id="uppercaseReq" text="• At least one uppercase letter" textFill="gray"/>
         <Label fx:id="numberReq" text="• At least one number" textFill="gray"/>
         <Label fx:id="specialReq" text="• At least one special character (@$!%*?...)" textFill="gray"/>
+        <Label fx:id="passwordMatchReq" text="• Passwords match" textFill="gray"/>
     </VBox>
 
     <Button text="Register" fx:id="registerButton" onAction="#onRegisterClick"

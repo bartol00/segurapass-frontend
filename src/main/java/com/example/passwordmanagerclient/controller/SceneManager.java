@@ -18,6 +18,10 @@ public final class SceneManager {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
             Scene newScene = new Scene(loader.load());
 
+            newScene.getStylesheets().add(
+                    SceneManager.class.getResource("/com/example/passwordmanagerclient/style/app.css").toExternalForm()
+            );
+
             stage.setScene(newScene);
 
             stage.setWidth(width);

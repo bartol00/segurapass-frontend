@@ -10,10 +10,14 @@ import com.example.passwordmanagerclient.util.TokenManager;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 import java.time.format.DateTimeFormatter;
@@ -101,6 +105,88 @@ public class CredentialsController {
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         passwordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
 
+        usernameColumn.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String username, boolean empty) {
+                super.updateItem(username, empty);
+
+                if (empty || username == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                Label usernameLabel = new Label();
+
+                Button copyButton = new Button("📋");
+                copyButton.setPrefSize(20, 20);
+                copyButton.setStyle("-fx-font-size: 10px; -fx-padding: 0;");
+
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+                HBox container = new HBox(usernameLabel, spacer, copyButton);
+                container.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                container.setSpacing(5);
+
+                copyButton.setOnAction(e -> {
+                    Clipboard clipboard = Clipboard.getSystemClipboard();
+                    ClipboardContent content = new ClipboardContent();
+                    content.putString(username);
+                    clipboard.setContent(content);
+                });
+
+                usernameLabel.setText(username);
+
+                setGraphic(container);
+            }
+        });
+
+        passwordColumn.setCellFactory(col -> new TableCell<>() {
+            private boolean visible = false;
+
+            @Override
+            protected void updateItem(String password, boolean empty) {
+                super.updateItem(password, empty);
+
+                if (empty || password == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                Label passwordLabel = new Label();
+
+                Button copyButton = new Button("📋");
+                copyButton.setPrefSize(20, 20);
+                copyButton.setStyle("-fx-font-size: 10px; -fx-padding: 0;");
+
+                Button toggleButton = new Button("\uD83D\uDC41");
+                toggleButton.setPrefSize(20, 20);
+                toggleButton.setStyle("-fx-font-size: 10px; -fx-padding: 0;");
+
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+                HBox container = new HBox(passwordLabel, spacer, copyButton, toggleButton);
+                container.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                container.setSpacing(5);
+
+                copyButton.setOnAction(e -> {
+                    Clipboard clipboard = Clipboard.getSystemClipboard();
+                    ClipboardContent content = new ClipboardContent();
+                    content.putString(password);
+                    clipboard.setContent(content);
+                });
+
+                toggleButton.setOnAction(e -> {
+                    visible = !visible;
+                    passwordLabel.setText(visible ? password : "••••••••");
+                });
+
+                passwordLabel.setText(visible ? password : "••••••••");
+
+                setGraphic(container);
+            }
+        });
+        passwordColumn.setMinWidth(350);
+
         lastUpdatedColumn.setCellValueFactory(cell -> {
             var inst = cell.getValue().getLastUpdated();
             String text = inst == null ? "" :
@@ -109,6 +195,7 @@ public class CredentialsController {
             return new javafx.beans.property.SimpleStringProperty(text);
         });
 
+        actionsColumn.setMinWidth(300);
         actionsColumn.setCellFactory(col -> new TableCell<>() {
             private final Button editButton = new Button("Update");
             private final Button deleteButton = new Button("Delete");
@@ -116,7 +203,9 @@ public class CredentialsController {
 
             {
                 editButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+                editButton.setMinWidth(60);
                 deleteButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
+                deleteButton.setMinWidth(60);
                 container.setAlignment(javafx.geometry.Pos.CENTER);
 
                 editButton.setOnAction(event -> {
@@ -168,7 +257,13 @@ public class CredentialsController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/add-credentials-view.fxml"));
 
             Stage dialogStage = new Stage();
-            dialogStage.setScene(new Scene(loader.load()));
+            Scene dialogScene = new Scene(loader.load());
+            dialogScene.getStylesheets().add(getClass()
+                    .getResource("/com/example/passwordmanagerclient/style/app.css")
+                    .toExternalForm()
+            );
+            dialogStage.setScene(dialogScene);
+
             dialogStage.setTitle("Add New Credentials");
             dialogStage.setResizable(false);
             dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
@@ -194,7 +289,13 @@ public class CredentialsController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/credential-edit-view.fxml"));
 
             Stage dialogStage = new Stage();
-            dialogStage.setScene(new Scene(loader.load()));
+            Scene dialogScene = new Scene(loader.load());
+            dialogScene.getStylesheets().add(getClass()
+                    .getResource("/com/example/passwordmanagerclient/style/app.css")
+                    .toExternalForm()
+            );
+            dialogStage.setScene(dialogScene);
+
             dialogStage.setTitle("Update Existing Credentials");
             dialogStage.setResizable(false);
             dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
@@ -221,7 +322,13 @@ public class CredentialsController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/delete-confirmation-view.fxml"));
 
             Stage dialogStage = new Stage();
-            dialogStage.setScene(new Scene(loader.load()));
+            Scene dialogScene = new Scene(loader.load());
+            dialogScene.getStylesheets().add(getClass()
+                    .getResource("/com/example/passwordmanagerclient/style/app.css")
+                    .toExternalForm()
+            );
+            dialogStage.setScene(dialogScene);
+
             dialogStage.setTitle("Confirm Deletion");
             dialogStage.setResizable(false);
             dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
