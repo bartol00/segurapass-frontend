@@ -1,5 +1,6 @@
 package com.example.passwordmanagerclient.controller.authorization;
 
+import com.example.passwordmanagerclient.controller.SceneManager;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.util.*;
 import javafx.fxml.FXML;
@@ -113,9 +114,11 @@ public class RegisterController {
     @FXML
     protected void onSwitchToLogin() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/authorization/login-view.fxml"));
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/authorization/login-view.fxml"));
+//            Stage stage = (Stage) emailField.getScene().getWindow();
+//            stage.setScene(new Scene(loader.load()));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(loader.load()));
+            SceneManager.switchScene(stage, "/com/example/passwordmanagerclient/authorization/login-view.fxml");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,9 +126,11 @@ public class RegisterController {
 
     private void switchToCredentialsView() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/credentials-view.fxml"));
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/credentials-view.fxml"));
+//            Stage stage = (Stage) emailField.getScene().getWindow();
+//            stage.setScene(new Scene(loader.load(), 800, 600));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(loader.load(), 800, 600));
+            SceneManager.switchScene(stage, "/com/example/passwordmanagerclient/credentials/credentials-view.fxml");
         } catch (Exception e) {
             e.printStackTrace();
             statusLabel.setText("Failed to open credentials view.");

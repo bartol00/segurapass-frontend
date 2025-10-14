@@ -2,11 +2,11 @@ package com.example.passwordmanagerclient.controller.credentials;
 
 import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
 import com.example.passwordmanagerclient.api.credentials.PagedResponse;
+import com.example.passwordmanagerclient.controller.SceneManager;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class CredentialsController {
 
@@ -250,10 +249,8 @@ public class CredentialsController {
         try {
             AuthService.logout();
             AppContext.clearSensitiveData();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/authorization/login-view.fxml"));
             Stage stage = (Stage) credentialsTable.getScene().getWindow();
-            stage.setScene(new Scene(loader.load()));
-            stage.setMaximized(true);
+            SceneManager.switchScene(stage, "/com/example/passwordmanagerclient/authorization/login-view.fxml");
         } catch (Exception e) {
             e.printStackTrace();
         }
