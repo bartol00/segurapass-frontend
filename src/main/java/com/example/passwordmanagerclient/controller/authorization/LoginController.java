@@ -25,13 +25,31 @@ public class LoginController {
             return;
         }
 
-        OperationResult operationResult = AuthService.loginSrp(email, password);
-        statusLabel.setText(operationResult.getMessage());
+        statusLabel.setText("Logging in...");
 
-        if (operationResult.isPassed()) {
-            switchToCredentialsView();
-        }
+        javafx.concurrent.Task<OperationResult> task = new javafx.concurrent.Task<>() {
+            @Override
+            protected OperationResult call() {
+                return AuthService.loginSrp(email, password);
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            OperationResult result = task.getValue();
+            statusLabel.setText(result.getMessage());
+            if (result.isPassed()) {
+                switchToCredentialsView();
+            }
+        });
+
+        task.setOnFailed(event -> {
+            statusLabel.setText("Login failed due to a system error");
+            task.getException().printStackTrace();
+        });
+
+        new Thread(task).start();
     }
+
 
     @FXML
     protected void onSwitchToRegister() {

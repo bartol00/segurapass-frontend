@@ -4,8 +4,6 @@ import com.example.passwordmanagerclient.controller.SceneManager;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.util.*;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -110,17 +108,36 @@ public class RegisterController {
         String email = emailField.getText();
         String password = masterPasswordField.getText();
 
+        statusLabel.setText("");
+
         if (email.isBlank() || password.isBlank()) {
             statusLabel.setText("Please fill in both fields");
             return;
         }
 
-        OperationResult operationResult = AuthService.registerSrp(email, password);
-        statusLabel.setText(operationResult.getMessage());
+        statusLabel.setText("Registering...");
 
-        if (operationResult.isPassed()) {
-            switchToCredentialsView();
-        }
+        javafx.concurrent.Task<OperationResult> task = new javafx.concurrent.Task<>() {
+            @Override
+            protected OperationResult call() {
+                return AuthService.registerSrp(email, password);
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            OperationResult result = task.getValue();
+            statusLabel.setText(result.getMessage());
+            if (result.isPassed()) {
+                switchToCredentialsView();
+            }
+        });
+
+        task.setOnFailed(event -> {
+            statusLabel.setText("Registration failed due to a system error");
+            task.getException().printStackTrace();
+        });
+
+        new Thread(task).start();
     }
 
     @FXML

@@ -13,7 +13,7 @@ import java.util.*;
 public class CredentialsService {
 
     public static PagedResponse<CredentialsResp> getCredentials(int page, int size) {
-        System.out.println("get credentials pinged");
+        // System.out.println("get credentials pinged");
         try {
             Map<String,String> params = Map.of(
                     "page", String.valueOf(page),

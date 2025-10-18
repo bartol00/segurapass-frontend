@@ -233,6 +233,49 @@ public class CredentialsController {
                 }
             }
         });
+
+        websiteColumn.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String website, boolean empty) {
+                super.updateItem(website, empty);
+                if (empty || website == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                Label websiteLabel = new Label(website);
+
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+                HBox container = new HBox(websiteLabel, spacer);
+                container.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                container.setSpacing(5);
+
+                setGraphic(container);
+            }
+        });
+
+        lastUpdatedColumn.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String dateText, boolean empty) {
+                super.updateItem(dateText, empty);
+                if (empty || dateText == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                Label dateLabel = new Label(dateText);
+
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+                HBox container = new HBox(dateLabel, spacer);
+                container.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                container.setSpacing(5);
+
+                setGraphic(container);
+            }
+        });
+
     }
 
     @FXML
