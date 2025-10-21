@@ -60,22 +60,22 @@ public class AuthService {
                 return new OperationResult(apiError.getMessage(), false);
             }
 
-            RegistrationResp registrationResp = DtoHandler.parseToDto(response, RegistrationResp.class);
+//            RegistrationResp registrationResp = DtoHandler.parseToDto(response, RegistrationResp.class);
+//
+//            Instant jwtExpiry = TokenManager.getJwtExpiry(registrationResp.getAccessToken());
+//            if (jwtExpiry == null) {
+//                return new OperationResult("Could not get expiry time from JWT", false);
+//            }
+//
+//            AppContext.setEmail(email);
+//            AppContext.setJwtToken(registrationResp.getAccessToken());
+//            AppContext.setJwtExpiry(jwtExpiry);
+//            AppContext.setRefreshToken(registrationResp.getRefreshToken());
+//            AppContext.setRefreshTokenExpiry(registrationResp.getRefreshTokenExpiryTime());
+//            AppContext.setMasterPassword(masterPassword);
+//            AppContext.setSaltKey(Base64.getEncoder().encodeToString(saltKey));
 
-            Instant jwtExpiry = TokenManager.getJwtExpiry(registrationResp.getAccessToken());
-            if (jwtExpiry == null) {
-                return new OperationResult("Could not get expiry time from JWT", false);
-            }
-
-            AppContext.setEmail(email);
-            AppContext.setJwtToken(registrationResp.getAccessToken());
-            AppContext.setJwtExpiry(jwtExpiry);
-            AppContext.setRefreshToken(registrationResp.getRefreshToken());
-            AppContext.setRefreshTokenExpiry(registrationResp.getRefreshTokenExpiryTime());
-            AppContext.setMasterPassword(masterPassword);
-            AppContext.setSaltKey(Base64.getEncoder().encodeToString(saltKey));
-
-            return new OperationResult("Registration successful", true);
+            return new OperationResult("Registration successful. Please verify the email address you entered before attempting to log in", true);
         } catch (Exception e) {
             e.printStackTrace();
             return new OperationResult("Failed to register user", false);

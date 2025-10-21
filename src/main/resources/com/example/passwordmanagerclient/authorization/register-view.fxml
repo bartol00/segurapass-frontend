@@ -40,5 +40,5 @@
             maxWidth="120" disable="true"/>
     <Button text="Switch to Login" onAction="#onSwitchToLogin" style="-fx-font-size: 11px;"/>
 
-    <Label fx:id="statusLabel" textFill="red"/>
+    <Label fx:id="statusLabel"/>
 </VBox>

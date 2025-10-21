@@ -14,6 +14,12 @@ public class LoginController {
     @FXML private TextField emailField;
     @FXML private PasswordField masterPasswordField;
     @FXML private Label statusLabel;
+    @FXML private Button loginButton;
+
+    public void initialize() {
+        emailField.textProperty().addListener((obs, oldVal, newVal) -> disableLoginButton());
+        masterPasswordField.textProperty().addListener((obs, oldVal, newVal) -> disableLoginButton());
+    }
 
     @FXML
     protected void onLoginClick() {
@@ -22,10 +28,12 @@ public class LoginController {
 
         if (email.isBlank() || password.isBlank()) {
             statusLabel.setText("Please fill in both fields.");
+            statusLabel.setStyle("-fx-text-fill: red;");
             return;
         }
 
         statusLabel.setText("Logging in...");
+        statusLabel.setStyle("-fx-text-fill: blue;");
 
         javafx.concurrent.Task<OperationResult> task = new javafx.concurrent.Task<>() {
             @Override
@@ -36,20 +44,35 @@ public class LoginController {
 
         task.setOnSucceeded(event -> {
             OperationResult result = task.getValue();
-            statusLabel.setText(result.getMessage());
             if (result.isPassed()) {
                 switchToCredentialsView();
+            } else {
+                masterPasswordField.setText("");
+                statusLabel.setText(result.getMessage());
+                statusLabel.setStyle("-fx-text-fill: red;");
             }
         });
 
         task.setOnFailed(event -> {
             statusLabel.setText("Login failed due to a system error");
+            statusLabel.setStyle("-fx-text-fill: red;");
+            masterPasswordField.setText("");
             task.getException().printStackTrace();
         });
 
         new Thread(task).start();
     }
 
+    private void disableLoginButton() {
+        String email = emailField.getText();
+        String password = masterPasswordField.getText();
+
+        if (email.isBlank() || password.isBlank()) {
+            loginButton.setDisable(true);
+        } else {
+            loginButton.setDisable(false);
+        }
+    }
 
     @FXML
     protected void onSwitchToRegister() {

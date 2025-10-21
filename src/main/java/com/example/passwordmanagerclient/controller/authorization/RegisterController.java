@@ -87,6 +87,11 @@ public class RegisterController {
     private void checkPasswordMatch() {
         String password = masterPasswordField.getText();
         String confirmPassword = confirmPasswordField.getText();
+        if (password.isBlank() && confirmPassword.isBlank()) {
+            updateLabel(passwordMatchReq, false);
+            registerButton.setDisable(true);
+            return;
+        }
         boolean passwordMatches = confirmPassword.equals(password);
         updateLabel(passwordMatchReq, passwordMatches);
         registerButton.setDisable(!passwordMatches);
@@ -112,10 +117,12 @@ public class RegisterController {
 
         if (email.isBlank() || password.isBlank()) {
             statusLabel.setText("Please fill in both fields");
+            statusLabel.setStyle("-fx-text-fill: red;");
             return;
         }
 
         statusLabel.setText("Registering...");
+        statusLabel.setStyle("-fx-text-fill: blue;");
 
         javafx.concurrent.Task<OperationResult> task = new javafx.concurrent.Task<>() {
             @Override
@@ -126,14 +133,21 @@ public class RegisterController {
 
         task.setOnSucceeded(event -> {
             OperationResult result = task.getValue();
-            statusLabel.setText(result.getMessage());
+            statusLabel.setStyle("-fx-text-fill: red;");
             if (result.isPassed()) {
-                switchToCredentialsView();
+                emailField.setText("");
+                statusLabel.setStyle("-fx-text-fill: green;");
             }
+            statusLabel.setText(result.getMessage());
+            masterPasswordField.setText("");
+            confirmPasswordField.setText("");
         });
 
         task.setOnFailed(event -> {
             statusLabel.setText("Registration failed due to a system error");
+            statusLabel.setStyle("-fx-text-fill: green;");
+            masterPasswordField.setText("");
+            confirmPasswordField.setText("");
             task.getException().printStackTrace();
         });
 
@@ -150,13 +164,13 @@ public class RegisterController {
         }
     }
 
-    private void switchToCredentialsView() {
-        try {
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            SceneManager.switchScene(stage, "/com/example/passwordmanagerclient/credentials/credentials-view.fxml");
-        } catch (Exception e) {
-            e.printStackTrace();
-            statusLabel.setText("Failed to open credentials view.");
-        }
-    }
+//    private void switchToCredentialsView() {
+//        try {
+//            Stage stage = (Stage) emailField.getScene().getWindow();
+//            SceneManager.switchScene(stage, "/com/example/passwordmanagerclient/credentials/credentials-view.fxml");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            statusLabel.setText("Failed to open credentials view.");
+//        }
+//    }
 }
