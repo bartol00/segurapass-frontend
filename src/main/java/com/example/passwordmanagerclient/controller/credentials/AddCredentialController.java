@@ -47,7 +47,7 @@ public class AddCredentialController {
         if (credentialsResp != null) {
             List<CredentialsResp> cache = AppContext.getCredentialsCache();
             cache.add(credentialsResp);
-            cache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
+            //cache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
 
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             stage.close();

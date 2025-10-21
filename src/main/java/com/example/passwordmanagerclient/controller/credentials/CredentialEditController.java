@@ -55,8 +55,7 @@ public class CredentialEditController {
                     .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
 
             AppContext.setCredentialsCache(updatedCache);
-            updatedCache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
-
+            // updatedCache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
 
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             stage.close();

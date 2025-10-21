@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class CredentialsController {
@@ -67,6 +68,8 @@ public class CredentialsController {
             nextButton.setDisable(true);
             return;
         }
+
+        cache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
 
         int fromIndex = currentPage * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, cache.size());

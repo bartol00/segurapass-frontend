@@ -7,13 +7,10 @@ import org.bouncycastle.crypto.params.Argon2Parameters;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.*;
 
 public final class PrivateKeyLoader {
@@ -40,22 +37,25 @@ public final class PrivateKeyLoader {
 
     @Getter
     public static class EncryptionResult {
+        private final EncryptionFieldResult websiteField;
         private final EncryptionFieldResult usernameField;
         private final EncryptionFieldResult passwordField;
 
-        public EncryptionResult(EncryptionFieldResult usernameField, EncryptionFieldResult passwordField) {
+        public EncryptionResult(EncryptionFieldResult websiteField, EncryptionFieldResult usernameField, EncryptionFieldResult passwordField) {
+            this.websiteField = websiteField;
             this.usernameField = usernameField;
             this.passwordField = passwordField;
         }
     }
 
-    public static EncryptionResult encryptCredential(String usernamePlaintext, String passwordPlaintext, char[] masterPassword, String salt) throws Exception {
+    public static EncryptionResult encryptCredential(String websitePlaintext, String usernamePlaintext, String passwordPlaintext, char[] masterPassword, String salt) throws Exception {
         SecretKey secretKey = deriveKeyFromPassword(masterPassword, salt.getBytes());
 
+        EncryptionFieldResult websiteResult = encryptField(websitePlaintext, secretKey);
         EncryptionFieldResult usernameResult = encryptField(usernamePlaintext, secretKey);
         EncryptionFieldResult passwordResult = encryptField(passwordPlaintext, secretKey);
 
-        return new EncryptionResult(usernameResult, passwordResult);
+        return new EncryptionResult(websiteResult, usernameResult, passwordResult);
     }
 
     public static EncryptionFieldResult encryptField(String plaintext, SecretKey secretKey) throws Exception {
@@ -86,15 +86,20 @@ public final class PrivateKeyLoader {
         List<CredentialsResp> decryptedCredentials = new ArrayList<>();
 
         for (CredentialsResp encryptedCredential : encryptedCredentials) {
+            String encryptedWebsite = encryptedCredential.getWebsite();
+            String websiteIv = encryptedCredential.getIvWebsite();
+
             String encryptedUsername = encryptedCredential.getUsername();
-            String usernameIv = encryptedCredential.getIvEmail();
+            String usernameIv = encryptedCredential.getIvUsername();
 
             String encryptedPassword = encryptedCredential.getPassword();
             String passwordIv = encryptedCredential.getIvPassword();
 
+            String decryptedWebsite = decryptField(encryptedWebsite, websiteIv, secretKey);
             String decryptedUsername = decryptField(encryptedUsername, usernameIv, secretKey);
             String decryptedPassword = decryptField(encryptedPassword, passwordIv, secretKey);
 
+            encryptedCredential.setWebsite(decryptedWebsite);
             encryptedCredential.setUsername(decryptedUsername);
             encryptedCredential.setPassword(decryptedPassword);
 
@@ -107,15 +112,20 @@ public final class PrivateKeyLoader {
     public static CredentialsResp decryptCredential(CredentialsResp encryptedCredential, char[] masterPassword, String salt) throws Exception {
         SecretKey secretKey = deriveKeyFromPassword(masterPassword, salt.getBytes());
 
+        String encryptedWebsite = encryptedCredential.getWebsite();
+        String websiteIv = encryptedCredential.getIvWebsite();
+
         String encryptedUsername = encryptedCredential.getUsername();
-        String usernameIv = encryptedCredential.getIvEmail();
+        String usernameIv = encryptedCredential.getIvUsername();
 
         String encryptedPassword = encryptedCredential.getPassword();
         String passwordIv = encryptedCredential.getIvPassword();
 
+        String decryptedWebsite = decryptField(encryptedWebsite, websiteIv, secretKey);
         String decryptedUsername = decryptField(encryptedUsername, usernameIv, secretKey);
         String decryptedPassword = decryptField(encryptedPassword, passwordIv, secretKey);
 
+        encryptedCredential.setWebsite(decryptedWebsite);
         encryptedCredential.setUsername(decryptedUsername);
         encryptedCredential.setPassword(decryptedPassword);
 

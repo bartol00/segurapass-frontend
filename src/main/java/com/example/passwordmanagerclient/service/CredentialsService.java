@@ -57,19 +57,22 @@ public class CredentialsService {
     public static CredentialsResp addCredential(String website, String username, String password) {
         try {
             PrivateKeyLoader.EncryptionResult encryptionResult = PrivateKeyLoader.encryptCredential(
+                    website,
                     username,
                     password,
                     AppContext.getMasterPassword(),
                     AppContext.getSaltKey()
             );
 
+            PrivateKeyLoader.EncryptionFieldResult websiteResult = encryptionResult.getWebsiteField();
             PrivateKeyLoader.EncryptionFieldResult usernameResult = encryptionResult.getUsernameField();
             PrivateKeyLoader.EncryptionFieldResult passwordResult = encryptionResult.getPasswordField();
 
             CredentialsReq credentialsReq = new CredentialsReq();
-            credentialsReq.setWebsite(website);
+            credentialsReq.setWebsite(websiteResult.getCipherB64());
+            credentialsReq.setIvWebsite(websiteResult.getIvB64());
             credentialsReq.setUsername(usernameResult.getCipherB64());
-            credentialsReq.setIvEmail(usernameResult.getIvB64());
+            credentialsReq.setIvUsername(usernameResult.getIvB64());
             credentialsReq.setPassword(passwordResult.getCipherB64());
             credentialsReq.setIvPassword(passwordResult.getIvB64());
 
@@ -98,7 +101,13 @@ public class CredentialsService {
             CredentialsReq credentialsReq = new CredentialsReq();
 
             if (website != null && !website.isBlank()) {
-                credentialsReq.setWebsite(website);
+                PrivateKeyLoader.EncryptionFieldResult encryptedWebsite = PrivateKeyLoader.encryptFieldUpdate(
+                        website,
+                        AppContext.getMasterPassword(),
+                        AppContext.getSaltKey()
+                );
+                credentialsReq.setWebsite(encryptedWebsite.getCipherB64());
+                credentialsReq.setIvWebsite(encryptedWebsite.getIvB64());
             }
             if (username != null && !username.isBlank()) {
                 PrivateKeyLoader.EncryptionFieldResult encryptedUsername = PrivateKeyLoader.encryptFieldUpdate(
@@ -107,7 +116,7 @@ public class CredentialsService {
                         AppContext.getSaltKey()
                 );
                 credentialsReq.setUsername(encryptedUsername.getCipherB64());
-                credentialsReq.setIvEmail(encryptedUsername.getIvB64());
+                credentialsReq.setIvUsername(encryptedUsername.getIvB64());
             }
             if (password != null && !password.isBlank()) {
                 PrivateKeyLoader.EncryptionFieldResult encryptedPassword = PrivateKeyLoader.encryptFieldUpdate(

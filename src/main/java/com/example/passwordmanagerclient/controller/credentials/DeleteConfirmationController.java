@@ -39,7 +39,7 @@ public class DeleteConfirmationController {
 
         List<CredentialsResp> cache = AppContext.getCredentialsCache();
         cache.removeIf(c -> c.getCredentialsId().equals(UUID.fromString(credentialId)));
-        cache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
+        // cache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
 
         this.credentialId = null;
 
