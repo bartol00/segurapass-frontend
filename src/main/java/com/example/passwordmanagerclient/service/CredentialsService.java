@@ -22,7 +22,7 @@ public class CredentialsService {
 
             HttpResponse<String> response = HttpComms.sendGetRequestWithAuthAndParams("/api/credentials/get", params, AppContext.getJwtToken());
 
-            if (response.statusCode() != 200) {
+            if (DtoHandler.getStatusCode(response) != 200) {
                 ApiError apiError = DtoHandler.parseToDto(response, ApiError.class);
                 System.out.println("Error loading credentials: " + apiError.getMessage());
                 PagedResponse<CredentialsResp> emptyPage = new PagedResponse<>();
@@ -78,7 +78,7 @@ public class CredentialsService {
 
             HttpResponse<String> response = HttpComms.sendPostRequestWithAuth(credentialsReq, "/api/credentials/create", AppContext.getJwtToken());
 
-            if (response.statusCode() != 200) {
+            if (DtoHandler.getStatusCode(response) != 200) {
                 ApiError apiError = DtoHandler.parseToDto(response, ApiError.class);
                 System.out.println(apiError.getMessage());
                 return null;
@@ -130,7 +130,7 @@ public class CredentialsService {
 
             HttpResponse<String> response = HttpComms.sendPutRequestWithAuth(credentialsReq, "/api/credentials/update/" + credentialId , AppContext.getJwtToken());
 
-            if (response.statusCode() != 200) {
+            if (DtoHandler.getStatusCode(response) != 200) {
                 ApiError apiError = DtoHandler.parseToDto(response, ApiError.class);
                 System.out.println(apiError.getMessage());
                 return null;
@@ -152,7 +152,7 @@ public class CredentialsService {
         try {
             HttpResponse<String> response = HttpComms.sendDeleteRequestWithAuth("/api/credentials/delete/" + credentialId, AppContext.getJwtToken());
 
-            if (response.statusCode() != 200) {
+            if (DtoHandler.getStatusCode(response) != 200) {
                 ApiError apiError = DtoHandler.parseToDto(response, ApiError.class);
                 return new OperationResult(apiError.getMessage(), false);
             }

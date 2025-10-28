@@ -38,7 +38,7 @@
 
     <Button text="Register" fx:id="registerButton" onAction="#onRegisterClick"
             maxWidth="120" disable="true"/>
-    <Button text="Switch to Login" onAction="#onSwitchToLogin" style="-fx-font-size: 11px;"/>
+    <Button text="Switch to Login" fx:id="switchLoginButton" onAction="#onSwitchToLogin" style="-fx-font-size: 11px;"/>
 
     <Label fx:id="statusLabel"/>
 </VBox>

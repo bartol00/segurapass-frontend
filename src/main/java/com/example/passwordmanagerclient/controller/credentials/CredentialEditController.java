@@ -5,6 +5,7 @@ import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -23,6 +24,7 @@ public class CredentialEditController {
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
     @FXML private Label statusLabel;
+    @FXML private Button saveButton;
 
     private String credentialId;
 
@@ -34,6 +36,7 @@ public class CredentialEditController {
 
     @FXML
     private void onSave() {
+        saveButton.setDisable(true);
         try {
             TokenManager.ensureValidJwt();
         } catch (Exception e) {
@@ -55,7 +58,6 @@ public class CredentialEditController {
                     .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
 
             AppContext.setCredentialsCache(updatedCache);
-            // updatedCache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
 
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             stage.close();
@@ -65,6 +67,7 @@ public class CredentialEditController {
             }
         } else {
             statusLabel.setText("Failed to update credentials");
+            saveButton.setDisable(false);
         }
     }
 

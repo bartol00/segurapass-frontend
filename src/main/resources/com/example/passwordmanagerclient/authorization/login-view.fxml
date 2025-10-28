@@ -16,7 +16,7 @@
     <PasswordField fx:id="masterPasswordField" promptText="Master Password" maxWidth="250"/>
 
     <Button text="Login" fx:id="loginButton" onAction="#onLoginClick" maxWidth="120" disable="true"/>
-    <Button text="Switch to Register" onAction="#onSwitchToRegister" style="-fx-font-size: 11px;"/>
+    <Button text="Switch to Register" fx:id="switchRegisterButton" onAction="#onSwitchToRegister" style="-fx-font-size: 11px;"/>
 
     <Label fx:id="statusLabel"/>
 </VBox>

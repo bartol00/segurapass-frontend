@@ -28,6 +28,7 @@ public class DeleteConfirmationController {
 
     @FXML
     private void onYesDelete() {
+        yesButton.setDisable(true);
         try {
             TokenManager.ensureValidJwt();
         } catch (Exception e) {
@@ -39,7 +40,6 @@ public class DeleteConfirmationController {
 
         List<CredentialsResp> cache = AppContext.getCredentialsCache();
         cache.removeIf(c -> c.getCredentialsId().equals(UUID.fromString(credentialId)));
-        // cache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
 
         this.credentialId = null;
 

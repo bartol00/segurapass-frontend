@@ -24,6 +24,7 @@ public class RegisterController {
     @FXML private Label specialReq;
     @FXML private Label passwordMatchReq;
     @FXML private Button registerButton;
+    @FXML private Button switchLoginButton;
     @FXML private Label statusLabel;
 
     private static final Pattern LOWERCASE = Pattern.compile(".*[a-z].*");
@@ -123,6 +124,8 @@ public class RegisterController {
 
         statusLabel.setText("Registering...");
         statusLabel.setStyle("-fx-text-fill: blue;");
+        registerButton.setDisable(true);
+        switchLoginButton.setDisable(true);
 
         javafx.concurrent.Task<OperationResult> task = new javafx.concurrent.Task<>() {
             @Override
@@ -141,6 +144,7 @@ public class RegisterController {
             statusLabel.setText(result.getMessage());
             masterPasswordField.setText("");
             confirmPasswordField.setText("");
+            switchLoginButton.setDisable(false);
         });
 
         task.setOnFailed(event -> {
@@ -149,6 +153,7 @@ public class RegisterController {
             masterPasswordField.setText("");
             confirmPasswordField.setText("");
             task.getException().printStackTrace();
+            switchLoginButton.setDisable(false);
         });
 
         new Thread(task).start();
@@ -163,14 +168,4 @@ public class RegisterController {
             e.printStackTrace();
         }
     }
-
-//    private void switchToCredentialsView() {
-//        try {
-//            Stage stage = (Stage) emailField.getScene().getWindow();
-//            SceneManager.switchScene(stage, "/com/example/passwordmanagerclient/credentials/credentials-view.fxml");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            statusLabel.setText("Failed to open credentials view.");
-//        }
-//    }
 }

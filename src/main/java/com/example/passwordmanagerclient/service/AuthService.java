@@ -55,25 +55,10 @@ public class AuthService {
 
             HttpResponse<String> response = HttpComms.sendPostRequest(req, "/api/authorization/register");
 
-            if (response.statusCode() != 200) {
+            if (DtoHandler.getStatusCode(response) != 200) {
                 ApiError apiError = DtoHandler.parseToDto(response, ApiError.class);
                 return new OperationResult(apiError.getMessage(), false);
             }
-
-//            RegistrationResp registrationResp = DtoHandler.parseToDto(response, RegistrationResp.class);
-//
-//            Instant jwtExpiry = TokenManager.getJwtExpiry(registrationResp.getAccessToken());
-//            if (jwtExpiry == null) {
-//                return new OperationResult("Could not get expiry time from JWT", false);
-//            }
-//
-//            AppContext.setEmail(email);
-//            AppContext.setJwtToken(registrationResp.getAccessToken());
-//            AppContext.setJwtExpiry(jwtExpiry);
-//            AppContext.setRefreshToken(registrationResp.getRefreshToken());
-//            AppContext.setRefreshTokenExpiry(registrationResp.getRefreshTokenExpiryTime());
-//            AppContext.setMasterPassword(masterPassword);
-//            AppContext.setSaltKey(Base64.getEncoder().encodeToString(saltKey));
 
             return new OperationResult("Registration successful. Please verify the email address you entered before attempting to log in", true);
         } catch (Exception e) {
@@ -93,11 +78,12 @@ public class AuthService {
 
             LoginStartReq startReq = new LoginStartReq();
             startReq.setEmail(email);
+            startReq.setDeviceId(AppContext.getDeviceId());
             startReq.setA(Base64.getEncoder().encodeToString(A.toByteArray()));
 
             HttpResponse<String> responseStart = HttpComms.sendPostRequest(startReq, "/api/authorization/login/start");
 
-            if (responseStart.statusCode() != 200) {
+            if (DtoHandler.getStatusCode(responseStart) != 200) {
                 ApiError apiError = DtoHandler.parseToDto(responseStart, ApiError.class);
                 return new OperationResult(apiError.getMessage(), false);
             }
@@ -129,7 +115,7 @@ public class AuthService {
 
             HttpResponse<String> responseComplete = HttpComms.sendPostRequest(completeReq, "/api/authorization/login/end");
 
-            if (responseComplete.statusCode() != 200) {
+            if (DtoHandler.getStatusCode(responseComplete) != 200) {
                 ApiError apiError = DtoHandler.parseToDto(responseComplete, ApiError.class);
                 return new OperationResult(apiError.getMessage(), false);
             }
@@ -171,7 +157,7 @@ public class AuthService {
 
             HttpResponse<String> response = HttpComms.sendPostRequest(refreshReq, "/api/authorization/refresh");
 
-            if (response.statusCode() != 200) {
+            if (DtoHandler.getStatusCode(response) != 200) {
                 return new OperationResult("Could not get valid JWT from server", false);
             }
 

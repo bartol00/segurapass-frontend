@@ -15,6 +15,7 @@ public class LoginController {
     @FXML private PasswordField masterPasswordField;
     @FXML private Label statusLabel;
     @FXML private Button loginButton;
+    @FXML private Button switchRegisterButton;
 
     public void initialize() {
         emailField.textProperty().addListener((obs, oldVal, newVal) -> disableLoginButton());
@@ -34,6 +35,8 @@ public class LoginController {
 
         statusLabel.setText("Logging in...");
         statusLabel.setStyle("-fx-text-fill: blue;");
+        loginButton.setDisable(true);
+        switchRegisterButton.setDisable(true);
 
         javafx.concurrent.Task<OperationResult> task = new javafx.concurrent.Task<>() {
             @Override
@@ -50,6 +53,7 @@ public class LoginController {
                 masterPasswordField.setText("");
                 statusLabel.setText(result.getMessage());
                 statusLabel.setStyle("-fx-text-fill: red;");
+                switchRegisterButton.setDisable(false);
             }
         });
 
@@ -57,6 +61,7 @@ public class LoginController {
             statusLabel.setText("Login failed due to a system error");
             statusLabel.setStyle("-fx-text-fill: red;");
             masterPasswordField.setText("");
+            switchRegisterButton.setDisable(false);
             task.getException().printStackTrace();
         });
 

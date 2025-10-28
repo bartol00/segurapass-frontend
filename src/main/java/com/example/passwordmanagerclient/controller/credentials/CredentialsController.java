@@ -36,6 +36,7 @@ public class CredentialsController {
 
     @FXML private Button prevButton;
     @FXML private Button nextButton;
+    @FXML private Button logoutButton;
     @FXML private Label pageLabel;
     @FXML private ComboBox<Integer> pageSizeCombo;
 
@@ -400,6 +401,7 @@ public class CredentialsController {
     @FXML
     private void onLogout() {
         try {
+            logoutButton.setDisable(true);
             AuthService.logout();
             AppContext.clearSensitiveData();
             Stage stage = (Stage) credentialsTable.getScene().getWindow();
