@@ -156,6 +156,8 @@ public class CredentialsController {
                     return;
                 }
 
+                CredentialsResp item = getTableView().getItems().get(getIndex());
+
                 Label passwordLabel = new Label();
 
                 Button copyButton = new Button("📋");
@@ -179,12 +181,12 @@ public class CredentialsController {
                     clipboard.setContent(content);
                 });
 
-                toggleButton.setOnAction(e -> {
-                    visible = !visible;
-                    passwordLabel.setText(visible ? password : "••••••••");
-                });
+                passwordLabel.setText(item.isPasswordVisible() ? password : "••••••••");
 
-                passwordLabel.setText(visible ? password : "••••••••");
+                toggleButton.setOnAction(e -> {
+                    item.setPasswordVisible(!item.isPasswordVisible());
+                    passwordLabel.setText(item.isPasswordVisible() ? password : "••••••••");
+                });
 
                 setGraphic(container);
             }

@@ -21,6 +21,7 @@ public class HelloApplication extends Application {
         );
         stage.setTitle("Password Manager");
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
     }
 
