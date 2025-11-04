@@ -103,3 +103,10 @@
     -fx-border-color: #c8d0d8;
     -fx-padding: 20;
 }
+
+.security-notice {
+    -fx-text-fill: #666666;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+    -fx-padding: 10 0 0 0;
+}

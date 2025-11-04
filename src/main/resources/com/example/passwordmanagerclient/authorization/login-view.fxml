@@ -19,4 +19,10 @@
     <Button text="Switch to Register" fx:id="switchRegisterButton" onAction="#onSwitchToRegister" style="-fx-font-size: 11px;"/>
 
     <Label fx:id="statusLabel"/>
+    <VBox alignment="CENTER" spacing="2">
+        <Label text="This app has been built with modern security practices in mind, but has not yet been independently audited."
+               styleClass="security-notice"/>
+        <Label text="Use at your own discretion."
+               styleClass="security-notice"/>
+    </VBox>
 </VBox>
