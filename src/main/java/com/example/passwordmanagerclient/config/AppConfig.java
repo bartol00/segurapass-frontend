@@ -2,6 +2,7 @@ package com.example.passwordmanagerclient.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.Properties;
 
 public class AppConfig {
@@ -17,6 +18,14 @@ public class AppConfig {
 
     public static String getBackendUrl() {
         return properties.getProperty("backend.url");
+    }
+
+    public static String getCurrentVersionNumber() {
+        return properties.getProperty("version.current");
+    }
+
+    public static LocalDate getCurrentVersionDate() {
+        return LocalDate.parse(properties.getProperty("version.date"));
     }
 
     public static int getTimeoutSeconds() {

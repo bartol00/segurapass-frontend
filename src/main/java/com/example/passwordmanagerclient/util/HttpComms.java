@@ -86,6 +86,15 @@ public class HttpComms {
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
+    public static HttpResponse<String> sendGetRequest(String endpoint) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(AppConfig.getBackendUrl() + endpoint))
+                .GET()
+                .build();
+
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
     public static HttpResponse<String> sendPostRequest(Object dto, String endpoint) throws IOException, InterruptedException {
         String jsonBody = mapper.writeValueAsString(dto);
 
