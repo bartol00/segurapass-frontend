@@ -6,6 +6,7 @@ import com.example.passwordmanagerclient.util.AppContext;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class HelloApplication extends Application {
@@ -19,7 +20,14 @@ public class HelloApplication extends Application {
         scene.getStylesheets().add(
                 SceneManager.class.getResource("/com/example/passwordmanagerclient/style/app.css").toExternalForm()
         );
-        stage.setTitle("Password Manager");
+
+        stage.setTitle("SeguraPass");
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logo16.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logo32.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logo64.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logo128.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logo256.png")));
+
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.show();

@@ -74,7 +74,7 @@ public class VersionCheckController {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Network Error");
                     alert.setHeaderText("Could not check for updates");
-                    alert.setContentText("Starting anyway...");
+                    alert.setContentText("Closing application...");
                     alert.showAndWait();
                     System.exit(0);
                 });
