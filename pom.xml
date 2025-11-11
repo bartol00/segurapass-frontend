@@ -12,19 +12,24 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.12.1</junit.version>
+        <javafx.version>17.0.14</javafx.version>
+        <main.class>com.example.passwordmanagerclient.HelloApplication</main.class>
     </properties>
 
     <dependencies>
+        <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>17.0.14</version>
+            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>17.0.14</version>
+            <version>${javafx.version}</version>
         </dependency>
+
+        <!-- ControlsFX, ValidatorFX, Ikonli, BootstrapFX -->
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
@@ -51,6 +56,41 @@
             <artifactId>bootstrapfx-core</artifactId>
             <version>0.4.0</version>
         </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.42</version>
+        </dependency>
+
+        <!-- Jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.20.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.20.0</version>
+        </dependency>
+
+        <!-- BouncyCastle -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>1.82</version>
+        </dependency>
+
+        <!-- JSON -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20250517</version>
+        </dependency>
+
+        <!-- JUnit -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -63,39 +103,11 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.42</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.20.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.20.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk18on</artifactId>
-            <version>1.82</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20250517</version>
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -103,26 +115,58 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.42</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
+            <!-- JavaFX Maven Plugin (optional, for running) -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>
-                                com.example.passwordmanagerclient/com.example.passwordmanagerclient.HelloApplication
-                            </mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
-                            <noManPages>true</noManPages>
-                            <stripDebug>true</stripDebug>
-                            <noHeaderFiles>true</noHeaderFiles>
+                            <mainClass>${main.class}</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Maven Shade Plugin (fat JAR) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${main.class}</mainClass>
+                                </transformer>
+                            </transformers>
                         </configuration>
                     </execution>
                 </executions>

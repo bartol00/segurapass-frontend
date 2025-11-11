@@ -30,9 +30,8 @@ public class DeviceIdManager {
     }
 
     public static Path getAppDataFolder() {
-        String userHome = System.getProperty("user.home");
-        return Paths.get(userHome, APP_FOLDER);
-//        String appData = System.getenv("APPDATA");
-//        return Paths.get(appData, "PasswordManager");
+//        String userHome = System.getProperty("user.home");
+//        return Paths.get(userHome, APP_FOLDER);
+        return Paths.get(System.getenv("APPDATA"), "SeguraPass");
     }
 }

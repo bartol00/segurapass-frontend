@@ -13,6 +13,7 @@ public class VersionService {
             HttpResponse<String> response = HttpComms.sendGetRequest("/api/versions/latest");
             return DtoHandler.parseToDto(response, VersionInfo.class);
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
