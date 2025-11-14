@@ -46,7 +46,8 @@ jpackage --input target --name SeguraPass ^
   --main-jar password-manager-client-1.0-SNAPSHOT.jar ^
   --main-class com.example.passwordmanagerclient.HelloApplication ^
   --type app-image ^
-  --runtime-image runtime
+  --runtime-image runtime ^
+  --icon C:\Users\Bartol\Desktop\password-manager-frontend\icon.ico
 if errorlevel 1 (
     echo [ERROR] jpackage failed!
     pause
