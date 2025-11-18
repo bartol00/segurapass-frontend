@@ -16,7 +16,7 @@ import java.util.*;
 public final class PrivateKeyLoader {
 
     private static final int AES_KEY_SIZE = 256;
-    private static final int GCM_TAG_LENGTH = 128; // bits
+    private static final int GCM_TAG_LENGTH = 128;
 
     private static final int ARGON2_ITERATIONS = 3;
     private static final int ARGON2_MEMORY_KB = 64 * 1024;
