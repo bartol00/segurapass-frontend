@@ -1,6 +1,7 @@
 package com.example.passwordmanagerclient.controller.authorization;
 
 import com.example.passwordmanagerclient.controller.SceneManager;
+import com.example.passwordmanagerclient.controller.deletion.RemoteDeletionController;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.util.OperationResult;
 import javafx.fxml.FXML;
@@ -87,6 +88,40 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    protected void onOpenRemoteDelete() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/deletion/remote-deletion-view.fxml"));
+
+            Stage dialogStage = new Stage();
+            Scene dialogScene = new Scene(loader.load());
+            dialogScene.getStylesheets().add(getClass()
+                    .getResource("/com/example/passwordmanagerclient/style/app.css")
+                    .toExternalForm()
+            );
+            dialogStage.setScene(dialogScene);
+
+            dialogStage.setTitle("Remotely Delete Account");
+            dialogStage.setResizable(false);
+            dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+
+            Stage parentStage = (Stage) statusLabel.getScene().getWindow();
+            dialogStage.initOwner(parentStage);
+
+            RemoteDeletionController controller = loader.getController();
+            controller.setLoginController(this);
+
+            dialogStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeStatusLabel(String message) {
+        statusLabel.setStyle("-fx-text-fill: green;");
+        statusLabel.setText(message);
     }
 
     private void switchToCredentialsView() {

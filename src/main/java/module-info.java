@@ -20,18 +20,23 @@ module com.example.passwordmanagerclient {
     opens com.example.passwordmanagerclient to javafx.fxml;
     opens com.example.passwordmanagerclient.controller.authorization to javafx.fxml;
     opens com.example.passwordmanagerclient.controller.credentials to javafx.fxml;
+    opens com.example.passwordmanagerclient.controller.deletion to javafx.fxml;
     opens com.example.passwordmanagerclient.controller.versions to javafx.fxml;
 
     opens com.example.passwordmanagerclient.api.authorization to com.fasterxml.jackson.databind;
     opens com.example.passwordmanagerclient.api.credentials to com.fasterxml.jackson.databind;
+    opens com.example.passwordmanagerclient.api.deletion to javafx.fxml;
     opens com.example.passwordmanagerclient.api.error to com.fasterxml.jackson.databind;
     opens com.example.passwordmanagerclient.api.versions to com.fasterxml.jackson.databind;
 
     exports com.example.passwordmanagerclient;
     exports com.example.passwordmanagerclient.controller.authorization;
+    exports com.example.passwordmanagerclient.controller.deletion;
     exports com.example.passwordmanagerclient.controller.credentials;
     exports com.example.passwordmanagerclient.controller.versions;
+
     exports com.example.passwordmanagerclient.api.authorization;
     exports com.example.passwordmanagerclient.api.credentials;
+    exports com.example.passwordmanagerclient.api.deletion;
     exports com.example.passwordmanagerclient.api.versions;
 }

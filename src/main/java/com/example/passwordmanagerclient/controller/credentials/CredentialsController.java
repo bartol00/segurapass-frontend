@@ -3,6 +3,7 @@ package com.example.passwordmanagerclient.controller.credentials;
 import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
 import com.example.passwordmanagerclient.api.credentials.PagedResponse;
 import com.example.passwordmanagerclient.controller.SceneManager;
+import com.example.passwordmanagerclient.controller.deletion.AuthorizedDeletionController;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
@@ -37,6 +38,7 @@ public class CredentialsController {
     @FXML private Button prevButton;
     @FXML private Button nextButton;
     @FXML private Button logoutButton;
+    @FXML private Button deleteAccountButton;
     @FXML private Label pageLabel;
     @FXML private ComboBox<Integer> pageSizeCombo;
 
@@ -387,6 +389,38 @@ public class CredentialsController {
 
             DeleteConfirmationController controller = loader.getController();
             controller.loadCredential(credentialId);
+            controller.setParentController(this);
+
+            dialogStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            onLogout();
+        }
+    }
+
+    @FXML
+    private void onDeleteAccount() {
+        try {
+            TokenManager.ensureValidJwt();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/deletion/authorized-deletion-view.fxml"));
+
+            Stage dialogStage = new Stage();
+            Scene dialogScene = new Scene(loader.load());
+            dialogScene.getStylesheets().add(getClass()
+                    .getResource("/com/example/passwordmanagerclient/style/app.css")
+                    .toExternalForm()
+            );
+            dialogStage.setScene(dialogScene);
+
+            dialogStage.setTitle("Delete Account");
+            dialogStage.setResizable(false);
+            dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+
+            Stage parentStage = (Stage) credentialsTable.getScene().getWindow();
+            dialogStage.initOwner(parentStage);
+
+            AuthorizedDeletionController controller = loader.getController();
             controller.setParentController(this);
 
             dialogStage.showAndWait();

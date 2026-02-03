@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.passwordmanagerclient.controller.deletion.RemoteDeletionController"
+            prefWidth="400" prefHeight="250"
+            style="-fx-padding: 15; -fx-background-color: white;">
+
+    <top>
+        <Label text="Please enter the email address of the account to be deleted:"
+               wrapText="true"
+               style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+    </top>
+
+    <center>
+        <TextField fx:id="emailField" promptText="Email" />
+    </center>
+
+    <bottom>
+        <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
+            <Button fx:id="sendButton" text="Send email"
+                    style="-fx-background-color: green; -fx-text-fill: white;"
+                    onAction="#onSend"/>
+            <Button fx:id="cancelButton" text="Cancel"
+                    style="-fx-background-color: gray; -fx-text-fill: white;"
+                    onAction="#onCancel"/>
+        </HBox>
+    </bottom>
+</BorderPane>
+

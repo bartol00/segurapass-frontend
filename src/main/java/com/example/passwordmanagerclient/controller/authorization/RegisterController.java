@@ -1,9 +1,12 @@
 package com.example.passwordmanagerclient.controller.authorization;
 
 import com.example.passwordmanagerclient.controller.SceneManager;
+import com.example.passwordmanagerclient.controller.deletion.RemoteDeletionController;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.util.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -25,6 +28,7 @@ public class RegisterController {
     @FXML private Label passwordMatchReq;
     @FXML private Button registerButton;
     @FXML private Button switchLoginButton;
+    @FXML private Button remoteDeleteButton;
     @FXML private Label statusLabel;
 
     private static final Pattern LOWERCASE = Pattern.compile(".*[a-z].*");
@@ -167,5 +171,39 @@ public class RegisterController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    protected void onOpenRemoteDelete() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/deletion/remote-deletion-view.fxml"));
+
+            Stage dialogStage = new Stage();
+            Scene dialogScene = new Scene(loader.load());
+            dialogScene.getStylesheets().add(getClass()
+                    .getResource("/com/example/passwordmanagerclient/style/app.css")
+                    .toExternalForm()
+            );
+            dialogStage.setScene(dialogScene);
+
+            dialogStage.setTitle("Remotely Delete Account");
+            dialogStage.setResizable(false);
+            dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+
+            Stage parentStage = (Stage) statusLabel.getScene().getWindow();
+            dialogStage.initOwner(parentStage);
+
+            RemoteDeletionController controller = loader.getController();
+            controller.setRegisterController(this);
+
+            dialogStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeStatusLabel(String message) {
+        statusLabel.setStyle("-fx-text-fill: green;");
+        statusLabel.setText(message);
     }
 }

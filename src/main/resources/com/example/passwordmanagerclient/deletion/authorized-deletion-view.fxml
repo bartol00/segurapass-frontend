@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.passwordmanagerclient.controller.deletion.AuthorizedDeletionController"
+            prefWidth="550" prefHeight="350"
+            style="-fx-padding: 15; -fx-background-color: white;">
+
+    <Label text="Enter your master password:"
+           wrapText="true"
+           style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+    <PasswordField fx:id="masterPassword" promptText="Master Password" />
+
+    <Label fx:id="statusLabel"/>
+    <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
+        <Button fx:id="deleteButton" text="Delete Account"
+                style="-fx-background-color: red; -fx-text-fill: white;"
+                onAction="#onDelete"/>
+        <Button fx:id="cancelButton" text="Cancel"
+                style="-fx-background-color: gray; -fx-text-fill: white;"
+                onAction="#onCancel"/>
+    </HBox>
+</VBox>
+

@@ -17,6 +17,7 @@
 
     <Button text="Login" fx:id="loginButton" onAction="#onLoginClick" maxWidth="120" disable="true"/>
     <Button text="Switch to Register" fx:id="switchRegisterButton" onAction="#onSwitchToRegister" style="-fx-font-size: 11px;"/>
+    <Button text="Remotely Delete Account" fx:id="remoteDeleteButton" onAction="#onOpenRemoteDelete" style="-fx-background-color: red; -fx-font-size: 11px;"/>
 
     <Label fx:id="statusLabel"/>
     <VBox alignment="CENTER" spacing="2">
