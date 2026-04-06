@@ -1,6 +1,6 @@
 package com.example.passwordmanagerclient.util;
 
-import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
+import com.segurapass.model.credentials.CredentialsResp;
 import lombok.Getter;
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;

@@ -1,13 +1,13 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
-import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
-import com.example.passwordmanagerclient.api.credentials.PagedResponse;
 import com.example.passwordmanagerclient.controller.SceneManager;
 import com.example.passwordmanagerclient.controller.deletion.AuthorizedDeletionController;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
+import com.segurapass.model.credentials.CredentialsResp;
+import com.segurapass.model.credentials.PagedResponse;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

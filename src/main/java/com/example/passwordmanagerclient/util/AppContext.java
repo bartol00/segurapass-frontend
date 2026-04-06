@@ -1,9 +1,9 @@
 package com.example.passwordmanagerclient.util;
 
-import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
 import com.example.passwordmanagerclient.config.AppConfig;
 import com.segurapass.ApiClient;
 import com.segurapass.SegurapassClient;
+import com.segurapass.model.credentials.CredentialsResp;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -87,6 +87,6 @@ public class AppContext {
             credentialsCache.clear();
         }
         credentialsCache = null;
-        segurapassClient = null;
+        segurapassClient.setJwt(null);
     }
 }
