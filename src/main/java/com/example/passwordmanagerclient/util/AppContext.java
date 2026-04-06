@@ -1,6 +1,9 @@
 package com.example.passwordmanagerclient.util;
 
 import com.example.passwordmanagerclient.api.credentials.CredentialsResp;
+import com.example.passwordmanagerclient.config.AppConfig;
+import com.segurapass.ApiClient;
+import com.segurapass.SegurapassClient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,9 +47,15 @@ public class AppContext {
 
     private static char[] masterPassword;
 
+    @Getter
+    @Setter
+    private static SegurapassClient segurapassClient;
+
 
     public static void init() {
         deviceId = UUID.fromString(DeviceIdManager.getDeviceId());
+        ApiClient apiClient = new ApiClient(AppConfig.getBackendUrl());
+        segurapassClient = new SegurapassClient(apiClient);
     }
 
     public static void setMasterPassword(String pwd) {
@@ -78,5 +87,6 @@ public class AppContext {
             credentialsCache.clear();
         }
         credentialsCache = null;
+        segurapassClient = null;
     }
 }

@@ -1,9 +1,5 @@
 package com.example.passwordmanagerclient.service;
 
-import com.example.passwordmanagerclient.api.authorization.LoginCompleteReq;
-import com.example.passwordmanagerclient.api.authorization.LoginCompleteResp;
-import com.example.passwordmanagerclient.api.authorization.LoginStartReq;
-import com.example.passwordmanagerclient.api.authorization.LoginStartResp;
 import com.example.passwordmanagerclient.api.deletion.AuthorizedDeletionCompleteReq;
 import com.example.passwordmanagerclient.api.deletion.AuthorizedDeletionStartReq;
 import com.example.passwordmanagerclient.api.deletion.AuthorizedDeletionStartResp;

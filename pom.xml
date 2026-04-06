@@ -10,13 +10,23 @@
     <name>password-manager-client</name>
 
     <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.12.1</junit.version>
         <javafx.version>17.0.14</javafx.version>
+        <segurapass.version>1.0-SNAPSHOT</segurapass.version>
         <main.class>com.example.passwordmanagerclient.HelloApplication</main.class>
     </properties>
 
     <dependencies>
+        <!-- SeguraPass -->
+        <dependency>
+            <groupId>com.segurapass</groupId>
+            <artifactId>segurapass-sdk</artifactId>
+            <version>${segurapass.version}</version>
+        </dependency>
+
         <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
