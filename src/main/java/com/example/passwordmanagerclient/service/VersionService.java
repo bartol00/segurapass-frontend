@@ -1,21 +1,21 @@
 package com.example.passwordmanagerclient.service;
 
-import com.example.passwordmanagerclient.api.versions.VersionInfo;
-import com.example.passwordmanagerclient.util.DtoHandler;
-import com.example.passwordmanagerclient.util.HttpComms;
-
-import java.net.http.HttpResponse;
+import com.example.passwordmanagerclient.util.AppContext;
+import com.segurapass.model.versions.VersionInfo;
 
 public class VersionService {
 
     public static VersionInfo getVersionInfo() {
         try {
-            HttpResponse<String> response = HttpComms.sendGetRequest("/api/versions/latest");
-            return DtoHandler.parseToDto(response, VersionInfo.class);
+            return version().getVersionInfo();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return null;
         }
+    }
+
+    private static com.segurapass.service.VersionService version() {
+        return AppContext.getSegurapassClient().version();
     }
 
 }

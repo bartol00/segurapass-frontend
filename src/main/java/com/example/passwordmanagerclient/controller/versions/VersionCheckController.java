@@ -1,9 +1,9 @@
 package com.example.passwordmanagerclient.controller.versions;
 
-import com.example.passwordmanagerclient.api.versions.VersionInfo;
 import com.example.passwordmanagerclient.config.AppConfig;
 import com.example.passwordmanagerclient.controller.SceneManager;
 import com.example.passwordmanagerclient.service.VersionService;
+import com.segurapass.model.versions.VersionInfo;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
