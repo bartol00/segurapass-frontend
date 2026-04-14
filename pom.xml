@@ -6,7 +6,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>password-manager-client</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
     <name>password-manager-client</name>
 
     <properties>
