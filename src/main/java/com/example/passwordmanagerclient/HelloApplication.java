@@ -1,6 +1,6 @@
 package com.example.passwordmanagerclient;
 
-import com.example.passwordmanagerclient.controller.SceneManager;
+import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.util.AppContext;
 import javafx.application.Application;
@@ -15,10 +15,13 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws Exception {
         AppContext.init();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/versions/version-check-view.fxml"));
+        StageManager.init(stage);
+
+        FXMLLoader loader = new FXMLLoader(getClass()
+                .getResource("/com/example/passwordmanagerclient/versions/version-check-view.fxml"));
         Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(
-                SceneManager.class.getResource("/com/example/passwordmanagerclient/style/app.css").toExternalForm()
+                StageManager.class.getResource("/com/example/passwordmanagerclient/style/app.css").toExternalForm()
         );
 
         stage.setTitle("SeguraPass");

@@ -1,12 +1,13 @@
 package com.example.passwordmanagerclient.util;
 
 import com.example.passwordmanagerclient.config.AppConfig;
-import com.segurapass.ApiClient;
+import com.segurapass.api.ApiClient;
 import com.segurapass.SegurapassClient;
 import com.segurapass.model.credentials.CredentialsResp;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.security.PublicKey;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,10 @@ public class AppContext {
     @Getter
     @Setter
     private static SegurapassClient segurapassClient;
+
+    @Getter
+    @Setter
+    private static PublicKey publicKey;
 
 
     public static void init() {

@@ -4,6 +4,7 @@ import com.example.passwordmanagerclient.util.*;
 import com.segurapass.exception.SdkException;
 import com.segurapass.service.AuthorizationService;
 import com.segurapass.model.authorization.*;
+import com.segurapass.service.KeyService;
 
 import java.time.Instant;
 
@@ -24,19 +25,25 @@ public class AuthService {
         try {
             LoginCompleteResp loginCompleteResp = auth().login(email, masterPassword, AppContext.getDeviceId());
 
-            Instant jwtExpiry = TokenManager.getJwtExpiry(loginCompleteResp.getAccessToken());
+            String accessToken = loginCompleteResp.getAccessToken();
+
+            if (!keys().isValid(accessToken, AppContext.getPublicKey())) {
+                return new OperationResult("Could not verify JWT", false);
+            }
+
+            Instant jwtExpiry = TokenManager.getJwtExpiry(accessToken);
             if (jwtExpiry == null) {
                 return new OperationResult("Could not get expiry time from JWT", false);
             }
 
             AppContext.setEmail(email);
-            AppContext.setJwtToken(loginCompleteResp.getAccessToken());
+            AppContext.setJwtToken(accessToken);
             AppContext.setJwtExpiry(jwtExpiry);
             AppContext.setRefreshToken(loginCompleteResp.getRefreshToken());
             AppContext.setRefreshTokenExpiry(loginCompleteResp.getRefreshTokenExpiryTime());
             AppContext.setMasterPassword(masterPassword);
             AppContext.setSaltKey(loginCompleteResp.getSaltKey());
-            AppContext.getSegurapassClient().setJwt(loginCompleteResp.getAccessToken());
+            AppContext.getSegurapassClient().setJwt(accessToken);
 
             return new OperationResult("Login successful", true);
         } catch (SdkException e) {
@@ -50,14 +57,20 @@ public class AuthService {
         try {
             RefreshResp refreshResp = auth().refreshJwt(AppContext.getEmail(), AppContext.getDeviceId(), AppContext.getRefreshToken());
 
-            Instant jwtExpiry = TokenManager.getJwtExpiry(refreshResp.getAccessToken());
+            String accessToken = refreshResp.getAccessToken();
+
+            if (!keys().isValid(accessToken, AppContext.getPublicKey())) {
+                return new OperationResult("Could not verify JWT", false);
+            }
+
+            Instant jwtExpiry = TokenManager.getJwtExpiry(accessToken);
             if (jwtExpiry == null) {
                 return new OperationResult("Could not get expiry time from JWT", false);
             }
 
-            AppContext.setJwtToken(refreshResp.getAccessToken());
+            AppContext.setJwtToken(accessToken);
             AppContext.setJwtExpiry(jwtExpiry);
-            AppContext.getSegurapassClient().setJwt(refreshResp.getAccessToken());
+            AppContext.getSegurapassClient().setJwt(accessToken);
 
             return new OperationResult("Successfully refreshed JWT", true);
         } catch (SdkException e) {
@@ -79,5 +92,9 @@ public class AuthService {
 
     private static AuthorizationService auth() {
         return AppContext.getSegurapassClient().auth();
+    }
+
+    private static KeyService keys() {
+        return AppContext.getSegurapassClient().keys();
     }
 }

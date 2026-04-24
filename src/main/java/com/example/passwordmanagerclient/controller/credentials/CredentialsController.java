@@ -1,6 +1,6 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
-import com.example.passwordmanagerclient.controller.SceneManager;
+import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.controller.deletion.AuthorizedDeletionController;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.service.CredentialsService;
@@ -440,8 +440,7 @@ public class CredentialsController {
             logoutButton.setDisable(true);
             AuthService.logout();
             AppContext.clearSensitiveData();
-            Stage stage = (Stage) credentialsTable.getScene().getWindow();
-            SceneManager.switchScene(stage, "/com/example/passwordmanagerclient/authorization/login-view.fxml");
+            StageManager.switchScene("/com/example/passwordmanagerclient/authorization/login-view.fxml");
         } catch (Exception e) {
             e.printStackTrace();
         }
