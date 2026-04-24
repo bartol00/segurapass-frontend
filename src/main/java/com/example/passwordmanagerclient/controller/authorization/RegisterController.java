@@ -1,6 +1,6 @@
 package com.example.passwordmanagerclient.controller.authorization;
 
-import com.example.passwordmanagerclient.controller.SceneManager;
+import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.controller.deletion.RemoteDeletionController;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.util.*;
@@ -166,8 +166,7 @@ public class RegisterController {
     @FXML
     protected void onSwitchToLogin() {
         try {
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            SceneManager.switchScene(stage, "/com/example/passwordmanagerclient/authorization/login-view.fxml");
+            StageManager.switchScene("/com/example/passwordmanagerclient/authorization/login-view.fxml");
         } catch (Exception e) {
             e.printStackTrace();
         }

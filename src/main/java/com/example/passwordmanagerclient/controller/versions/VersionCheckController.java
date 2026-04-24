@@ -1,7 +1,7 @@
 package com.example.passwordmanagerclient.controller.versions;
 
 import com.example.passwordmanagerclient.config.AppConfig;
-import com.example.passwordmanagerclient.controller.SceneManager;
+import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.service.VersionService;
 import com.segurapass.model.versions.VersionInfo;
 import javafx.application.Platform;
@@ -23,47 +23,27 @@ public class VersionCheckController {
 
     @FXML
     public void initialize() {
+
         new Thread(() -> {
             try {
                 VersionInfo versionInfo = VersionService.getVersionInfo();
-                if (versionInfo == null) throw new Exception("Null version info");
 
-                String currentVersionNumber = AppConfig.getCurrentVersionNumber();
-                LocalDate currentVersionDate = AppConfig.getCurrentVersionDate();
+                if (versionInfo == null) {
+                    throw new RuntimeException("Null version info");
+                }
 
-                boolean upToDate = versionInfo.getVersionNumber().equals(currentVersionNumber)
-                        && versionInfo.getVersionDate().equals(currentVersionDate);
+                boolean upToDate =
+                        versionInfo.getVersionNumber().equals(AppConfig.getCurrentVersionNumber())
+                                && versionInfo.getVersionDate().equals(AppConfig.getCurrentVersionDate());
 
                 Platform.runLater(() -> {
+
                     if (upToDate) {
-                        SceneManager.switchScene(
-                                (Stage) progressIndicator.getScene().getWindow(),
-                                "/com/example/passwordmanagerclient/authorization/login-view.fxml"
+                        StageManager.switchScene(
+                                "/com/example/passwordmanagerclient/keys/key-loading.fxml"
                         );
                     } else {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/versions/update-dialog.fxml"));
-                        Parent root;
-                        try {
-                            root = loader.load();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                        UpdateDialogController ctrl = loader.getController();
-                        ctrl.setData(
-                                versionInfo.getVersionNumber(),
-                                versionInfo.getVersionDescription(),
-                                versionInfo.getDownloadUrl(),
-                                versionInfo.getVersionDate().toString()
-                        );
-
-                        Stage dialog = new Stage();
-                        dialog.initOwner(progressIndicator.getScene().getWindow());
-                        dialog.initModality(Modality.APPLICATION_MODAL);
-                        dialog.setTitle("Update Required");
-                        dialog.setResizable(false);
-                        dialog.setScene(new Scene(root));
-                        dialog.show();
+                        showUpdateDialog(versionInfo);
                     }
                 });
 
@@ -80,5 +60,33 @@ public class VersionCheckController {
                 });
             }
         }).start();
+    }
+
+    private void showUpdateDialog(VersionInfo versionInfo) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/passwordmanagerclient/versions/update-dialog.fxml")
+            );
+
+            Parent root = loader.load();
+
+            UpdateDialogController ctrl = loader.getController();
+            ctrl.setData(
+                    versionInfo.getVersionNumber(),
+                    versionInfo.getVersionDescription(),
+                    versionInfo.getDownloadUrl(),
+                    versionInfo.getVersionDate().toString()
+            );
+
+            Stage dialog = new Stage();
+            dialog.initOwner(progressIndicator.getScene().getWindow());
+            dialog.setTitle("Update Required");
+            dialog.setResizable(false);
+            dialog.setScene(new Scene(root));
+            dialog.show();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

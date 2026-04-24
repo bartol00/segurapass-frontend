@@ -7,15 +7,19 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public final class SceneManager {
+public final class StageManager {
 
-    private SceneManager() {}
+    private static Stage stage;
+
+    public static void init(Stage primaryStage) {
+        stage = primaryStage;
+    }
 
     /**
      * Switch scene with a fade transition.
      * Keeps previous window size and position.
      */
-    public static void switchScene(Stage stage, String fxmlPath) {
+    public static void switchScene(String fxmlPath) {
         try {
             // Save current stage dimensions and position
             double width = stage.getWidth();
@@ -23,11 +27,11 @@ public final class SceneManager {
             double x = stage.getX();
             double y = stage.getY();
 
-            FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
+            FXMLLoader loader = new FXMLLoader(StageManager.class.getResource(fxmlPath));
             Pane root = loader.load();
             Scene newScene = new Scene(root);
             newScene.getStylesheets().add(
-                    SceneManager.class.getResource("/com/example/passwordmanagerclient/style/app.css").toExternalForm()
+                    StageManager.class.getResource("/com/example/passwordmanagerclient/style/app.css").toExternalForm()
             );
 
             if (stage.getScene() != null) {
