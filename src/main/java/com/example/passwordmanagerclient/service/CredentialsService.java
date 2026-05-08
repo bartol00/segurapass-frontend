@@ -1,19 +1,19 @@
 package com.example.passwordmanagerclient.service;
 
+import xyz.segurapass.api.credentials.*;
 import com.example.passwordmanagerclient.util.*;
-import com.segurapass.model.credentials.*;
 
 import java.util.*;
 
 public class CredentialsService {
 
-    public static PagedResponse<CredentialsResp> getCredentials(int page, int size) {
+    public static PagedResponse<CredentialsRespSdk> getCredentials(int page, int size) {
         try {
-            PagedResponse<CredentialsResp> pagedResponse = credentials().getCredentials(page, size);
+            PagedResponse<CredentialsRespSdk> pagedResponse = credentials().getCredentials(page, size);
 
-            List<CredentialsResp> encryptedCredentials = pagedResponse.getContent();
+            List<CredentialsRespSdk> encryptedCredentials = pagedResponse.getContent();
 
-            List<CredentialsResp> decryptedCredentials = PrivateKeyLoader.decryptList(
+            List<CredentialsRespSdk> decryptedCredentials = PrivateKeyLoader.decryptList(
                     encryptedCredentials,
                     AppContext.getMasterPassword(),
                     AppContext.getSaltKey()
@@ -23,13 +23,13 @@ public class CredentialsService {
             return pagedResponse;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            PagedResponse<CredentialsResp> emptyPage = new PagedResponse<>();
+            PagedResponse<CredentialsRespSdk> emptyPage = new PagedResponse<>();
             emptyPage.setContent(Collections.emptyList());
             return emptyPage;
         }
     }
 
-    public static CredentialsResp addCredential(String website, String username, String password) {
+    public static CredentialsRespSdk addCredential(String website, String username, String password) {
         try {
             PrivateKeyLoader.EncryptionResult encryptionResult = PrivateKeyLoader.encryptCredential(
                     website,
@@ -43,7 +43,7 @@ public class CredentialsService {
             PrivateKeyLoader.EncryptionFieldResult usernameResult = encryptionResult.getUsernameField();
             PrivateKeyLoader.EncryptionFieldResult passwordResult = encryptionResult.getPasswordField();
 
-            CredentialsResp encryptedCredentials = credentials().addCredential(
+            CredentialsRespSdk encryptedCredentials = credentials().addCredential(
                     websiteResult.getCipherB64(),
                     websiteResult.getIvB64(),
                     usernameResult.getCipherB64(),
@@ -64,7 +64,7 @@ public class CredentialsService {
         }
     }
 
-    public static CredentialsResp updateCredentials(String credentialId, String website, String username, String password) {
+    public static CredentialsRespSdk updateCredentials(String credentialId, String website, String username, String password) {
         try {
             String websiteCipher = null;
             String websiteIv = null;
@@ -101,7 +101,7 @@ public class CredentialsService {
                 passwordIv = encryptedPassword.getIvB64();
             }
 
-            CredentialsResp encryptedCredentials = credentials().updateCredential(
+            CredentialsRespSdk encryptedCredentials = credentials().updateCredential(
                     websiteCipher,
                     websiteIv,
                     usernameCipher,

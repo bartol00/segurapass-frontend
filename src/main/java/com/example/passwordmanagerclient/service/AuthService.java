@@ -1,9 +1,9 @@
 package com.example.passwordmanagerclient.service;
 
+import xyz.segurapass.api.authorization.*;
 import com.example.passwordmanagerclient.util.*;
 import com.segurapass.exception.SdkException;
 import com.segurapass.service.AuthorizationService;
-import com.segurapass.model.authorization.*;
 import com.segurapass.service.KeyService;
 
 import java.time.Instant;

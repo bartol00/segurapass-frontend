@@ -1,9 +1,9 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
+import xyz.segurapass.api.credentials.CredentialsRespSdk;
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
-import com.segurapass.model.credentials.CredentialsResp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
@@ -37,7 +37,7 @@ public class DeleteConfirmationController {
 
         CredentialsService.deleteCredentials(credentialId);
 
-        List<CredentialsResp> cache = AppContext.getCredentialsCache();
+        List<CredentialsRespSdk> cache = AppContext.getCredentialsCache();
         cache.removeIf(c -> c.getCredentialsId().equals(UUID.fromString(credentialId)));
 
         this.credentialId = null;

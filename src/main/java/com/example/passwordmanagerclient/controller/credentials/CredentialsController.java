@@ -1,13 +1,13 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
+import xyz.segurapass.api.credentials.CredentialsRespSdk;
+import xyz.segurapass.api.credentials.PagedResponse;
 import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.controller.deletion.AuthorizedDeletionController;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
-import com.segurapass.model.credentials.CredentialsResp;
-import com.segurapass.model.credentials.PagedResponse;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,12 +28,12 @@ import java.util.List;
 
 public class CredentialsController {
 
-    @FXML private TableView<CredentialsResp> credentialsTable;
-    @FXML private TableColumn<CredentialsResp, String> websiteColumn;
-    @FXML private TableColumn<CredentialsResp, String> usernameColumn;
-    @FXML private TableColumn<CredentialsResp, String> passwordColumn;
-    @FXML private TableColumn<CredentialsResp, String> lastUpdatedColumn;
-    @FXML private TableColumn<CredentialsResp, Void> actionsColumn;
+    @FXML private TableView<CredentialsRespSdk> credentialsTable;
+    @FXML private TableColumn<CredentialsRespSdk, String> websiteColumn;
+    @FXML private TableColumn<CredentialsRespSdk, String> usernameColumn;
+    @FXML private TableColumn<CredentialsRespSdk, String> passwordColumn;
+    @FXML private TableColumn<CredentialsRespSdk, String> lastUpdatedColumn;
+    @FXML private TableColumn<CredentialsRespSdk, Void> actionsColumn;
 
     @FXML private Button prevButton;
     @FXML private Button nextButton;
@@ -63,7 +63,7 @@ public class CredentialsController {
     }
 
     public void refreshTable() {
-        List<CredentialsResp> cache = AppContext.getCredentialsCache();
+        List<CredentialsRespSdk> cache = AppContext.getCredentialsCache();
         if (cache == null || cache.isEmpty()) {
             credentialsTable.setItems(FXCollections.observableArrayList());
             pageLabel.setText("No credentials found");
@@ -72,7 +72,7 @@ public class CredentialsController {
             return;
         }
 
-        cache.sort(Comparator.comparing(CredentialsResp::getWebsite, String.CASE_INSENSITIVE_ORDER));
+        cache.sort(Comparator.comparing(CredentialsRespSdk::getWebsite, String.CASE_INSENSITIVE_ORDER));
 
         int fromIndex = currentPage * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, cache.size());
@@ -92,12 +92,12 @@ public class CredentialsController {
     }
 
     private void preloadCredentials() {
-        List<CredentialsResp> allCredentials = new ArrayList<>();
+        List<CredentialsRespSdk> allCredentials = new ArrayList<>();
         int page = 0;
         int size = 100;
 
         while (true) {
-            PagedResponse<CredentialsResp> response = CredentialsService.getCredentials(page, size);
+            PagedResponse<CredentialsRespSdk> response = CredentialsService.getCredentials(page, size);
             allCredentials.addAll(response.getContent());
             if (response.getContent().size() < size) break;
             page++;
@@ -158,7 +158,7 @@ public class CredentialsController {
                     return;
                 }
 
-                CredentialsResp item = getTableView().getItems().get(getIndex());
+                CredentialsRespSdk item = getTableView().getItems().get(getIndex());
 
                 Label passwordLabel = new Label();
 

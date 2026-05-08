@@ -1,9 +1,9 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
+import xyz.segurapass.api.credentials.CredentialsRespSdk;
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
-import com.segurapass.model.credentials.CredentialsResp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -43,7 +43,7 @@ public class CredentialEditController {
             return;
         }
 
-        CredentialsResp credentialsResp = CredentialsService.updateCredentials(
+        CredentialsRespSdk credentialsResp = CredentialsService.updateCredentials(
                 credentialId,
                 websiteField.getText(),
                 usernameField.getText(),
@@ -51,8 +51,8 @@ public class CredentialEditController {
         );
 
         if (credentialsResp != null) {
-            List<CredentialsResp> cache = AppContext.getCredentialsCache();
-            List<CredentialsResp> updatedCache = cache.stream()
+            List<CredentialsRespSdk> cache = AppContext.getCredentialsCache();
+            List<CredentialsRespSdk> updatedCache = cache.stream()
                     .map(c -> c.getCredentialsId().equals(credentialsResp.getCredentialsId()) ? credentialsResp : c)
                     .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
 
