@@ -1,9 +1,9 @@
 package com.example.passwordmanagerclient.controller.versions;
 
+import xyz.segurapass.api.versions.VersionInfo;
 import com.example.passwordmanagerclient.config.AppConfig;
 import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.service.VersionService;
-import com.segurapass.model.versions.VersionInfo;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,11 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.time.LocalDate;
 
 public class VersionCheckController {
 

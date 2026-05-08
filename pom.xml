@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- SeguraPass -->
-        <segurapass.version>1.4.0</segurapass.version>
+        <segurapass-sdk.version>1.5.0</segurapass-sdk.version>
 
         <!-- Third Party -->
         <junit.version>5.12.1</junit.version>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>xyz.segurapass</groupId>
             <artifactId>segurapass-sdk</artifactId>
-            <version>${segurapass.version}</version>
+            <version>${segurapass-sdk.version}</version>
         </dependency>
 
         <!-- JavaFX -->

@@ -1,6 +1,6 @@
 package com.example.passwordmanagerclient.util;
 
-import com.segurapass.model.credentials.CredentialsResp;
+import xyz.segurapass.api.credentials.CredentialsRespSdk;
 import lombok.Getter;
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
@@ -80,12 +80,12 @@ public final class PrivateKeyLoader {
         return encryptField(plaintext, secretKey);
     }
 
-    public static List<CredentialsResp> decryptList(List<CredentialsResp> encryptedCredentials, char[] masterPassword, String salt) throws Exception {
+    public static List<CredentialsRespSdk> decryptList(List<CredentialsRespSdk> encryptedCredentials, char[] masterPassword, String salt) throws Exception {
         SecretKey secretKey = deriveKeyFromPassword(masterPassword, salt.getBytes());
 
-        List<CredentialsResp> decryptedCredentials = new ArrayList<>();
+        List<CredentialsRespSdk> decryptedCredentials = new ArrayList<>();
 
-        for (CredentialsResp encryptedCredential : encryptedCredentials) {
+        for (CredentialsRespSdk encryptedCredential : encryptedCredentials) {
             String encryptedWebsite = encryptedCredential.getWebsite();
             String websiteIv = encryptedCredential.getIvWebsite();
 
@@ -109,7 +109,7 @@ public final class PrivateKeyLoader {
         return decryptedCredentials;
     }
 
-    public static CredentialsResp decryptCredential(CredentialsResp encryptedCredential, char[] masterPassword, String salt) throws Exception {
+    public static CredentialsRespSdk decryptCredential(CredentialsRespSdk encryptedCredential, char[] masterPassword, String salt) throws Exception {
         SecretKey secretKey = deriveKeyFromPassword(masterPassword, salt.getBytes());
 
         String encryptedWebsite = encryptedCredential.getWebsite();

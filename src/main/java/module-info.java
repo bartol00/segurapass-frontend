@@ -16,6 +16,7 @@ module com.example.passwordmanagerclient {
     requires java.desktop;
     requires segurapass.sdk;
     requires api.client;
+    requires segurapass.api;
 
     opens com.example.passwordmanagerclient to javafx.fxml;
     opens com.example.passwordmanagerclient.controller.authorization to javafx.fxml;

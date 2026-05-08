@@ -1,7 +1,7 @@
 package com.example.passwordmanagerclient.service;
 
+import xyz.segurapass.api.versions.VersionInfo;
 import com.example.passwordmanagerclient.util.AppContext;
-import com.segurapass.model.versions.VersionInfo;
 
 public class VersionService {
 

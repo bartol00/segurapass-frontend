@@ -1,9 +1,9 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
+import xyz.segurapass.api.credentials.CredentialsRespSdk;
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
-import com.segurapass.model.credentials.CredentialsResp;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -55,11 +55,11 @@ public class AddCredentialController {
             return;
         }
 
-        CredentialsResp credentialsResp = CredentialsService.addCredential(website, username, password);
+        CredentialsRespSdk credentialsRespSdk = CredentialsService.addCredential(website, username, password);
 
-        if (credentialsResp != null) {
-            List<CredentialsResp> cache = AppContext.getCredentialsCache();
-            cache.add(credentialsResp);
+        if (credentialsRespSdk != null) {
+            List<CredentialsRespSdk> cache = AppContext.getCredentialsCache();
+            cache.add(credentialsRespSdk);
 
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             stage.close();

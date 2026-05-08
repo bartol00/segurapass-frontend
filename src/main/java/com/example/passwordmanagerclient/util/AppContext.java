@@ -1,9 +1,9 @@
 package com.example.passwordmanagerclient.util;
 
+import xyz.segurapass.api.credentials.CredentialsRespSdk;
 import com.example.passwordmanagerclient.config.AppConfig;
 import com.segurapass.api.ApiClient;
 import com.segurapass.SegurapassClient;
-import com.segurapass.model.credentials.CredentialsResp;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,7 +44,7 @@ public class AppContext {
 
     @Getter
     @Setter
-    private static List<CredentialsResp> credentialsCache = new ArrayList<>();
+    private static List<CredentialsRespSdk> credentialsCache = new ArrayList<>();
 
     private static char[] masterPassword;
 
