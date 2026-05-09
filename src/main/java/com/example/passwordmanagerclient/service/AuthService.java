@@ -55,7 +55,7 @@ public class AuthService {
 
     public static OperationResult refreshJwt() {
         try {
-            RefreshResp refreshResp = auth().refreshJwt(AppContext.getEmail(), AppContext.getDeviceId(), AppContext.getRefreshToken());
+            RefreshResp refreshResp = auth().refreshJwt(AppContext.getRefreshToken());
 
             String accessToken = refreshResp.getAccessToken();
 
@@ -82,7 +82,7 @@ public class AuthService {
 
     public static void logout() {
         try {
-            auth().logout(AppContext.getEmail(), AppContext.getDeviceId(), AppContext.getRefreshToken());
+            auth().logout(AppContext.getRefreshToken());
         } catch (SdkException e) {
             System.out.println(e.getMessage());
         } catch (Exception e) {
