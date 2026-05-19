@@ -1,7 +1,7 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
-import xyz.segurapass.api.credentials.CredentialsRespSdk;
-import xyz.segurapass.api.credentials.PagedResponse;
+import com.example.passwordmanagerclient.controller.password_change.PasswordChangeController;
+import com.segurapass.models.credentials.DecryptedCredential;
 import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.controller.deletion.AuthorizedDeletionController;
 import com.example.passwordmanagerclient.service.AuthService;
@@ -22,22 +22,22 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class CredentialsController {
 
-    @FXML private TableView<CredentialsRespSdk> credentialsTable;
-    @FXML private TableColumn<CredentialsRespSdk, String> websiteColumn;
-    @FXML private TableColumn<CredentialsRespSdk, String> usernameColumn;
-    @FXML private TableColumn<CredentialsRespSdk, String> passwordColumn;
-    @FXML private TableColumn<CredentialsRespSdk, String> lastUpdatedColumn;
-    @FXML private TableColumn<CredentialsRespSdk, Void> actionsColumn;
+    @FXML private TableView<DecryptedCredential> credentialsTable;
+    @FXML private TableColumn<DecryptedCredential, String> websiteColumn;
+    @FXML private TableColumn<DecryptedCredential, String> usernameColumn;
+    @FXML private TableColumn<DecryptedCredential, String> passwordColumn;
+    @FXML private TableColumn<DecryptedCredential, String> lastUpdatedColumn;
+    @FXML private TableColumn<DecryptedCredential, Void> actionsColumn;
 
     @FXML private Button prevButton;
     @FXML private Button nextButton;
     @FXML private Button logoutButton;
+    @FXML private Button changePasswordButton;
     @FXML private Button deleteAccountButton;
     @FXML private Label pageLabel;
     @FXML private ComboBox<Integer> pageSizeCombo;
@@ -63,7 +63,7 @@ public class CredentialsController {
     }
 
     public void refreshTable() {
-        List<CredentialsRespSdk> cache = AppContext.getCredentialsCache();
+        List<DecryptedCredential> cache = AppContext.getCredentialsCache();
         if (cache == null || cache.isEmpty()) {
             credentialsTable.setItems(FXCollections.observableArrayList());
             pageLabel.setText("No credentials found");
@@ -72,7 +72,7 @@ public class CredentialsController {
             return;
         }
 
-        cache.sort(Comparator.comparing(CredentialsRespSdk::getWebsite, String.CASE_INSENSITIVE_ORDER));
+        cache.sort(Comparator.comparing(DecryptedCredential::getWebsite, String.CASE_INSENSITIVE_ORDER));
 
         int fromIndex = currentPage * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, cache.size());
@@ -92,17 +92,7 @@ public class CredentialsController {
     }
 
     private void preloadCredentials() {
-        List<CredentialsRespSdk> allCredentials = new ArrayList<>();
-        int page = 0;
-        int size = 100;
-
-        while (true) {
-            PagedResponse<CredentialsRespSdk> response = CredentialsService.getCredentials(page, size);
-            allCredentials.addAll(response.getContent());
-            if (response.getContent().size() < size) break;
-            page++;
-        }
-
+        List<DecryptedCredential> allCredentials = CredentialsService.getCredentials(0, 100);
         AppContext.setCredentialsCache(allCredentials);
     }
 
@@ -158,7 +148,7 @@ public class CredentialsController {
                     return;
                 }
 
-                CredentialsRespSdk item = getTableView().getItems().get(getIndex());
+                DecryptedCredential item = getTableView().getItems().get(getIndex());
 
                 Label passwordLabel = new Label();
 
@@ -421,6 +411,38 @@ public class CredentialsController {
             dialogStage.initOwner(parentStage);
 
             AuthorizedDeletionController controller = loader.getController();
+            controller.setParentController(this);
+
+            dialogStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            onLogout();
+        }
+    }
+
+    @FXML
+    private void onChangePassword() {
+        try {
+            TokenManager.ensureValidJwt();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/password_change/password-change-view.fxml"));
+
+            Stage dialogStage = new Stage();
+            Scene dialogScene = new Scene(loader.load());
+            dialogScene.getStylesheets().add(getClass()
+                    .getResource("/com/example/passwordmanagerclient/style/app.css")
+                    .toExternalForm()
+            );
+            dialogStage.setScene(dialogScene);
+
+            dialogStage.setTitle("Change Password");
+            dialogStage.setResizable(false);
+            dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+
+            Stage parentStage = (Stage) credentialsTable.getScene().getWindow();
+            dialogStage.initOwner(parentStage);
+
+            PasswordChangeController controller = loader.getController();
             controller.setParentController(this);
 
             dialogStage.showAndWait();

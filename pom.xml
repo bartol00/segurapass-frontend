@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- SeguraPass -->
-        <segurapass-sdk.version>1.6.1</segurapass-sdk.version>
+        <segurapass-sdk.version>2.0.0</segurapass-sdk.version>
 
         <!-- Third Party -->
         <junit.version>5.12.1</junit.version>
@@ -25,8 +25,8 @@
         <validatorfx.version>0.6.3</validatorfx.version>
         <ikonli-javafx.version>12.3.1</ikonli-javafx.version>
         <bootstrapfx-core.version>0.4.0</bootstrapfx-core.version>
-        <lombok.version>1.18.44</lombok.version>
-        <bcprov-jdk18on.version>1.82</bcprov-jdk18on.version>
+        <lombok.version>1.18.46</lombok.version>
+        <bcprov-jdk18on.version>1.84</bcprov-jdk18on.version>
         <json.version>20251224</json.version>
 
         <!-- Plugins -->

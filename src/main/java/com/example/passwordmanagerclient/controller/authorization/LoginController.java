@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import static com.example.passwordmanagerclient.controller.FieldHelpers.*;
+
 public class LoginController {
 
     @FXML private TextField emailField;
@@ -39,10 +41,15 @@ public class LoginController {
         loginButton.setDisable(true);
         switchRegisterButton.setDisable(true);
 
+        char[] masterPasswordChars = extractPassword(masterPasswordField);
         javafx.concurrent.Task<OperationResult> task = new javafx.concurrent.Task<>() {
             @Override
             protected OperationResult call() {
-                return AuthService.loginSrp(email, password);
+                try {
+                    return AuthService.login(email, masterPasswordChars);
+                } finally {
+                    clearPassword(masterPasswordChars);
+                }
             }
         };
 

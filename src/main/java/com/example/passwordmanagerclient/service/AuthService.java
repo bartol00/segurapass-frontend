@@ -1,5 +1,6 @@
 package com.example.passwordmanagerclient.service;
 
+import com.segurapass.helpers.LoginSuccessObject;
 import xyz.segurapass.api.authorization.*;
 import com.example.passwordmanagerclient.util.*;
 import com.segurapass.exception.SdkException;
@@ -10,7 +11,7 @@ import java.time.Instant;
 
 public class AuthService {
 
-    public static OperationResult registerSrp(String email, String masterPassword) {
+    public static OperationResult register(String email, char[] masterPassword) {
         try {
             auth().register(email, masterPassword, AppContext.getDeviceId());
             return new OperationResult("Registration successful. Please verify the email address you entered before attempting to log in", true);
@@ -21,31 +22,26 @@ public class AuthService {
         }
     }
 
-    public static OperationResult loginSrp(String email, String masterPassword) {
+    public static OperationResult login(String email, char[] masterPassword) {
         try {
-            LoginCompleteResp loginCompleteResp = auth().login(email, masterPassword, AppContext.getDeviceId());
 
-            String accessToken = loginCompleteResp.getAccessToken();
+            LoginSuccessObject successObject = auth().login(email, masterPassword, AppContext.getDeviceId());
 
-            if (!keys().isValid(accessToken, AppContext.getPublicKey())) {
+            if (!keys().isValid(successObject.getAccessToken(), AppContext.getPublicKey())) {
                 return new OperationResult("Could not verify JWT", false);
             }
 
-            Instant jwtExpiry = TokenManager.getJwtExpiry(accessToken);
+            Instant jwtExpiry = TokenManager.getJwtExpiry(successObject.getAccessToken());
             if (jwtExpiry == null) {
                 return new OperationResult("Could not get expiry time from JWT", false);
             }
 
             AppContext.setEmail(email);
-            AppContext.setJwtToken(accessToken);
+            AppContext.setSession(successObject);
             AppContext.setJwtExpiry(jwtExpiry);
-            AppContext.setRefreshToken(loginCompleteResp.getRefreshToken());
-            AppContext.setRefreshTokenExpiry(loginCompleteResp.getRefreshTokenExpiryTime());
-            AppContext.setMasterPassword(masterPassword);
-            AppContext.setSaltKey(loginCompleteResp.getSaltKey());
-            AppContext.getSegurapassClient().setJwt(accessToken);
 
             return new OperationResult("Login successful", true);
+
         } catch (SdkException e) {
             return new OperationResult(e.getMessage(), false);
         } catch (Exception e) {

@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 
 import java.util.regex.Pattern;
 
+import static com.example.passwordmanagerclient.controller.FieldHelpers.*;
+
 public class RegisterController {
 
     @FXML private TextField emailField;
@@ -131,10 +133,15 @@ public class RegisterController {
         registerButton.setDisable(true);
         switchLoginButton.setDisable(true);
 
+        char[] masterPasswordChars = extractPassword(masterPasswordField);
         javafx.concurrent.Task<OperationResult> task = new javafx.concurrent.Task<>() {
             @Override
             protected OperationResult call() {
-                return AuthService.registerSrp(email, password);
+                try {
+                    return AuthService.register(email, masterPasswordChars);
+                } finally {
+                    clearPassword(masterPasswordChars);
+                }
             }
         };
 

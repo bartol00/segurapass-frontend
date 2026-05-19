@@ -1,6 +1,6 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
-import xyz.segurapass.api.credentials.CredentialsRespSdk;
+import com.segurapass.models.credentials.DecryptedCredential;
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
@@ -55,11 +55,11 @@ public class AddCredentialController {
             return;
         }
 
-        CredentialsRespSdk credentialsRespSdk = CredentialsService.addCredential(website, username, password);
+        DecryptedCredential decryptedCredential = CredentialsService.addCredential(website, username, password);
 
-        if (credentialsRespSdk != null) {
-            List<CredentialsRespSdk> cache = AppContext.getCredentialsCache();
-            cache.add(credentialsRespSdk);
+        if (decryptedCredential != null) {
+            List<DecryptedCredential> cache = AppContext.getCredentialsCache();
+            cache.add(decryptedCredential);
 
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             stage.close();

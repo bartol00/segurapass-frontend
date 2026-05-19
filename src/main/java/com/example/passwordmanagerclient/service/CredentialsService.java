@@ -1,5 +1,7 @@
 package com.example.passwordmanagerclient.service;
 
+import com.segurapass.models.credentials.DecryptedCredential;
+import com.segurapass.models.credentials.DecryptedCredentials;
 import xyz.segurapass.api.credentials.*;
 import com.example.passwordmanagerclient.util.*;
 
@@ -7,114 +9,60 @@ import java.util.*;
 
 public class CredentialsService {
 
-    public static PagedResponse<CredentialsRespSdk> getCredentials(int page, int size) {
+    public static List<DecryptedCredential> getCredentials(int page, int size) {
         try {
-            PagedResponse<CredentialsRespSdk> pagedResponse = credentials().getCredentials(page, size);
-
-            List<CredentialsRespSdk> encryptedCredentials = pagedResponse.getContent();
-
-            List<CredentialsRespSdk> decryptedCredentials = PrivateKeyLoader.decryptList(
-                    encryptedCredentials,
-                    AppContext.getMasterPassword(),
-                    AppContext.getSaltKey()
-            );
-
-            pagedResponse.setContent(decryptedCredentials);
-            return pagedResponse;
+            DecryptedCredentials decryptedCredentials = credentials().getCredentials(page, size, AppContext.getSession().getVaultKey());
+            return decryptedCredentials.getCredentials();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            PagedResponse<CredentialsRespSdk> emptyPage = new PagedResponse<>();
-            emptyPage.setContent(Collections.emptyList());
-            return emptyPage;
+            return new LinkedList<>();
         }
     }
 
-    public static CredentialsRespSdk addCredential(String website, String username, String password) {
+    public static DecryptedCredential addCredential(String website, String username, String password) {
         try {
-            PrivateKeyLoader.EncryptionResult encryptionResult = PrivateKeyLoader.encryptCredential(
+            CredentialsRespSdk credentialsRespSdk = credentials().addCredential(
                     website,
                     username,
                     password,
-                    AppContext.getMasterPassword(),
-                    AppContext.getSaltKey()
+                    AppContext.getSession().getVaultKey()
             );
 
-            PrivateKeyLoader.EncryptionFieldResult websiteResult = encryptionResult.getWebsiteField();
-            PrivateKeyLoader.EncryptionFieldResult usernameResult = encryptionResult.getUsernameField();
-            PrivateKeyLoader.EncryptionFieldResult passwordResult = encryptionResult.getPasswordField();
-
-            CredentialsRespSdk encryptedCredentials = credentials().addCredential(
-                    websiteResult.getCipherB64(),
-                    websiteResult.getIvB64(),
-                    usernameResult.getCipherB64(),
-                    usernameResult.getIvB64(),
-                    passwordResult.getCipherB64(),
-                    passwordResult.getIvB64()
+            return new DecryptedCredential(
+                    credentialsRespSdk.getCredentialsId(),
+                    website,
+                    username,
+                    password,
+                    credentialsRespSdk.getCreatedAt(),
+                    credentialsRespSdk.getLastUpdated(),
+                    false
             );
-
-            return PrivateKeyLoader.decryptCredential(
-                    encryptedCredentials,
-                    AppContext.getMasterPassword(),
-                    AppContext.getSaltKey()
-            );
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
 
-    public static CredentialsRespSdk updateCredentials(String credentialId, String website, String username, String password) {
+    public static DecryptedCredential updateCredentials(String credentialId, String website, String username, String password) {
         try {
-            String websiteCipher = null;
-            String websiteIv = null;
-            String usernameCipher = null;
-            String usernameIv = null;
-            String passwordCipher = null;
-            String passwordIv = null;
-
-            if (website != null && !website.isBlank()) {
-                PrivateKeyLoader.EncryptionFieldResult encryptedWebsite = PrivateKeyLoader.encryptFieldUpdate(
-                        website,
-                        AppContext.getMasterPassword(),
-                        AppContext.getSaltKey()
-                );
-                websiteCipher = encryptedWebsite.getCipherB64();
-                websiteIv = encryptedWebsite.getIvB64();
-            }
-            if (username != null && !username.isBlank()) {
-                PrivateKeyLoader.EncryptionFieldResult encryptedUsername = PrivateKeyLoader.encryptFieldUpdate(
-                        username,
-                        AppContext.getMasterPassword(),
-                        AppContext.getSaltKey()
-                );
-                usernameCipher = encryptedUsername.getCipherB64();
-                usernameIv = encryptedUsername.getIvB64();
-            }
-            if (password != null && !password.isBlank()) {
-                PrivateKeyLoader.EncryptionFieldResult encryptedPassword = PrivateKeyLoader.encryptFieldUpdate(
-                        password,
-                        AppContext.getMasterPassword(),
-                        AppContext.getSaltKey()
-                );
-                passwordCipher = encryptedPassword.getCipherB64();
-                passwordIv = encryptedPassword.getIvB64();
-            }
-
-            CredentialsRespSdk encryptedCredentials = credentials().updateCredential(
-                    websiteCipher,
-                    websiteIv,
-                    usernameCipher,
-                    usernameIv,
-                    passwordCipher,
-                    passwordIv,
-                    credentialId
+            CredentialsRespSdk credentialsRespSdk = credentials().updateCredential(
+                    credentialId,
+                    website,
+                    username,
+                    password,
+                    AppContext.getSession().getVaultKey()
             );
 
-            return PrivateKeyLoader.decryptCredential(
-                    encryptedCredentials,
-                    AppContext.getMasterPassword(),
-                    AppContext.getSaltKey()
+            DecryptedCredential decryptedCredential = new DecryptedCredential();
+
+            return new DecryptedCredential(
+                    credentialsRespSdk.getCredentialsId(),
+                    website,
+                    username,
+                    password,
+                    credentialsRespSdk.getCreatedAt(),
+                    credentialsRespSdk.getLastUpdated(),
+                    false
             );
         } catch (Exception e) {
             System.out.println(e.getMessage());

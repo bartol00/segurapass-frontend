@@ -1,5 +1,6 @@
 package com.example.passwordmanagerclient.controller.deletion;
 
+import com.example.passwordmanagerclient.controller.FieldHelpers;
 import com.example.passwordmanagerclient.controller.credentials.CredentialsController;
 import com.example.passwordmanagerclient.service.DeletionService;
 import com.example.passwordmanagerclient.util.OperationResult;
@@ -38,7 +39,9 @@ public class AuthorizedDeletionController {
             return;
         }
 
-        OperationResult result = DeletionService.deleteAuthorized(masterPassword.getText());
+        char[] masterPasswordChars = FieldHelpers.extractPassword(masterPassword);
+        OperationResult result = DeletionService.deleteAuthorized(masterPasswordChars);
+        FieldHelpers.clearPassword(masterPasswordChars);
 
         if (!result.isPassed()) {
             masterPassword.setText("");
