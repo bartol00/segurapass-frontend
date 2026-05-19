@@ -13,7 +13,7 @@ public class DeletionService {
         }
     }
 
-    public static OperationResult deleteAuthorized(String masterPassword) {
+    public static OperationResult deleteAuthorized(char[] masterPassword) {
         try {
             deletion().authorizedDeletion(
                     AppContext.getEmail(),

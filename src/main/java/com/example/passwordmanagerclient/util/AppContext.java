@@ -1,5 +1,7 @@
 package com.example.passwordmanagerclient.util;
 
+import com.segurapass.helpers.LoginSuccessObject;
+import com.segurapass.models.credentials.DecryptedCredential;
 import xyz.segurapass.api.credentials.CredentialsRespSdk;
 import com.example.passwordmanagerclient.config.AppConfig;
 import com.segurapass.api.ApiClient;
@@ -22,6 +24,8 @@ public class AppContext {
     @Setter
     private static String email;
 
+    private static LoginSuccessObject session;
+
     @Getter
     @Setter
     private static String jwtToken;
@@ -40,13 +44,7 @@ public class AppContext {
 
     @Getter
     @Setter
-    private static String saltKey;
-
-    @Getter
-    @Setter
-    private static List<CredentialsRespSdk> credentialsCache = new ArrayList<>();
-
-    private static char[] masterPassword;
+    private static List<DecryptedCredential> credentialsCache = new ArrayList<>();
 
     @Getter
     @Setter
@@ -63,31 +61,32 @@ public class AppContext {
         segurapassClient = new SegurapassClient(apiClient);
     }
 
-    public static void setMasterPassword(String pwd) {
-        clearMasterPassword();
-        masterPassword = pwd.toCharArray();
+    public static LoginSuccessObject getSession() {
+        if (session == null) throw new IllegalStateException("Session object not set");
+        return session;
     }
 
-    public static char[] getMasterPassword() {
-        if (masterPassword == null) throw new IllegalStateException("Master password not set");
-        return masterPassword;
-    }
-
-    public static void clearMasterPassword() {
-        if (masterPassword != null) {
-            java.util.Arrays.fill(masterPassword, '\0');
-            masterPassword = null;
+    public static void setSession(LoginSuccessObject loginSuccessObject) {
+        if (session != null) {
+            session.destroy();
         }
+        session = loginSuccessObject;
+        jwtToken = loginSuccessObject.getAccessToken();
+        refreshToken = loginSuccessObject.getRefreshToken();
+        refreshTokenExpiry = loginSuccessObject.getRefreshTokenExpiryTime();
+        segurapassClient.setJwt(loginSuccessObject.getAccessToken());
     }
 
     public static void clearSensitiveData() {
-        clearMasterPassword();
         email = null;
+        if (session != null) {
+            session.destroy();
+        }
+        session = null;
         jwtToken = null;
         jwtExpiry = null;
         refreshToken = null;
         refreshTokenExpiry = null;
-        saltKey = null;
         if (credentialsCache != null) {
             credentialsCache.clear();
         }
