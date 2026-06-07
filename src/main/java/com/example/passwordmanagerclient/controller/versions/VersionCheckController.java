@@ -44,7 +44,7 @@ public class VersionCheckController {
                 });
 
             } catch (Exception e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
 
                 Platform.runLater(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);

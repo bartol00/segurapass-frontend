@@ -1,5 +1,6 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
+import com.example.passwordmanagerclient.controller.DialogManager;
 import com.example.passwordmanagerclient.controller.password_change.PasswordChangeController;
 import com.segurapass.models.credentials.DecryptedCredential;
 import com.example.passwordmanagerclient.controller.StageManager;
@@ -10,10 +11,8 @@ import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
@@ -62,6 +61,11 @@ public class CredentialsController {
         refreshTable();
     }
 
+    private void preloadCredentials() {
+        List<DecryptedCredential> allCredentials = CredentialsService.getCredentials(0, 100);
+        AppContext.setCredentialsCache(allCredentials);
+    }
+
     public void refreshTable() {
         List<DecryptedCredential> cache = AppContext.getCredentialsCache();
         if (cache == null || cache.isEmpty()) {
@@ -91,15 +95,31 @@ public class CredentialsController {
         nextButton.setDisable(toIndex >= cache.size());
     }
 
-    private void preloadCredentials() {
-        List<DecryptedCredential> allCredentials = CredentialsService.getCredentials(0, 100);
-        AppContext.setCredentialsCache(allCredentials);
-    }
-
     private void setFactories() {
         websiteColumn.setCellValueFactory(new PropertyValueFactory<>("website"));
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         passwordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
+
+        websiteColumn.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String website, boolean empty) {
+                super.updateItem(website, empty);
+                if (empty || website == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                Label websiteLabel = new Label(website);
+
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+                HBox container = new HBox(websiteLabel, spacer);
+                container.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                container.setSpacing(5);
+
+                setGraphic(container);
+            }
+        });
 
         usernameColumn.setCellFactory(col -> new TableCell<>() {
             @Override
@@ -137,8 +157,6 @@ public class CredentialsController {
         });
 
         passwordColumn.setCellFactory(col -> new TableCell<>() {
-            private boolean visible = false;
-
             @Override
             protected void updateItem(String password, boolean empty) {
                 super.updateItem(password, empty);
@@ -185,6 +203,26 @@ public class CredentialsController {
         });
         passwordColumn.setMinWidth(350);
 
+        lastUpdatedColumn.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String dateText, boolean empty) {
+                super.updateItem(dateText, empty);
+                if (empty || dateText == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                Label dateLabel = new Label(dateText);
+
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+                HBox container = new HBox(dateLabel, spacer);
+                container.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                container.setSpacing(5);
+
+                setGraphic(container);
+            }
+        });
         lastUpdatedColumn.setCellValueFactory(cell -> {
             var inst = cell.getValue().getLastUpdated();
             String text = inst == null ? "" :
@@ -193,7 +231,6 @@ public class CredentialsController {
             return new javafx.beans.property.SimpleStringProperty(text);
         });
 
-        actionsColumn.setMinWidth(300);
         actionsColumn.setCellFactory(col -> new TableCell<>() {
             private final Button editButton = new Button("Update");
             private final Button deleteButton = new Button("Delete");
@@ -231,49 +268,7 @@ public class CredentialsController {
                 }
             }
         });
-
-        websiteColumn.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(String website, boolean empty) {
-                super.updateItem(website, empty);
-                if (empty || website == null) {
-                    setGraphic(null);
-                    return;
-                }
-
-                Label websiteLabel = new Label(website);
-
-                Region spacer = new Region();
-                HBox.setHgrow(spacer, Priority.ALWAYS);
-                HBox container = new HBox(websiteLabel, spacer);
-                container.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-                container.setSpacing(5);
-
-                setGraphic(container);
-            }
-        });
-
-        lastUpdatedColumn.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(String dateText, boolean empty) {
-                super.updateItem(dateText, empty);
-                if (empty || dateText == null) {
-                    setGraphic(null);
-                    return;
-                }
-
-                Label dateLabel = new Label(dateText);
-
-                Region spacer = new Region();
-                HBox.setHgrow(spacer, Priority.ALWAYS);
-                HBox container = new HBox(dateLabel, spacer);
-                container.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-                container.setSpacing(5);
-
-                setGraphic(container);
-            }
-        });
-
+        actionsColumn.setMinWidth(300);
     }
 
     @FXML
@@ -295,29 +290,19 @@ public class CredentialsController {
         try {
             TokenManager.ensureValidJwt();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/add-credentials-view.fxml"));
+            DialogManager.DialogResult<AddCredentialController> result =
+                    DialogManager.openWindow(
+                            "/com/example/passwordmanagerclient/credentials/add-credentials-view.fxml",
+                            "Add New Credentials",
+                            (Stage) pageLabel.getScene().getWindow(),
+                            false,
+                            AddCredentialController.class
+                    );
 
-            Stage dialogStage = new Stage();
-            Scene dialogScene = new Scene(loader.load());
-            dialogScene.getStylesheets().add(getClass()
-                    .getResource("/com/example/passwordmanagerclient/style/app.css")
-                    .toExternalForm()
-            );
-            dialogStage.setScene(dialogScene);
-
-            dialogStage.setTitle("Add New Credentials");
-            dialogStage.setResizable(false);
-            dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
-
-            Stage parentStage = (Stage) credentialsTable.getScene().getWindow();
-            dialogStage.initOwner(parentStage);
-
-            AddCredentialController controller = loader.getController();
-            controller.setParentController(this);
-
-            dialogStage.showAndWait();
+            result.controller().setParentController(this);
+            result.stage().showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             onLogout();
         }
     }
@@ -327,30 +312,21 @@ public class CredentialsController {
         try {
             TokenManager.ensureValidJwt();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/credential-edit-view.fxml"));
+            DialogManager.DialogResult<CredentialEditController> result =
+                    DialogManager.openWindow(
+                            "/com/example/passwordmanagerclient/credentials/credential-edit-view.fxml",
+                            "Update Existing Credentials",
+                            (Stage) pageLabel.getScene().getWindow(),
+                            false,
+                            CredentialEditController.class
+                    );
 
-            Stage dialogStage = new Stage();
-            Scene dialogScene = new Scene(loader.load());
-            dialogScene.getStylesheets().add(getClass()
-                    .getResource("/com/example/passwordmanagerclient/style/app.css")
-                    .toExternalForm()
-            );
-            dialogStage.setScene(dialogScene);
-
-            dialogStage.setTitle("Update Existing Credentials");
-            dialogStage.setResizable(false);
-            dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
-
-            Stage parentStage = (Stage) credentialsTable.getScene().getWindow();
-            dialogStage.initOwner(parentStage);
-
-            CredentialEditController controller = loader.getController();
+            CredentialEditController controller = result.controller();
             controller.loadCredentialData(credentialId, website, username);
             controller.setParentController(this);
-
-            dialogStage.showAndWait();
+            result.stage().showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             onLogout();
         }
     }
@@ -360,30 +336,21 @@ public class CredentialsController {
         try {
             TokenManager.ensureValidJwt();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/credentials/delete-confirmation-view.fxml"));
+            DialogManager.DialogResult<DeleteConfirmationController> result =
+                    DialogManager.openWindow(
+                            "/com/example/passwordmanagerclient/credentials/delete-confirmation-view.fxml",
+                            "Confirm Deletion",
+                            (Stage) pageLabel.getScene().getWindow(),
+                            false,
+                            DeleteConfirmationController.class
+                    );
 
-            Stage dialogStage = new Stage();
-            Scene dialogScene = new Scene(loader.load());
-            dialogScene.getStylesheets().add(getClass()
-                    .getResource("/com/example/passwordmanagerclient/style/app.css")
-                    .toExternalForm()
-            );
-            dialogStage.setScene(dialogScene);
-
-            dialogStage.setTitle("Confirm Deletion");
-            dialogStage.setResizable(false);
-            dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
-
-            Stage parentStage = (Stage) credentialsTable.getScene().getWindow();
-            dialogStage.initOwner(parentStage);
-
-            DeleteConfirmationController controller = loader.getController();
+            DeleteConfirmationController controller = result.controller();
             controller.loadCredential(credentialId);
             controller.setParentController(this);
-
-            dialogStage.showAndWait();
+            result.stage().showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             onLogout();
         }
     }
@@ -393,29 +360,19 @@ public class CredentialsController {
         try {
             TokenManager.ensureValidJwt();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/deletion/authorized-deletion-view.fxml"));
+            DialogManager.DialogResult<AuthorizedDeletionController> result =
+                    DialogManager.openWindow(
+                            "/com/example/passwordmanagerclient/deletion/authorized-deletion-view.fxml",
+                            "Delete Account",
+                            (Stage) pageLabel.getScene().getWindow(),
+                            false,
+                            AuthorizedDeletionController.class
+                    );
 
-            Stage dialogStage = new Stage();
-            Scene dialogScene = new Scene(loader.load());
-            dialogScene.getStylesheets().add(getClass()
-                    .getResource("/com/example/passwordmanagerclient/style/app.css")
-                    .toExternalForm()
-            );
-            dialogStage.setScene(dialogScene);
-
-            dialogStage.setTitle("Delete Account");
-            dialogStage.setResizable(false);
-            dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
-
-            Stage parentStage = (Stage) credentialsTable.getScene().getWindow();
-            dialogStage.initOwner(parentStage);
-
-            AuthorizedDeletionController controller = loader.getController();
-            controller.setParentController(this);
-
-            dialogStage.showAndWait();
+            result.controller().setParentController(this);
+            result.stage().showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             onLogout();
         }
     }
@@ -425,29 +382,19 @@ public class CredentialsController {
         try {
             TokenManager.ensureValidJwt();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/passwordmanagerclient/password_change/password-change-view.fxml"));
+            DialogManager.DialogResult<PasswordChangeController> result =
+                    DialogManager.openWindow(
+                            "/com/example/passwordmanagerclient/password_change/password-change-view.fxml",
+                            "Change Password",
+                            (Stage) pageLabel.getScene().getWindow(),
+                            false,
+                            PasswordChangeController.class
+                    );
 
-            Stage dialogStage = new Stage();
-            Scene dialogScene = new Scene(loader.load());
-            dialogScene.getStylesheets().add(getClass()
-                    .getResource("/com/example/passwordmanagerclient/style/app.css")
-                    .toExternalForm()
-            );
-            dialogStage.setScene(dialogScene);
-
-            dialogStage.setTitle("Change Password");
-            dialogStage.setResizable(false);
-            dialogStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
-
-            Stage parentStage = (Stage) credentialsTable.getScene().getWindow();
-            dialogStage.initOwner(parentStage);
-
-            PasswordChangeController controller = loader.getController();
-            controller.setParentController(this);
-
-            dialogStage.showAndWait();
+            result.controller().setParentController(this);
+            result.stage().showAndWait();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
             onLogout();
         }
     }
@@ -460,11 +407,13 @@ public class CredentialsController {
     private void onLogout() {
         try {
             logoutButton.setDisable(true);
+            changePasswordButton.setDisable(true);
+            deleteAccountButton.setDisable(true);
             AuthService.logout();
             AppContext.clearSensitiveData();
             StageManager.switchScene("/com/example/passwordmanagerclient/authorization/login-view.fxml");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 }

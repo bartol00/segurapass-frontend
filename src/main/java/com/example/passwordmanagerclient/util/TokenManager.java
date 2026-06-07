@@ -20,8 +20,6 @@ public class TokenManager {
         if (!result.isPassed()) {
             throw new Exception(result.getMessage());
         }
-
-        System.out.println("Refresh token successfully used");
     }
 
     public static Instant getJwtExpiry(String jwt) {

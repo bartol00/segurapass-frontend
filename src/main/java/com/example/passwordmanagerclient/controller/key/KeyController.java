@@ -7,24 +7,18 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
-import javafx.stage.Stage;
 
 import java.security.PublicKey;
 
 public class KeyController {
 
     @FXML private ProgressIndicator progressIndicator;
-    private Stage stage;
 
     @FXML
     public void initialize() {
         progressIndicator.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
-                newScene.windowProperty().addListener((obsW, oldW, newW) -> {
-                    if (newW != null) {
-                        stage = (Stage) newW;
-                    }
-                });
+                newScene.windowProperty().addListener((obsW, oldW, newW) -> {});
             }
         });
 
@@ -35,12 +29,14 @@ public class KeyController {
 
                 AppContext.setPublicKey(publicKey);
 
-                Platform.runLater(() -> {
-                    StageManager.switchScene("/com/example/passwordmanagerclient/authorization/login-view.fxml");
-                });
+                Platform.runLater(
+                        () -> StageManager.switchScene(
+                                "/com/example/passwordmanagerclient/authorization/login-view.fxml"
+                        )
+                );
 
             } catch (Exception e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
 
                 Platform.runLater(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);

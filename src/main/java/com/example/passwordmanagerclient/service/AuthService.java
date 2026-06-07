@@ -14,7 +14,10 @@ public class AuthService {
     public static OperationResult register(String email, char[] masterPassword) {
         try {
             auth().register(email, masterPassword, AppContext.getDeviceId());
-            return new OperationResult("Registration successful. Please verify the email address you entered before attempting to log in", true);
+            return new OperationResult(
+                    "Registration successful. " +
+                            "Please verify the email address you entered before attempting to log in",
+                    true);
         } catch (SdkException e) {
             return new OperationResult(e.getMessage(), false);
         } catch (Exception e) {
@@ -24,7 +27,6 @@ public class AuthService {
 
     public static OperationResult login(String email, char[] masterPassword) {
         try {
-
             LoginSuccessObject successObject = auth().login(email, masterPassword, AppContext.getDeviceId());
 
             if (!keys().isValid(successObject.getAccessToken(), AppContext.getPublicKey())) {

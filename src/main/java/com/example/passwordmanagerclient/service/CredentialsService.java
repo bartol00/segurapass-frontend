@@ -11,7 +11,11 @@ public class CredentialsService {
 
     public static List<DecryptedCredential> getCredentials(int page, int size) {
         try {
-            DecryptedCredentials decryptedCredentials = credentials().getCredentials(page, size, AppContext.getSession().getVaultKey());
+            DecryptedCredentials decryptedCredentials = credentials().getCredentials(
+                    page,
+                    size,
+                    AppContext.getSession().getVaultKey()
+            );
             return decryptedCredentials.getCredentials();
         } catch (Exception e) {
             System.out.println(e.getMessage());

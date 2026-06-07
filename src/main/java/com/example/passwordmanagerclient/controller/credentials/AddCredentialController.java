@@ -19,26 +19,34 @@ public class AddCredentialController {
     @FXML private TextField websiteField;
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
-    @FXML private Label statusLabel;
     @FXML private Button saveButton;
+    @FXML private Button cancelButton;
+    @FXML private Label statusLabel;
 
     public void initialize() {
         saveButton.setDisable(true);
-        websiteField.textProperty().addListener((obs, oldVal, newVal) -> disableSaveButton());
-        usernameField.textProperty().addListener((obs, oldVal, newVal) -> disableSaveButton());
-        passwordField.textProperty().addListener((obs, oldVal, newVal) -> disableSaveButton());
+        websiteField.textProperty().addListener(
+                (obs, oldVal, newVal) -> disableSaveButton()
+        );
+        usernameField.textProperty().addListener(
+                (obs, oldVal, newVal) -> disableSaveButton()
+        );
+        passwordField.textProperty().addListener(
+                (obs, oldVal, newVal) -> disableSaveButton()
+        );
     }
 
     private void disableSaveButton() {
-        String website = websiteField.getText();
-        String username = usernameField.getText();
-        String password = passwordField.getText();
-        saveButton.setDisable(website.isBlank() || username.isBlank() || password.isBlank());
+        saveButton.setDisable(
+                websiteField.getText().isBlank() || usernameField.getText().isBlank() || passwordField.getText().isBlank()
+        );
     }
 
     @FXML
     private void onSaveClick() {
         saveButton.setDisable(true);
+        cancelButton.setDisable(true);
+
         try {
             TokenManager.ensureValidJwt();
         } catch (Exception e) {
@@ -52,6 +60,7 @@ public class AddCredentialController {
 
         if (website.isBlank() || username.isBlank() || password.isBlank()) {
             statusLabel.setText("All fields are required");
+            cancelButton.setDisable(false);
             return;
         }
 
@@ -70,6 +79,7 @@ public class AddCredentialController {
         } else {
             statusLabel.setText("Failed to add credentials");
             saveButton.setDisable(false);
+            cancelButton.setDisable(false);
         }
     }
 

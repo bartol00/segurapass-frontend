@@ -2,7 +2,6 @@ package com.example.passwordmanagerclient.util;
 
 import com.segurapass.helpers.LoginSuccessObject;
 import com.segurapass.models.credentials.DecryptedCredential;
-import xyz.segurapass.api.credentials.CredentialsRespSdk;
 import com.example.passwordmanagerclient.config.AppConfig;
 import com.segurapass.api.ApiClient;
 import com.segurapass.SegurapassClient;

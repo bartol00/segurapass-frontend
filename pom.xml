@@ -20,10 +20,10 @@
 
         <!-- Third Party -->
         <junit.version>5.12.1</junit.version>
-        <javafx.version>17.0.14</javafx.version>
+        <javafx.version>17.0.19</javafx.version>
         <controlsfx.version>11.2.3</controlsfx.version>
         <validatorfx.version>0.6.3</validatorfx.version>
-        <ikonli-javafx.version>12.3.1</ikonli-javafx.version>
+        <ikonli-javafx.version>12.4.0</ikonli-javafx.version>
         <bootstrapfx-core.version>0.4.0</bootstrapfx-core.version>
         <lombok.version>1.18.46</lombok.version>
         <bcprov-jdk18on.version>1.84</bcprov-jdk18on.version>

@@ -14,12 +14,13 @@ import java.util.UUID;
 
 public class DeleteConfirmationController {
 
-    private String credentialId;
     @Setter
     private CredentialsController parentController;
 
     @FXML private Button yesButton;
     @FXML private Button noButton;
+
+    private String credentialId;
 
     public void loadCredential(String credentialId) {
         this.credentialId = credentialId;
@@ -28,6 +29,7 @@ public class DeleteConfirmationController {
     @FXML
     private void onYesDelete() {
         yesButton.setDisable(true);
+        noButton.setDisable(true);
         try {
             TokenManager.ensureValidJwt();
         } catch (Exception e) {
