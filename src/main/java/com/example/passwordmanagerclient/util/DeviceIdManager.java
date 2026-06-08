@@ -9,7 +9,6 @@ import java.util.UUID;
 public class DeviceIdManager {
 
     private static final String FILE_NAME = "device_id.txt";
-    private static final String APP_FOLDER = ".passwordmanager";
 
     public static String getDeviceId() {
         try {
@@ -30,8 +29,6 @@ public class DeviceIdManager {
     }
 
     public static Path getAppDataFolder() {
-//        String userHome = System.getProperty("user.home");
-//        return Paths.get(userHome, APP_FOLDER);
         return Paths.get(System.getenv("APPDATA"), "SeguraPass");
     }
 }

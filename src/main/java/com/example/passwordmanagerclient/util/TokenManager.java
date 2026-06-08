@@ -16,9 +16,10 @@ public class TokenManager {
         if (isRefreshTokenExpired()) {
             throw new Exception("Refresh token has expired");
         }
+
         OperationResult result = AuthService.refreshJwt();
-        if (!result.isPassed()) {
-            throw new Exception(result.getMessage());
+        if (!result.passed()) {
+            throw new Exception(result.message());
         }
     }
 

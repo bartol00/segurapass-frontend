@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class HelloApplication extends Application {
 
     @Override
@@ -21,15 +23,18 @@ public class HelloApplication extends Application {
                 .getResource("/com/example/passwordmanagerclient/versions/version-check-view.fxml"));
         Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(
-                StageManager.class.getResource("/com/example/passwordmanagerclient/style/app.css").toExternalForm()
+                Objects.requireNonNull(
+                        StageManager.class.getResource("/com/example/passwordmanagerclient/style/app.css")
+                        )
+                        .toExternalForm()
         );
 
         stage.setTitle("SeguraPass");
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logo16.png")));
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logo32.png")));
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logo64.png")));
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logo128.png")));
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/icons/logo256.png")));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/logo16.png"))));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/logo32.png"))));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/logo64.png"))));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/logo128.png"))));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/logo256.png"))));
 
         stage.setScene(scene);
         stage.setMaximized(true);

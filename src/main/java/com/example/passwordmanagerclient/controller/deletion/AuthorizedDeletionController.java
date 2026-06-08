@@ -46,9 +46,9 @@ public class AuthorizedDeletionController {
         OperationResult result = DeletionService.deleteAuthorized(masterPasswordChars);
         FieldHelpers.clearPassword(masterPasswordChars);
 
-        if (!result.isPassed()) {
+        if (!result.passed()) {
             masterPassword.setText("");
-            statusLabel.setText(result.getMessage());
+            statusLabel.setText(result.message());
             statusLabel.setStyle("-fx-text-fill: red;");
             deleteButton.setDisable(false);
             cancelButton.setDisable(false);

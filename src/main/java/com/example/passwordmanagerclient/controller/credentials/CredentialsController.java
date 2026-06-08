@@ -2,7 +2,7 @@ package com.example.passwordmanagerclient.controller.credentials;
 
 import com.example.passwordmanagerclient.controller.DialogManager;
 import com.example.passwordmanagerclient.controller.password_change.PasswordChangeController;
-import com.segurapass.models.credentials.DecryptedCredential;
+import xyz.segurapass.sdk.models.DecryptedCredential;
 import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.controller.deletion.AuthorizedDeletionController;
 import com.example.passwordmanagerclient.service.AuthService;

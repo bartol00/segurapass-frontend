@@ -168,11 +168,11 @@ public class PasswordChangeController {
         FieldHelpers.clearPassword(oldPasswordBytes);
         FieldHelpers.clearPassword(newPasswordBytes);
 
-        if (!result.isPassed()) {
+        if (!result.passed()) {
             oldPassword.setText("");
             newPassword.setText("");
             repeatNewPassword.setText("");
-            statusLabel.setText(result.getMessage());
+            statusLabel.setText(result.message());
             statusLabel.setStyle("-fx-text-fill: red;");
             passwordChangeButton.setDisable(false);
             cancelButton.setDisable(false);

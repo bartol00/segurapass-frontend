@@ -59,11 +59,11 @@ public class LoginController {
 
         task.setOnSucceeded(event -> {
             OperationResult result = task.getValue();
-            if (result.isPassed()) {
+            if (result.passed()) {
                 switchToCredentialsView();
             } else {
                 masterPasswordField.setText("");
-                statusLabel.setText(result.getMessage());
+                statusLabel.setText(result.message());
                 statusLabel.setStyle("-fx-text-fill: red;");
                 switchRegisterButton.setDisable(false);
                 remoteDeleteButton.setDisable(false);

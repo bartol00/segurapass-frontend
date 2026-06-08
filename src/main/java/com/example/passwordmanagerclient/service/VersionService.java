@@ -14,7 +14,7 @@ public class VersionService {
         }
     }
 
-    private static com.segurapass.service.VersionService version() {
+    private static xyz.segurapass.sdk.service.VersionService version() {
         return AppContext.getSegurapassClient().version();
     }
 

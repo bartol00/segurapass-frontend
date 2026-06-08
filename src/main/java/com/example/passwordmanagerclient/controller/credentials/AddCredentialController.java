@@ -1,6 +1,6 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
-import com.segurapass.models.credentials.DecryptedCredential;
+import xyz.segurapass.sdk.models.DecryptedCredential;
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;

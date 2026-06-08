@@ -1,7 +1,7 @@
 package com.example.passwordmanagerclient.service;
 
 import com.example.passwordmanagerclient.util.*;
-import com.segurapass.exception.SdkException;
+import xyz.segurapass.sdk.exception.SegurapassSdkException;
 
 public class DeletionService {
 
@@ -9,12 +9,13 @@ public class DeletionService {
         try {
             deletion().emailDeletion(email);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 
     public static OperationResult deleteAuthorized(char[] masterPassword) {
         try {
+
             deletion().authorizedDeletion(
                     AppContext.getEmail(),
                     masterPassword,
@@ -22,15 +23,16 @@ public class DeletionService {
             );
 
             return new OperationResult("Account deletion successful", true);
-        } catch (SdkException e) {
+
+        } catch (SegurapassSdkException e) {
             return new OperationResult(e.getMessage(), false);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println("Account deletion failed: " + e.getMessage());
             return new OperationResult("Account deletion failed", false);
         }
     }
 
-    private static com.segurapass.service.DeletionService deletion() {
+    private static xyz.segurapass.sdk.service.DeletionService deletion() {
         return AppContext.getSegurapassClient().deletion();
     }
 

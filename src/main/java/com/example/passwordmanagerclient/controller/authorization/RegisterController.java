@@ -156,11 +156,11 @@ public class RegisterController {
         task.setOnSucceeded(event -> {
             OperationResult result = task.getValue();
             statusLabel.setStyle("-fx-text-fill: red;");
-            if (result.isPassed()) {
+            if (result.passed()) {
                 emailField.setText("");
                 statusLabel.setStyle("-fx-text-fill: green;");
             }
-            statusLabel.setText(result.getMessage());
+            statusLabel.setText(result.message());
             masterPasswordField.setText("");
             confirmPasswordField.setText("");
             switchLoginButton.setDisable(false);
