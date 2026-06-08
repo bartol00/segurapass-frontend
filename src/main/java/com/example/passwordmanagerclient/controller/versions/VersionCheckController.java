@@ -1,6 +1,5 @@
 package com.example.passwordmanagerclient.controller.versions;
 
-import xyz.segurapass.api.versions.VersionInfo;
 import com.example.passwordmanagerclient.config.AppConfig;
 import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.service.VersionService;
@@ -12,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.stage.Stage;
+import xyz.segurapass.sdk.models.VersionModel;
 
 public class VersionCheckController {
 
@@ -22,7 +22,7 @@ public class VersionCheckController {
 
         new Thread(() -> {
             try {
-                VersionInfo versionInfo = VersionService.getVersionInfo();
+                VersionModel versionInfo = VersionService.getVersionInfo();
 
                 if (versionInfo == null) {
                     throw new RuntimeException("Null version info");
@@ -58,7 +58,7 @@ public class VersionCheckController {
         }).start();
     }
 
-    private void showUpdateDialog(VersionInfo versionInfo) {
+    private void showUpdateDialog(VersionModel versionInfo) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/example/passwordmanagerclient/versions/update-dialog.fxml")

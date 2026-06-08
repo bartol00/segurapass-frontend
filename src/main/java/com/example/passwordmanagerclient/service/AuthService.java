@@ -80,8 +80,6 @@ public class AuthService {
             AppContext.setJwtExpiry(jwtExpiry);
             AppContext.getSegurapassClient().setJwt(accessToken);
 
-            System.out.println("TOKEN refreshed");
-
             return new OperationResult("Successfully refreshed JWT", true);
 
         } catch (SegurapassSdkException e) {

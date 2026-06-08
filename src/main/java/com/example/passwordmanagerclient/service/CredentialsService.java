@@ -2,10 +2,10 @@ package com.example.passwordmanagerclient.service;
 
 import xyz.segurapass.sdk.models.DecryptedCredential;
 import xyz.segurapass.sdk.models.DecryptedCredentials;
-import xyz.segurapass.api.credentials.*;
 import com.example.passwordmanagerclient.util.*;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CredentialsService {
 
@@ -30,21 +30,11 @@ public class CredentialsService {
 
         try {
 
-            CredentialsRespSdk credentialsRespSdk = credentials().addCredential(
+            return credentials().addCredential(
                     website,
                     username,
                     password,
                     AppContext.getSession().getVaultKey()
-            );
-
-            return new DecryptedCredential(
-                    credentialsRespSdk.getCredentialsId(),
-                    website,
-                    username,
-                    password,
-                    credentialsRespSdk.getCreatedAt(),
-                    credentialsRespSdk.getLastUpdated(),
-                    false
             );
 
         } catch (Exception e) {
@@ -61,22 +51,12 @@ public class CredentialsService {
     ) {
         try {
 
-            CredentialsRespSdk credentialsRespSdk = credentials().updateCredential(
+            return credentials().updateCredential(
                     credentialId,
                     website,
                     username,
                     password,
                     AppContext.getSession().getVaultKey()
-            );
-
-            return new DecryptedCredential(
-                    credentialsRespSdk.getCredentialsId(),
-                    website,
-                    username,
-                    password,
-                    credentialsRespSdk.getCreatedAt(),
-                    credentialsRespSdk.getLastUpdated(),
-                    false
             );
 
         } catch (Exception e) {

@@ -1,11 +1,11 @@
 package com.example.passwordmanagerclient.service;
 
-import xyz.segurapass.api.versions.VersionInfo;
 import com.example.passwordmanagerclient.util.AppContext;
+import xyz.segurapass.sdk.models.VersionModel;
 
 public class VersionService {
 
-    public static VersionInfo getVersionInfo() {
+    public static VersionModel getVersionInfo() {
         try {
             return version().getVersionInfo();
         } catch (Exception e) {
