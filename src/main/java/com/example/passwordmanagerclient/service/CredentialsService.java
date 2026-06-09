@@ -1,51 +1,62 @@
 package com.example.passwordmanagerclient.service;
 
-import com.segurapass.models.credentials.DecryptedCredential;
-import com.segurapass.models.credentials.DecryptedCredentials;
-import xyz.segurapass.api.credentials.*;
+import xyz.segurapass.sdk.exception.SegurapassSdkException;
+import xyz.segurapass.sdk.models.DecryptedCredential;
+import xyz.segurapass.sdk.models.DecryptedCredentials;
 import com.example.passwordmanagerclient.util.*;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CredentialsService {
 
     public static List<DecryptedCredential> getCredentials(int page, int size) {
+
         try {
-            DecryptedCredentials decryptedCredentials = credentials().getCredentials(page, size, AppContext.getSession().getVaultKey());
+
+            DecryptedCredentials decryptedCredentials = credentials().getCredentials(
+                    page,
+                    size,
+                    AppContext.getSession().getVaultKey()
+            );
             return decryptedCredentials.getCredentials();
+
+        } catch (SegurapassSdkException e) {
+            System.err.println(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new LinkedList<>();
+            System.err.println("Exception occurred while getting credentials: " + e.getMessage());
         }
+        return new LinkedList<>();
     }
 
     public static DecryptedCredential addCredential(String website, String username, String password) {
+
         try {
-            CredentialsRespSdk credentialsRespSdk = credentials().addCredential(
+
+            return credentials().addCredential(
                     website,
                     username,
                     password,
                     AppContext.getSession().getVaultKey()
             );
 
-            return new DecryptedCredential(
-                    credentialsRespSdk.getCredentialsId(),
-                    website,
-                    username,
-                    password,
-                    credentialsRespSdk.getCreatedAt(),
-                    credentialsRespSdk.getLastUpdated(),
-                    false
-            );
+        } catch (SegurapassSdkException e) {
+            System.err.println(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+            System.err.println("Exception occurred while adding credentials: " + e.getMessage());
         }
+        return null;
     }
 
-    public static DecryptedCredential updateCredentials(String credentialId, String website, String username, String password) {
+    public static DecryptedCredential updateCredentials(
+            String credentialId,
+            String website,
+            String username,
+            String password
+    ) {
         try {
-            CredentialsRespSdk credentialsRespSdk = credentials().updateCredential(
+
+            return credentials().updateCredential(
                     credentialId,
                     website,
                     username,
@@ -53,34 +64,25 @@ public class CredentialsService {
                     AppContext.getSession().getVaultKey()
             );
 
-            DecryptedCredential decryptedCredential = new DecryptedCredential();
-
-            return new DecryptedCredential(
-                    credentialsRespSdk.getCredentialsId(),
-                    website,
-                    username,
-                    password,
-                    credentialsRespSdk.getCreatedAt(),
-                    credentialsRespSdk.getLastUpdated(),
-                    false
-            );
+        } catch (SegurapassSdkException e) {
+            System.err.println(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+            System.err.println("Exception occurred while updating credentials: " + e.getMessage());
         }
+        return null;
     }
 
-    public static OperationResult deleteCredentials(String credentialId) {
+    public static void deleteCredentials(String credentialId) {
         try {
             credentials().deleteCredential(credentialId);
-            return new OperationResult("Successfully deleted credential", true);
+        } catch (SegurapassSdkException e) {
+            System.err.println(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new OperationResult("Failed to delete credential", false);
+            System.err.println("Exception occurred while deleting credentials: " + e.getMessage());
         }
     }
 
-    private static com.segurapass.service.CredentialsService credentials() {
+    private static xyz.segurapass.sdk.service.CredentialsService credentials() {
         return AppContext.getSegurapassClient().credentials();
     }
 }

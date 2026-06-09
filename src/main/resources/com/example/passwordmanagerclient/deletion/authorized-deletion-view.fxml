@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
@@ -14,6 +15,7 @@
     <PasswordField fx:id="masterPassword" promptText="Master Password" />
 
     <Label fx:id="statusLabel"/>
+
     <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10;">
         <Button fx:id="deleteButton" text="Delete Account"
                 style="-fx-background-color: red; -fx-text-fill: white;"

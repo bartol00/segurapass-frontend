@@ -6,13 +6,14 @@ import java.time.LocalDate;
 import java.util.Properties;
 
 public class AppConfig {
+
     private static final Properties properties = new Properties();
 
     static {
         try (InputStream input = AppConfig.class.getResourceAsStream("/config.properties")) {
             properties.load(input);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 
@@ -28,8 +29,4 @@ public class AppConfig {
         return LocalDate.parse(properties.getProperty("version.date"));
     }
 
-    public static int getTimeoutSeconds() {
-        return Integer.parseInt(properties.getProperty("timeout.seconds", "10"));
-    }
 }
-

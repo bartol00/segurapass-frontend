@@ -4,6 +4,7 @@ import com.example.passwordmanagerclient.controller.FieldHelpers;
 import com.example.passwordmanagerclient.controller.credentials.CredentialsController;
 import com.example.passwordmanagerclient.service.DeletionService;
 import com.example.passwordmanagerclient.util.OperationResult;
+import com.example.passwordmanagerclient.util.TokenManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,21 +18,23 @@ public class AuthorizedDeletionController {
     private CredentialsController parentController;
 
     @FXML private PasswordField masterPassword;
-
     @FXML private Label statusLabel;
-
     @FXML private Button deleteButton;
     @FXML private Button cancelButton;
-
 
     @FXML
     private void onDelete() {
         deleteButton.setDisable(true);
         cancelButton.setDisable(true);
 
-        String password = masterPassword.getText();
+        try {
+            TokenManager.ensureValidJwt();
+        } catch (Exception e) {
+            parentController.handleChildExceptions();
+            return;
+        }
 
-        if (password.isBlank()) {
+        if (masterPassword.getText().isBlank()) {
             statusLabel.setText("Please enter the master password");
             statusLabel.setStyle("-fx-text-fill: red;");
             deleteButton.setDisable(false);
@@ -43,9 +46,9 @@ public class AuthorizedDeletionController {
         OperationResult result = DeletionService.deleteAuthorized(masterPasswordChars);
         FieldHelpers.clearPassword(masterPasswordChars);
 
-        if (!result.isPassed()) {
+        if (!result.passed()) {
             masterPassword.setText("");
-            statusLabel.setText(result.getMessage());
+            statusLabel.setText(result.message());
             statusLabel.setStyle("-fx-text-fill: red;");
             deleteButton.setDisable(false);
             cancelButton.setDisable(false);

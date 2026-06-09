@@ -4,8 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.passwordmanagerclient.controller.authorization.LoginController"
-      alignment="CENTER" spacing="15" style="-fx-background-color: #f5f5f5;" prefWidth="700" prefHeight="600">
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.passwordmanagerclient.controller.authorization.LoginController"
+      alignment="CENTER"
+      spacing="15"
+      style="-fx-background-color: #f5f5f5;"
+      prefWidth="700" prefHeight="600">
+
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
@@ -15,11 +20,12 @@
     <TextField fx:id="emailField" promptText="Email" maxWidth="250"/>
     <PasswordField fx:id="masterPasswordField" promptText="Master Password" maxWidth="250"/>
 
+    <Label fx:id="statusLabel"/>
+
     <Button text="Login" fx:id="loginButton" onAction="#onLoginClick" maxWidth="120" disable="true"/>
     <Button text="Switch to Register" fx:id="switchRegisterButton" onAction="#onSwitchToRegister" style="-fx-font-size: 11px;"/>
     <Button text="Remotely Delete Account" fx:id="remoteDeleteButton" onAction="#onOpenRemoteDelete" style="-fx-background-color: red; -fx-font-size: 11px;"/>
 
-    <Label fx:id="statusLabel"/>
     <VBox alignment="CENTER" spacing="2">
         <Label text="This app has been built with modern security practices in mind, but has not yet been independently audited."
                styleClass="security-notice"/>

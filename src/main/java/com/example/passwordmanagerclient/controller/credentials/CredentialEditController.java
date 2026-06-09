@@ -1,6 +1,6 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
-import com.segurapass.models.credentials.DecryptedCredential;
+import xyz.segurapass.sdk.models.DecryptedCredential;
 import com.example.passwordmanagerclient.service.CredentialsService;
 import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.TokenManager;
@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class CredentialEditController {
@@ -23,8 +24,9 @@ public class CredentialEditController {
     @FXML private TextField websiteField;
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
-    @FXML private Label statusLabel;
     @FXML private Button saveButton;
+    @FXML private Button cancelButton;
+    @FXML private Label statusLabel;
 
     private String credentialId;
 
@@ -37,21 +39,25 @@ public class CredentialEditController {
     @FXML
     private void onSave() {
         saveButton.setDisable(true);
+        cancelButton.setDisable(true);
         try {
             TokenManager.ensureValidJwt();
         } catch (Exception e) {
+            System.err.println(e.getMessage());
             parentController.handleChildExceptions();
             return;
         }
 
         List<DecryptedCredential> cache = AppContext.getCredentialsCache();
+
         DecryptedCredential oldCredential = cache.stream()
                 .filter(c -> c.getCredentialsId().equals(UUID.fromString(credentialId)))
                 .findAny().orElse(null);
 
-        if (oldCredential != null) {
+        if (oldCredential == null) {
             statusLabel.setText("Failed to find credential to update");
             saveButton.setDisable(false);
+            cancelButton.setDisable(false);
         }
 
         DecryptedCredential decryptedCredential = CredentialsService.updateCredentials(
@@ -62,13 +68,19 @@ public class CredentialEditController {
         );
 
         if (websiteField.getText() == null || websiteField.getText().isBlank()) {
-            decryptedCredential.setWebsite(oldCredential.getWebsite());
+            Objects.requireNonNull(decryptedCredential).setWebsite(
+                    Objects.requireNonNull(oldCredential).getWebsite()
+            );
         }
         if (usernameField.getText() == null || usernameField.getText().isBlank()) {
-            decryptedCredential.setUsername(oldCredential.getUsername());
+            Objects.requireNonNull(decryptedCredential).setUsername(
+                    Objects.requireNonNull(oldCredential).getUsername()
+            );
         }
         if (passwordField.getText() == null || passwordField.getText().isBlank()) {
-            decryptedCredential.setPassword(oldCredential.getPassword());
+            Objects.requireNonNull(decryptedCredential).setPassword(
+                    Objects.requireNonNull(oldCredential).getPassword()
+            );
         }
 
         if (decryptedCredential != null) {
@@ -87,6 +99,7 @@ public class CredentialEditController {
         } else {
             statusLabel.setText("Failed to update credentials");
             saveButton.setDisable(false);
+            cancelButton.setDisable(false);
         }
     }
 

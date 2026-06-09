@@ -23,15 +23,15 @@ public class UpdateDialogController {
 
     @FXML
     private void initialize() {
-        downloadBtn.setOnAction(e -> {
+        downloadBtn.setOnAction(event -> {
             try {
                 java.awt.Desktop.getDesktop().browse(new java.net.URI(downloadUrl));
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
             }
             System.exit(0);
         });
 
-        exitBtn.setOnAction(e -> System.exit(0));
+        exitBtn.setOnAction(event -> System.exit(0));
     }
 }

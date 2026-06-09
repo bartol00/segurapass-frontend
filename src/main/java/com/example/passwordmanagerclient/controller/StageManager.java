@@ -7,6 +7,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.Objects;
+
 public final class StageManager {
 
     private static Stage stage;
@@ -31,7 +33,10 @@ public final class StageManager {
             Pane root = loader.load();
             Scene newScene = new Scene(root);
             newScene.getStylesheets().add(
-                    StageManager.class.getResource("/com/example/passwordmanagerclient/style/app.css").toExternalForm()
+                    Objects.requireNonNull(
+                            StageManager.class.getResource("/com/example/passwordmanagerclient/style/app.css")
+                            )
+                            .toExternalForm()
             );
 
             if (stage.getScene() != null) {
@@ -56,7 +61,7 @@ public final class StageManager {
                 fadeIn(root);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 
