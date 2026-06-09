@@ -90,6 +90,10 @@ public class AuthService {
     }
 
     public static void logout() {
+        if (AppContext.getRefreshToken() == null) {
+            return;
+        }
+
         try {
             auth().logout(AppContext.getRefreshToken());
         } catch (SegurapassSdkException e) {
