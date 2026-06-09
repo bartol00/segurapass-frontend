@@ -13,7 +13,7 @@ public class KeyService {
         } catch (SegurapassSdkException e) {
             System.err.println(e.getMessage());
         } catch (Exception e) {
-            System.err.println("Exception occurred when getting public key: " + e.getMessage());
+            System.err.println("Exception occurred while getting public key: " + e.getMessage());
         }
         return null;
     }

@@ -24,7 +24,7 @@ public class AuthService {
             return new OperationResult(e.getMessage(), false);
         } catch (Exception e) {
             return new OperationResult(
-                    "An exception occurred during registration: " + e.getMessage(),
+                    "Exception occurred during registration: " + e.getMessage(),
                     false
             );
         }
@@ -55,7 +55,7 @@ public class AuthService {
             return new OperationResult(e.getMessage(), false);
         } catch (Exception e) {
             return new OperationResult(
-                    "An exception occurred during login: " + e.getMessage(),
+                    "Exception occurred during login: " + e.getMessage(),
                     false
             );
         }
@@ -85,7 +85,10 @@ public class AuthService {
         } catch (SegurapassSdkException e) {
             return new OperationResult(e.getMessage(), false);
         } catch (Exception e) {
-            return new OperationResult("Could not refresh JWT", false);
+            return new OperationResult(
+                    "Exception occurred during JWT refresh: " + e.getMessage(),
+                    false
+            );
         }
     }
 
@@ -101,7 +104,7 @@ public class AuthService {
         } catch (SegurapassSdkException e) {
             System.err.println(e.getMessage());
         } catch (Exception e) {
-            System.err.printf("An exception occurred during logout: %s", e.getMessage());
+            System.err.println("Exception occurred during logout: " + e.getMessage());
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.passwordmanagerclient.service;
 
+import xyz.segurapass.sdk.exception.SegurapassSdkException;
 import xyz.segurapass.sdk.models.DecryptedCredential;
 import xyz.segurapass.sdk.models.DecryptedCredentials;
 import com.example.passwordmanagerclient.util.*;
@@ -20,10 +21,12 @@ public class CredentialsService {
             );
             return decryptedCredentials.getCredentials();
 
-        } catch (Exception e) {
+        } catch (SegurapassSdkException e) {
             System.err.println(e.getMessage());
-            return new LinkedList<>();
+        } catch (Exception e) {
+            System.err.println("Exception occurred while getting credentials: " + e.getMessage());
         }
+        return new LinkedList<>();
     }
 
     public static DecryptedCredential addCredential(String website, String username, String password) {
@@ -37,10 +40,12 @@ public class CredentialsService {
                     AppContext.getSession().getVaultKey()
             );
 
-        } catch (Exception e) {
+        } catch (SegurapassSdkException e) {
             System.err.println(e.getMessage());
-            return null;
+        } catch (Exception e) {
+            System.err.println("Exception occurred while adding credentials: " + e.getMessage());
         }
+        return null;
     }
 
     public static DecryptedCredential updateCredentials(
@@ -59,17 +64,21 @@ public class CredentialsService {
                     AppContext.getSession().getVaultKey()
             );
 
-        } catch (Exception e) {
+        } catch (SegurapassSdkException e) {
             System.err.println(e.getMessage());
-            return null;
+        } catch (Exception e) {
+            System.err.println("Exception occurred while updating credentials: " + e.getMessage());
         }
+        return null;
     }
 
     public static void deleteCredentials(String credentialId) {
         try {
             credentials().deleteCredential(credentialId);
+        } catch (SegurapassSdkException e) {
+            System.err.println(e.getMessage());
         } catch (Exception e) {
-            System.err.println("Failed to delete credentials: " + e.getMessage());
+            System.err.println("Exception occurred while deleting credentials: " + e.getMessage());
         }
     }
 

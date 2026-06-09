@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.Properties;
 
 public class AppConfig {
+
     private static final Properties properties = new Properties();
 
     static {

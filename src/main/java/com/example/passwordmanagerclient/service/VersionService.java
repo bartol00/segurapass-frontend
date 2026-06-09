@@ -9,7 +9,7 @@ public class VersionService {
         try {
             return version().getVersionInfo();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             return null;
         }
     }

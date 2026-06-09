@@ -22,8 +22,10 @@ public class PasswordChangeService {
         } catch (SegurapassSdkException e) {
             return new OperationResult(e.getMessage(), false);
         } catch (Exception e) {
-            System.err.println("An exception occurred " + e.getMessage());
-            return new OperationResult("Could not ", false);
+            return new OperationResult(
+                    "Exception occurred while attempting to change master password: " + e.getMessage(),
+                    false
+            );
         }
     }
 

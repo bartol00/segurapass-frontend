@@ -8,8 +8,10 @@ public class DeletionService {
     public static void deleteEmail(String email) {
         try {
             deletion().emailDeletion(email);
-        } catch (Exception e) {
+        } catch (SegurapassSdkException e) {
             System.err.println(e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Exception occurred while sending deletion email: " + e.getMessage());
         }
     }
 
@@ -27,8 +29,10 @@ public class DeletionService {
         } catch (SegurapassSdkException e) {
             return new OperationResult(e.getMessage(), false);
         } catch (Exception e) {
-            System.err.println("Account deletion failed: " + e.getMessage());
-            return new OperationResult("Account deletion failed", false);
+            return new OperationResult(
+                    "Authorized account deletion failed: " + e.getMessage(),
+                    false
+            );
         }
     }
 
