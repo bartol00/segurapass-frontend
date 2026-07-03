@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.passwordmanagerclient.controller.uptime.ServerSelectionDialogController"
+      spacing="15" alignment="CENTER" prefWidth="380" style="-fx-padding: 20;">
+
+    <Label text="Please Enter SeguraPass Server URL"
+           style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="urlField" promptText="URL" />
+
+    <HBox alignment="CENTER" spacing="15">
+        <Button fx:id="serverBtn" text="Check Server Status" prefWidth="140"/>
+        <Button fx:id="exitBtn" text="Exit" prefWidth="80"/>
+    </HBox>
+</VBox>

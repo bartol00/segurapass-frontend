@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
 
-public class DeviceIdManager {
+public class ServerUrlManager {
 
-    private static final String FILE_NAME = "device_id.txt";
+    private static final String FILE_NAME = "server_url.txt";
 
-    public static String getDeviceId() {
+    public static String getServerUrl() {
         try {
             Path folderPath = getAppDataFolder();
             Path filePath = folderPath.resolve(FILE_NAME);
@@ -18,17 +17,19 @@ public class DeviceIdManager {
             if (Files.exists(filePath)) {
                 return Files.readString(filePath).trim();
             } else {
-                String newId = UUID.randomUUID().toString();
-                Files.createDirectories(folderPath);
-                Files.writeString(filePath, newId);
-                return newId;
+                return null;
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to read or create device ID file", e);
         }
     }
 
+    public static void createServerUrl() {
+
+    }
+
     private static Path getAppDataFolder() {
         return Paths.get(System.getenv("APPDATA"), "SeguraPass");
     }
+
 }

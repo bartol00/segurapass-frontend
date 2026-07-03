@@ -21,6 +21,10 @@ public class AppContext {
 
     @Getter
     @Setter
+    private static String serverUrl;
+
+    @Getter
+    @Setter
     private static String email;
 
     private static LoginSuccessObject session;
@@ -56,7 +60,14 @@ public class AppContext {
 
     public static void init() {
         deviceId = UUID.fromString(DeviceIdManager.getDeviceId());
-        ApiClient apiClient = new ApiClient(AppConfig.getBackendUrl());
+        serverUrl = ServerUrlManager.getServerUrl();
+        if (serverUrl != null) {
+            serverUrlSetup();
+        }
+    }
+
+    public static void serverUrlSetup() {
+        ApiClient apiClient = new ApiClient(serverUrl);
         segurapassClient = new SegurapassClient(apiClient);
     }
 
