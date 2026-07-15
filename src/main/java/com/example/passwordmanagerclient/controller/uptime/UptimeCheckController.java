@@ -19,53 +19,70 @@ public class UptimeCheckController {
 
     @FXML
     public void initialize() {
+        checkServer();
+    }
+
+    private void checkServer() {
 
         new Thread(() -> {
+
             try {
-                if (AppContext.getServerUrl() == null) {
-                    showServerSelectionDialog();
-                }
 
-                boolean uptime = UptimeService.getUptime();
-                if (!uptime) {
-                    showServerSelectionDialog();
-                }
+                String url = AppContext.getServerUrl();
 
-                Platform.runLater(() -> StageManager.switchScene(
-                        "/com/example/passwordmanagerclient/versions/version-check-view.fxml"
-                ));
+                if (url == null || !UptimeService.getUptime(url)) {
+                    Platform.runLater(this::showServerSelectionDialog);
+                } else {
+                    Platform.runLater(this::goToVersionCheck);
+                }
 
             } catch (Exception e) {
-                System.err.println(e.getMessage());
-                Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Network Error");
-                    alert.setHeaderText("Could not check server up status");
-                    alert.setContentText("Closing application...");
-                    alert.showAndWait();
-                    System.exit(0);
-                });
+                Platform.runLater(this::showError);
             }
+
         }).start();
     }
 
     private void showServerSelectionDialog() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/passwordmanagerclient/uptime/server-selection-dialog.fxml")
+                    getClass().getResource("/com/example/passwordmanagerclient/uptime/server-selection-dialog-view.fxml")
             );
 
             Parent root = loader.load();
 
+            ServerSelectionDialogController controller = loader.getController();
+
+            controller.setOnSuccess(this::goToVersionCheck);
+
             Stage dialog = new Stage();
+
             dialog.initOwner(progressIndicator.getScene().getWindow());
             dialog.setTitle("SeguraPass Server URL Required");
             dialog.setResizable(false);
             dialog.setScene(new Scene(root));
+
             dialog.show();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void goToVersionCheck() {
+        StageManager.switchScene(
+                "/com/example/passwordmanagerclient/versions/version-check-view.fxml"
+        );
+    }
+
+    private void showError() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+
+        alert.setTitle("Network Error");
+        alert.setHeaderText("Could not check server up status");
+        alert.setContentText("Closing application...");
+        alert.showAndWait();
+
+        System.exit(0);
     }
 }

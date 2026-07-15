@@ -20,7 +20,6 @@ public class AppContext {
     private static UUID deviceId;
 
     @Getter
-    @Setter
     private static String serverUrl;
 
     @Getter
@@ -60,7 +59,7 @@ public class AppContext {
 
     public static void init() {
         deviceId = UUID.fromString(DeviceIdManager.getDeviceId());
-        serverUrl = ServerUrlManager.getServerUrl();
+        serverUrl = ServerUrlManager.readServerUrl();
         if (serverUrl != null) {
             serverUrlSetup();
         }
@@ -69,6 +68,12 @@ public class AppContext {
     public static void serverUrlSetup() {
         ApiClient apiClient = new ApiClient(serverUrl);
         segurapassClient = new SegurapassClient(apiClient);
+    }
+
+    public static void setServerUrl(String url) {
+        ServerUrlManager.writeServerUrl(url);
+        serverUrl = url;
+        serverUrlSetup();
     }
 
     public static LoginSuccessObject getSession() {

@@ -1,20 +1,17 @@
 package com.example.passwordmanagerclient.service;
 
-import com.example.passwordmanagerclient.util.AppContext;
+import xyz.segurapass.sdk.service.impl.UptimeServiceImpl;
 
 public class UptimeService {
 
-    public static boolean getUptime() {
+    public static boolean getUptime(String serverUrl) {
         try {
-            return uptime().getUptime();
+            xyz.segurapass.sdk.service.UptimeService service = new UptimeServiceImpl();
+            return service.getUptime(serverUrl);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             return false;
         }
-    }
-
-    private static xyz.segurapass.sdk.service.UptimeService uptime() {
-        return AppContext.getSegurapassClient().uptime();
     }
 
 }

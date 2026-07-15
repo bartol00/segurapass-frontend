@@ -9,7 +9,7 @@ public class ServerUrlManager {
 
     private static final String FILE_NAME = "server_url.txt";
 
-    public static String getServerUrl() {
+    public static String readServerUrl() {
         try {
             Path folderPath = getAppDataFolder();
             Path filePath = folderPath.resolve(FILE_NAME);
@@ -20,12 +20,23 @@ public class ServerUrlManager {
                 return null;
             }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read or create device ID file", e);
+            throw new RuntimeException("Failed to read server URL file", e);
         }
     }
 
-    public static void createServerUrl() {
+    public static void writeServerUrl(String url) {
+        try {
+            Path folderPath = getAppDataFolder();
+            Path filePath = folderPath.resolve(FILE_NAME);
 
+            if (!Files.exists(filePath)) {
+                Files.createDirectories(folderPath);
+            }
+
+            Files.writeString(filePath, url);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write server URL file", e);
+        }
     }
 
     private static Path getAppDataFolder() {
