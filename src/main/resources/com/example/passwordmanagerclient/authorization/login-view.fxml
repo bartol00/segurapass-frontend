@@ -22,11 +22,21 @@
 
     <Label fx:id="statusLabel"/>
 
-    <Button text="Login" fx:id="loginButton" onAction="#onLoginClick" maxWidth="120" disable="true"/>
-    <Button text="Switch to Register" fx:id="switchRegisterButton" onAction="#onSwitchToRegister" style="-fx-font-size: 11px;"/>
-    <Button text="Remotely Delete Account" fx:id="remoteDeleteButton" onAction="#onOpenRemoteDelete" style="-fx-background-color: red; -fx-font-size: 11px;"/>
+    <Button text="Login" fx:id="loginButton"
+            onAction="#onLoginClick"
+            maxWidth="120" disable="true"/>
+    <Button text="Switch to Register" fx:id="switchRegisterButton"
+            onAction="#onSwitchToRegister"
+            style="-fx-font-size: 11px;"/>
+    <Button text="Remotely Delete Account" fx:id="remoteDeleteButton"
+            onAction="#onOpenRemoteDelete"
+            style="-fx-background-color: red; -fx-font-size: 11px;"/>
+    <Button text="Change Server" fx:id="serverButton"
+            style="-fx-background-color: white; -fx-text-fill: black; -fx-font-weight: bold;"
+            onAction="#onServerChange"/>
 
     <VBox alignment="CENTER" spacing="2">
+        <Label text="Current Server URL: " fx:id="serverLabel"/>
         <Label text="This app has been built with modern security practices in mind, but has not yet been independently audited."
                styleClass="security-notice"/>
         <Label text="Use at your own discretion."

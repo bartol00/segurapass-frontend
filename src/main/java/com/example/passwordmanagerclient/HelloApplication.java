@@ -20,7 +20,7 @@ public class HelloApplication extends Application {
         StageManager.init(stage);
 
         FXMLLoader loader = new FXMLLoader(getClass()
-                .getResource("/com/example/passwordmanagerclient/versions/version-check-view.fxml"));
+                .getResource("/com/example/passwordmanagerclient/uptime/uptime-check-view.fxml"));
         Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(
                 Objects.requireNonNull(

@@ -1,5 +1,8 @@
 package com.example.passwordmanagerclient.util;
 
+import com.example.passwordmanagerclient.controller.key.KeyController;
+import com.example.passwordmanagerclient.controller.uptime.UptimeCheckController;
+import com.example.passwordmanagerclient.service.KeyService;
 import xyz.segurapass.sdk.helpers.LoginSuccessObject;
 import xyz.segurapass.sdk.models.DecryptedCredential;
 import com.example.passwordmanagerclient.config.AppConfig;
@@ -18,6 +21,9 @@ public class AppContext {
 
     @Getter
     private static UUID deviceId;
+
+    @Getter
+    private static String serverUrl;
 
     @Getter
     @Setter
@@ -56,8 +62,23 @@ public class AppContext {
 
     public static void init() {
         deviceId = UUID.fromString(DeviceIdManager.getDeviceId());
-        ApiClient apiClient = new ApiClient(AppConfig.getBackendUrl());
+        serverUrl = ServerUrlManager.readServerUrl();
+        if (serverUrl != null) {
+            serverUrlSetup();
+        }
+    }
+
+    public static void serverUrlSetup() {
+        ApiClient apiClient = new ApiClient(serverUrl);
         segurapassClient = new SegurapassClient(apiClient);
+    }
+
+    public static void setServerUrl(String url) {
+        ServerUrlManager.writeServerUrl(url);
+        serverUrl = url;
+        serverUrlSetup();
+        UptimeCheckController controller = new UptimeCheckController();
+        controller.goToVersionCheck();
     }
 
     public static LoginSuccessObject getSession() {

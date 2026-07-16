@@ -2,6 +2,7 @@ package com.example.passwordmanagerclient.controller.credentials;
 
 import com.example.passwordmanagerclient.controller.DialogManager;
 import com.example.passwordmanagerclient.controller.password_change.PasswordChangeController;
+import com.example.passwordmanagerclient.controller.uptime.ServerSelectionDialogController;
 import xyz.segurapass.sdk.models.DecryptedCredential;
 import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.controller.deletion.AuthorizedDeletionController;
@@ -35,17 +36,22 @@ public class CredentialsController {
 
     @FXML private Button prevButton;
     @FXML private Button nextButton;
+    @FXML private Button serverButton;
     @FXML private Button logoutButton;
     @FXML private Button changePasswordButton;
     @FXML private Button deleteAccountButton;
     @FXML private Label pageLabel;
     @FXML private ComboBox<Integer> pageSizeCombo;
 
+    @FXML private Label serverLabel;
+
     private int currentPage = 0;
     private int pageSize = 20;
 
     @FXML
     public void initialize() {
+        updateServerUrl();
+
         setFactories();
 
         pageSizeCombo.getItems().addAll(5, 10, 20, 50, 100);
@@ -399,13 +405,10 @@ public class CredentialsController {
         }
     }
 
-    public void handleChildExceptions() {
-        onLogout();
-    }
-
     @FXML
     private void onLogout() {
         try {
+            serverButton.setDisable(true);
             logoutButton.setDisable(true);
             changePasswordButton.setDisable(true);
             deleteAccountButton.setDisable(true);
@@ -416,4 +419,33 @@ public class CredentialsController {
             System.err.println(e.getMessage());
         }
     }
+
+    @FXML
+    private void onServerChange() {
+        try {
+            DialogManager.DialogResult<ServerSelectionDialogController> result =
+                    DialogManager.openWindow(
+                            "/com/example/passwordmanagerclient/uptime/server-selection-dialog-view.fxml",
+                            "Change Server URL",
+                            (Stage) pageLabel.getScene().getWindow(),
+                            false,
+                            ServerSelectionDialogController.class
+                    );
+
+            result.controller().setCredentialsController(this);
+            result.stage().showAndWait();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            onLogout();
+        }
+    }
+
+    public void handleChildExceptions() {
+        onLogout();
+    }
+
+    private void updateServerUrl() {
+        serverLabel.setText(String.format("Current Server URL: %s", AppContext.getServerUrl()));
+    }
+
 }

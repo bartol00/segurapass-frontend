@@ -25,6 +25,7 @@ module com.example.passwordmanagerclient {
     opens com.example.passwordmanagerclient.controller.key to javafx.fxml;
     opens com.example.passwordmanagerclient.controller.versions to javafx.fxml;
     opens com.example.passwordmanagerclient.controller.password_change to javafx.fxml;
+    opens com.example.passwordmanagerclient.controller.uptime to javafx.fxml;
 
     exports com.example.passwordmanagerclient;
     exports com.example.passwordmanagerclient.controller.authorization;
@@ -33,4 +34,5 @@ module com.example.passwordmanagerclient {
     exports com.example.passwordmanagerclient.controller.key;
     exports com.example.passwordmanagerclient.controller.versions;
     exports com.example.passwordmanagerclient.controller.password_change;
+    exports com.example.passwordmanagerclient.controller.uptime;
 }

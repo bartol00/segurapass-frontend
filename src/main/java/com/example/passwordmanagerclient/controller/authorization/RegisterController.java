@@ -3,6 +3,7 @@ package com.example.passwordmanagerclient.controller.authorization;
 import com.example.passwordmanagerclient.controller.DialogManager;
 import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.controller.deletion.RemoteDeletionController;
+import com.example.passwordmanagerclient.controller.uptime.ServerSelectionDialogController;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.util.*;
 import javafx.fxml.FXML;
@@ -30,7 +31,9 @@ public class RegisterController {
     @FXML private Button registerButton;
     @FXML private Button switchLoginButton;
     @FXML private Button remoteDeleteButton;
+    @FXML private Button serverButton;
     @FXML private Label statusLabel;
+    @FXML private Label serverLabel;
 
     private static final Pattern LOWERCASE = Pattern.compile(".*[a-z].*");
     private static final Pattern UPPERCASE = Pattern.compile(".*[A-Z].*");
@@ -49,6 +52,7 @@ public class RegisterController {
         confirmPasswordField.textProperty().addListener(
                 (obs, oldVal, newVal) -> checkPasswordMatch()
         );
+        updateServerUrl();
     }
 
     private void updateStrength(String password) {
@@ -136,6 +140,7 @@ public class RegisterController {
         registerButton.setDisable(true);
         switchLoginButton.setDisable(true);
         remoteDeleteButton.setDisable(true);
+        serverButton.setDisable(true);
 
         statusLabel.setText("Registering...");
         statusLabel.setStyle("-fx-text-fill: blue;");
@@ -165,6 +170,7 @@ public class RegisterController {
             confirmPasswordField.setText("");
             switchLoginButton.setDisable(false);
             remoteDeleteButton.setDisable(false);
+            serverButton.setDisable(false);
         });
 
         task.setOnFailed(event -> {
@@ -175,6 +181,7 @@ public class RegisterController {
             System.err.println(task.getException().getMessage());
             switchLoginButton.setDisable(false);
             remoteDeleteButton.setDisable(false);
+            serverButton.setDisable(false);
         });
 
         new Thread(task).start();
@@ -206,6 +213,30 @@ public class RegisterController {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    @FXML
+    protected void onServerChange() {
+        try {
+            DialogManager.DialogResult<ServerSelectionDialogController> result =
+                    DialogManager.openWindow(
+                            "/com/example/passwordmanagerclient/uptime/server-selection-dialog-view.fxml",
+                            "Change Server URL",
+                            (Stage) statusLabel.getScene().getWindow(),
+                            false,
+                            ServerSelectionDialogController.class
+                    );
+
+            result.stage().showAndWait();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        } finally {
+            updateServerUrl();
+        }
+    }
+
+    private void updateServerUrl() {
+        serverLabel.setText(String.format("Current Server URL: %s", AppContext.getServerUrl()));
     }
 
     public void writeStatusLabel(String message) {

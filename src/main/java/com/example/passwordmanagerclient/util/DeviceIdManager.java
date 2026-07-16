@@ -28,7 +28,7 @@ public class DeviceIdManager {
         }
     }
 
-    public static Path getAppDataFolder() {
+    private static Path getAppDataFolder() {
         return Paths.get(System.getenv("APPDATA"), "SeguraPass");
     }
 }
