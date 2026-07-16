@@ -52,8 +52,6 @@ public class UptimeCheckController {
             Parent root = loader.load();
 
             ServerSelectionDialogController controller = loader.getController();
-
-            controller.setOnSuccess(this::goToVersionCheck);
             controller.setExitAppOnClose(true);
 
             Stage dialog = new Stage();
@@ -70,7 +68,7 @@ public class UptimeCheckController {
         }
     }
 
-    private void goToVersionCheck() {
+    public void goToVersionCheck() {
         StageManager.switchScene(
                 "/com/example/passwordmanagerclient/versions/version-check-view.fxml"
         );

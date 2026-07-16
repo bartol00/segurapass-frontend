@@ -43,11 +43,15 @@ public class CredentialsController {
     @FXML private Label pageLabel;
     @FXML private ComboBox<Integer> pageSizeCombo;
 
+    @FXML private Label serverLabel;
+
     private int currentPage = 0;
     private int pageSize = 20;
 
     @FXML
     public void initialize() {
+        updateServerUrl();
+
         setFactories();
 
         pageSizeCombo.getItems().addAll(5, 10, 20, 50, 100);
@@ -438,6 +442,10 @@ public class CredentialsController {
 
     public void handleChildExceptions() {
         onLogout();
+    }
+
+    private void updateServerUrl() {
+        serverLabel.setText(String.format("Current Server URL: %s", AppContext.getServerUrl()));
     }
 
 }
