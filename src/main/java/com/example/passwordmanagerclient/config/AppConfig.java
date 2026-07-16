@@ -17,10 +17,6 @@ public class AppConfig {
         }
     }
 
-    public static String getBackendUrl() {
-        return properties.getProperty("backend.url");
-    }
-
     public static String getCurrentVersionNumber() {
         return properties.getProperty("version.current");
     }
