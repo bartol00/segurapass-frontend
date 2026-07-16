@@ -1,5 +1,6 @@
 package com.example.passwordmanagerclient.controller.uptime;
 
+import com.example.passwordmanagerclient.controller.credentials.CredentialsController;
 import com.example.passwordmanagerclient.service.UptimeService;
 import com.example.passwordmanagerclient.util.AppContext;
 import javafx.fxml.FXML;
@@ -17,7 +18,11 @@ public class ServerSelectionDialogController {
     @FXML private Label serverStatus;
 
     @Setter
+    private CredentialsController credentialsController;
+    @Setter
     private Runnable onSuccess;
+    @Setter
+    private boolean exitAppOnClose = false;
 
     public void initialize() {
         serverBtn.setDisable(true);
@@ -59,19 +64,23 @@ public class ServerSelectionDialogController {
 
         AppContext.setServerUrl(url);
 
-        if (onSuccess != null) {
-            onSuccess.run();
-        }
-
         Stage stage = (Stage) serverStatus.getScene().getWindow();
         stage.close();
+
+        if (credentialsController != null) {
+            credentialsController.handleChildExceptions();
+        } else if (onSuccess != null) {
+            onSuccess.run();
+        }
     }
 
     @FXML
     private void onExitBtnClick() {
         Stage stage = (Stage) serverStatus.getScene().getWindow();
         stage.close();
-        System.exit(0);
+        if (exitAppOnClose) {
+            System.exit(0);
+        }
     }
 
 }

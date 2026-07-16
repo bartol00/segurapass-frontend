@@ -1,5 +1,7 @@
 package com.example.passwordmanagerclient.util;
 
+import com.example.passwordmanagerclient.controller.key.KeyController;
+import com.example.passwordmanagerclient.service.KeyService;
 import xyz.segurapass.sdk.helpers.LoginSuccessObject;
 import xyz.segurapass.sdk.models.DecryptedCredential;
 import com.example.passwordmanagerclient.config.AppConfig;
@@ -74,6 +76,11 @@ public class AppContext {
         ServerUrlManager.writeServerUrl(url);
         serverUrl = url;
         serverUrlSetup();
+        PublicKey newKey = KeyService.getPublicKey();
+        if (newKey == null) {
+            System.exit(1);
+        }
+        publicKey = newKey;
     }
 
     public static LoginSuccessObject getSession() {

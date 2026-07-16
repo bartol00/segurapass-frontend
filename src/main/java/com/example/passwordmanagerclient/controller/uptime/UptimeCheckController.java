@@ -54,6 +54,7 @@ public class UptimeCheckController {
             ServerSelectionDialogController controller = loader.getController();
 
             controller.setOnSuccess(this::goToVersionCheck);
+            controller.setExitAppOnClose(true);
 
             Stage dialog = new Stage();
 
