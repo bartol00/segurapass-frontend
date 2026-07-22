@@ -37,7 +37,8 @@ public class CredentialsService {
                     website,
                     username,
                     password,
-                    AppContext.getSession().getVaultKey()
+                    AppContext.getSession().getVaultKey(),
+                    AppContext.getSession().getPrivateSigningKey()
             );
 
         } catch (SegurapassSdkException e) {
@@ -61,7 +62,8 @@ public class CredentialsService {
                     website,
                     username,
                     password,
-                    AppContext.getSession().getVaultKey()
+                    AppContext.getSession().getVaultKey(),
+                    AppContext.getSession().getPrivateSigningKey()
             );
 
         } catch (SegurapassSdkException e) {
@@ -74,7 +76,7 @@ public class CredentialsService {
 
     public static void deleteCredentials(String credentialId) {
         try {
-            credentials().deleteCredential(credentialId);
+            credentials().deleteCredential(credentialId, AppContext.getSession().getPrivateSigningKey());
         } catch (SegurapassSdkException e) {
             System.err.println(e.getMessage());
         } catch (Exception e) {
