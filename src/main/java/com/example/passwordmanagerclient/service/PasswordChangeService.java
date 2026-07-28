@@ -14,6 +14,7 @@ public class PasswordChangeService {
                     oldPassword,
                     newPassword,
                     AppContext.getSession().getVaultKey(),
+                    AppContext.getSession().getPrivateSigningKey(),
                     AppContext.getDeviceId()
             );
 
