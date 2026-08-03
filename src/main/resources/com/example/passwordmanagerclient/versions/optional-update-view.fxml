@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.passwordmanagerclient.controller.versions.OptionalUpdateDialogController"
+      spacing="15" alignment="CENTER" prefWidth="380" style="-fx-padding: 20;">
+
+    <VBox alignment="CENTER" spacing="2">
+        <Label text="New version is available to download. Would you like to download it?"
+               wrapText="true" />
+        <Label fx:id="currentClientVersionLabel" wrapText="true" />
+        <Label fx:id="latestClientVersionLabel" wrapText="true" />
+    </VBox>
+
+    <HBox alignment="CENTER" spacing="15">
+        <Button fx:id="updateButton" text="Update" prefWidth="80"/>
+        <Button fx:id="declineButton" text="Decline" prefWidth="80"/>
+    </HBox>
+
+    <ProgressBar fx:id="downloadProgressBar"
+                 prefWidth="320"
+                 visible="false"/>
+
+    <Label fx:id="progressLabel"
+           visible="false"
+           wrapText="true"/>
+</VBox>
