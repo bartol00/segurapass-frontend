@@ -1,20 +1,18 @@
 package com.example.passwordmanagerclient.controller.versions;
 
-import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.util.DownloadUtil;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.stage.Stage;
 
-public class OptionalUpdateDialogController {
+public class MandatoryUpdateDialogController {
 
     @FXML private Label currentClientVersionLabel;
     @FXML private Label latestClientVersionLabel;
     @FXML private Button updateButton;
-    @FXML private Button declineButton;
+    @FXML private Button exitButton;
     @FXML private ProgressBar downloadProgressBar;
     @FXML private Label progressLabel;
 
@@ -30,7 +28,7 @@ public class OptionalUpdateDialogController {
     private void initialize() {
         updateButton.setOnAction(event -> {
             updateButton.setDisable(true);
-            declineButton.setDisable(true);
+            exitButton.setDisable(true);
 
             downloadProgressBar.setVisible(true);
             progressLabel.setVisible(true);
@@ -44,13 +42,7 @@ public class OptionalUpdateDialogController {
             thread.setDaemon(true);
             thread.start();
         });
-        declineButton.setOnAction(event -> {
-            Stage stage = (Stage) currentClientVersionLabel.getScene().getWindow();
-            stage.close();
-            StageManager.switchScene(
-                    "/com/example/passwordmanagerclient/keys/key-loading.fxml"
-            );
-        });
+        exitButton.setOnAction(event -> System.exit(0));
     }
 
 }
