@@ -45,8 +45,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "..\SeguraPass\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\SeguraPass\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\SeguraPass-jpackage\SeguraPass-jpackage.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\SeguraPass-jpackage\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

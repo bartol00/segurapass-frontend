@@ -47,7 +47,7 @@ echo ===========================================
 echo   Removing old runtime...
 echo ===========================================
 rmdir /s /q runtime
-rmdir /s /q SeguraPass
+rmdir /s /q SeguraPass-jpackage
 
 echo.
 echo ===========================================
@@ -77,7 +77,7 @@ echo.
 echo ===========================================
 echo   Packaging app image...
 echo ===========================================
-"%JAVA_HOME%\bin\jpackage.exe" --input target --name SeguraPass ^
+"%JAVA_HOME%\bin\jpackage.exe" --input target --name SeguraPass-jpackage ^
   --main-jar password-manager-client-%VERSION%.jar ^
   --main-class com.example.passwordmanagerclient.HelloApplication ^
   --type app-image ^

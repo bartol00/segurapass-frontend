@@ -38,6 +38,11 @@ build/
 .DS_Store
 
 runtime/
-SeguraPass/
-Output/
+SeguraPass-jpackage/
+release/Output/
 dependency-reduced-pom.xml
+release/metadata.json
+release/versions.json
+release/metadata.sig
+release/versions.sig
+release/keys/
