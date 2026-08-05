@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.passwordmanagerclient.controller.versions.ServerObsoleteDialogController"
+      spacing="15" alignment="CENTER" prefWidth="380" style="-fx-padding: 20;">
+
+    <VBox alignment="CENTER" spacing="2">
+        <Label text="Unfortunately, the server protocol version is obsolete for this version of the SeguraPass client app"
+                wrapText="true" />
+        <Label fx:id="serverProtocolVersion" wrapText="true" />
+        <Label fx:id="clientProtocolVersion" wrapText="true" />
+        <Label text="Please contact your SeguraPass server administrator" wrapText="true" />
+    </VBox>
+
+    <HBox alignment="CENTER" spacing="15">
+        <Button fx:id="exitBtn" text="Exit" prefWidth="80"/>
+    </HBox>
+</VBox>

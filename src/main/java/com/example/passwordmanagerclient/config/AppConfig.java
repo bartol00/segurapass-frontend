@@ -2,7 +2,6 @@ package com.example.passwordmanagerclient.config;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.Properties;
 
 public class AppConfig {
@@ -17,12 +16,16 @@ public class AppConfig {
         }
     }
 
-    public static String getCurrentVersionNumber() {
-        return properties.getProperty("version.current");
+    public static String getAppVersion() {
+        return properties.getProperty("app.version");
     }
 
-    public static LocalDate getCurrentVersionDate() {
-        return LocalDate.parse(properties.getProperty("version.date"));
+    public static Integer getProtocolVersion() {
+        return Integer.parseInt(properties.getProperty("segurapass.protocol.version"));
+    }
+
+    public static String getDownloadUrl() {
+        return properties.getProperty("download.url");
     }
 
 }

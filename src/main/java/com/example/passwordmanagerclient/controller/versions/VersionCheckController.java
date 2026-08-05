@@ -10,7 +10,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import xyz.segurapass.sdk.models.ClientLatestVersion;
 import xyz.segurapass.sdk.models.VersionModel;
 
 public class VersionCheckController {
@@ -22,30 +24,55 @@ public class VersionCheckController {
 
         new Thread(() -> {
             try {
-                VersionModel versionInfo = VersionService.getVersionInfo();
-
-                if (versionInfo == null) {
+                VersionModel versionModel = VersionService.getVersionInfo();
+                if (versionModel == null) {
                     throw new RuntimeException("Null version info");
                 }
-
-                boolean upToDate =
-                        versionInfo.getVersionNumber().equals(AppConfig.getCurrentVersionNumber())
-                                && versionInfo.getVersionDate().equals(AppConfig.getCurrentVersionDate());
+                int serverProtocolVersion = Integer.parseInt(versionModel.getProtocolVersion());
+                int clientProtocolVersion = AppConfig.getProtocolVersion();
+                String currentAppVersion = AppConfig.getAppVersion();
 
                 Platform.runLater(() -> {
 
-                    if (upToDate) {
-                        StageManager.switchScene(
-                                "/com/example/passwordmanagerclient/keys/key-loading.fxml"
+                    if (clientProtocolVersion < serverProtocolVersion) {
+
+                        String bucketUrl = AppConfig.getDownloadUrl() + serverProtocolVersion + "/";
+
+                        ClientLatestVersion clientLatestVersion = VersionService.getClientLatestVersion(
+                                bucketUrl,
+                                "versions.json"
                         );
+                        assert clientLatestVersion != null;
+                        String latestAppVersion = clientLatestVersion.getLatestVersion();
+
+                        showMandatoryUpdateDialog(bucketUrl, currentAppVersion, latestAppVersion);
+
+                    } else if (clientProtocolVersion == serverProtocolVersion) {
+
+                        String bucketUrl = AppConfig.getDownloadUrl() + clientProtocolVersion + "/";
+
+                        ClientLatestVersion clientLatestVersion = VersionService.getClientLatestVersion(
+                                bucketUrl,
+                                "versions.json"
+                        );
+                        assert clientLatestVersion != null;
+                        String latestAppVersion = clientLatestVersion.getLatestVersion();
+
+                        if (!latestAppVersion.equals(currentAppVersion)) {
+                            showOptionalUpdateDialog(bucketUrl, currentAppVersion, latestAppVersion);
+                        } else {
+                            StageManager.switchScene(
+                                    "/com/example/passwordmanagerclient/keys/key-loading.fxml"
+                            );
+                        }
+
                     } else {
-                        showUpdateDialog(versionInfo);
+                        showServerObsoleteDialog(serverProtocolVersion, clientProtocolVersion);
                     }
                 });
 
             } catch (Exception e) {
                 System.err.println(e.getMessage());
-
                 Platform.runLater(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Network Error");
@@ -58,25 +85,83 @@ public class VersionCheckController {
         }).start();
     }
 
-    private void showUpdateDialog(VersionModel versionInfo) {
+    private void showMandatoryUpdateDialog(String bucketUrl, String currentVersion, String latestVersion) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/example/passwordmanagerclient/versions/update-dialog.fxml")
+                    getClass().getResource("/com/example/passwordmanagerclient/versions/mandatory-update-view.fxml")
             );
 
             Parent root = loader.load();
 
-            UpdateDialogController ctrl = loader.getController();
-            ctrl.setData(
-                    versionInfo.getVersionNumber(),
-                    versionInfo.getVersionDescription(),
-                    versionInfo.getDownloadUrl(),
-                    versionInfo.getVersionDate().toString()
+            String url = bucketUrl + latestVersion + "/";
+            MandatoryUpdateDialogController controller = loader.getController();
+            controller.setData(
+                    url,
+                    currentVersion,
+                    latestVersion
             );
 
             Stage dialog = new Stage();
             dialog.initOwner(progressIndicator.getScene().getWindow());
-            dialog.setTitle("Update Required");
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.setTitle("Update SeguraPass");
+            dialog.setResizable(false);
+            dialog.setScene(new Scene(root));
+            dialog.setOnCloseRequest(event -> System.exit(0));
+            dialog.showAndWait();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showOptionalUpdateDialog(String bucketUrl, String currentVersion, String latestVersion) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/passwordmanagerclient/versions/optional-update-view.fxml")
+            );
+
+            Parent root = loader.load();
+
+            String url = bucketUrl + latestVersion + "/";
+            OptionalUpdateDialogController controller = loader.getController();
+            controller.setData(
+                    url,
+                    currentVersion,
+                    latestVersion
+            );
+
+            Stage dialog = new Stage();
+            dialog.initOwner(progressIndicator.getScene().getWindow());
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.setTitle("Update SeguraPass");
+            dialog.setResizable(false);
+            dialog.setScene(new Scene(root));
+            dialog.setOnCloseRequest(event -> System.exit(0));
+            dialog.showAndWait();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showServerObsoleteDialog(int serverProtocolVersion, int clientProtocolVersion) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/passwordmanagerclient/versions/server-obsolete-view.fxml")
+            );
+
+            Parent root = loader.load();
+
+            ServerObsoleteDialogController ctrl = loader.getController();
+            ctrl.setData(
+                    serverProtocolVersion,
+                    clientProtocolVersion
+            );
+
+            Stage dialog = new Stage();
+            dialog.initOwner(progressIndicator.getScene().getWindow());
+            dialog.setTitle("Server Obsolete");
             dialog.setResizable(false);
             dialog.setScene(new Scene(root));
             dialog.show();
@@ -85,4 +170,5 @@ public class VersionCheckController {
             throw new RuntimeException(e);
         }
     }
+
 }

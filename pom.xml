@@ -16,7 +16,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- SeguraPass -->
-        <segurapass-sdk.version>4.0.0</segurapass-sdk.version>
+        <segurapass-sdk.version>5.0.0</segurapass-sdk.version>
+        <segurapass.protocol.version>2</segurapass.protocol.version>
 
         <!-- Third Party -->
         <junit.version>5.12.1</junit.version>
@@ -188,5 +189,12 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 </project>

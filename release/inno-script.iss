@@ -3,7 +3,9 @@
 ; Non-commercial use only
 
 #define MyAppName "SeguraPass"
-#define MyAppVersion "1.0"
+#ifndef MyAppVersion
+  #define MyAppVersion "DEV"
+#endif
 #define MyAppPublisher "SeguraPass"
 #define MyAppURL "https://segurapass.xyz"
 #define MyAppExeName "SeguraPass.exe"
@@ -32,7 +34,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
-OutputBaseFilename=mysetup
+OutputBaseFilename=SeguraPass-Setup
 SolidCompression=yes
 WizardStyle=modern dynamic
 
@@ -43,8 +45,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\Bartol\Desktop\password-manager-frontend\SeguraPass\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Bartol\Desktop\password-manager-frontend\SeguraPass\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\SeguraPass\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\SeguraPass\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
