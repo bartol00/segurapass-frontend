@@ -196,5 +196,7 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
+
+        <finalName>password-manager-client</finalName>
     </build>
 </project>
