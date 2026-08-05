@@ -37,7 +37,7 @@ if errorlevel 1 (
     pause
     exit /b
 )
-if not exist "target\password-manager-client-%VERSION%.jar" (
+if not exist "target\password-manager-client.jar" (
     echo [ERROR] Built JAR not found!
     exit /b 1
 )
@@ -47,7 +47,7 @@ echo ===========================================
 echo   Removing old runtime...
 echo ===========================================
 rmdir /s /q runtime
-rmdir /s /q SeguraPass-jpackage
+rmdir /s /q SeguraPass
 
 echo.
 echo ===========================================
@@ -77,7 +77,7 @@ echo.
 echo ===========================================
 echo   Packaging app image...
 echo ===========================================
-"%JAVA_HOME%\bin\jpackage.exe" --input target --name SeguraPass-jpackage ^
+"%JAVA_HOME%\bin\jpackage.exe" --input target --name SeguraPass ^
   --main-jar password-manager-client.jar ^
   --main-class com.example.passwordmanagerclient.HelloApplication ^
   --type app-image ^
