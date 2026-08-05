@@ -78,7 +78,7 @@ echo ===========================================
 echo   Packaging app image...
 echo ===========================================
 "%JAVA_HOME%\bin\jpackage.exe" --input target --name SeguraPass-jpackage ^
-  --main-jar password-manager-client-%VERSION%.jar ^
+  --main-jar password-manager-client.jar ^
   --main-class com.example.passwordmanagerclient.HelloApplication ^
   --type app-image ^
   --runtime-image runtime ^
