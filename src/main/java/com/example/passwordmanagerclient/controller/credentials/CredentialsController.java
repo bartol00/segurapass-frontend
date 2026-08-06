@@ -1,5 +1,6 @@
 package com.example.passwordmanagerclient.controller.credentials;
 
+import com.example.passwordmanagerclient.config.AppConfig;
 import com.example.passwordmanagerclient.controller.DialogManager;
 import com.example.passwordmanagerclient.controller.password_change.PasswordChangeController;
 import com.example.passwordmanagerclient.controller.uptime.ServerSelectionDialogController;
@@ -44,6 +45,7 @@ public class CredentialsController {
     @FXML private ComboBox<Integer> pageSizeCombo;
 
     @FXML private Label serverLabel;
+    @FXML private Label versionLabel;
 
     private int currentPage = 0;
     private int pageSize = 20;
@@ -51,6 +53,7 @@ public class CredentialsController {
     @FXML
     public void initialize() {
         updateServerUrl();
+        updateVersionLabel();
 
         setFactories();
 
@@ -446,6 +449,10 @@ public class CredentialsController {
 
     private void updateServerUrl() {
         serverLabel.setText(String.format("Current Server URL: %s", AppContext.getServerUrl()));
+    }
+
+    private void updateVersionLabel() {
+        versionLabel.setText(String.format("Current App Version: %s", AppConfig.getAppVersion()));
     }
 
 }

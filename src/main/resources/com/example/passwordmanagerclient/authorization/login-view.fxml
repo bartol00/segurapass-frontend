@@ -37,6 +37,7 @@
 
     <VBox alignment="CENTER" spacing="2">
         <Label text="Current Server URL: " fx:id="serverLabel"/>
+        <Label text="Current App Version: " fx:id="versionLabel"/>
         <Label text="This app has been built with modern security practices in mind, but has not yet been independently audited."
                styleClass="security-notice"/>
         <Label text="Use at your own discretion."

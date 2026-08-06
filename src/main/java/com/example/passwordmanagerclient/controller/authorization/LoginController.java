@@ -1,5 +1,6 @@
 package com.example.passwordmanagerclient.controller.authorization;
 
+import com.example.passwordmanagerclient.config.AppConfig;
 import com.example.passwordmanagerclient.controller.DialogManager;
 import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.controller.deletion.RemoteDeletionController;
@@ -23,6 +24,7 @@ public class LoginController {
     @FXML private Button remoteDeleteButton;
     @FXML private Button serverButton;
     @FXML private Label serverLabel;
+    @FXML private Label versionLabel;
 
     public void initialize() {
         emailField.textProperty().addListener(
@@ -32,6 +34,7 @@ public class LoginController {
                 (obs, oldVal, newVal) -> disableLoginButton()
         );
         updateServerUrl();
+        updateVersionLabel();
     }
 
     @FXML
@@ -147,6 +150,10 @@ public class LoginController {
 
     private void updateServerUrl() {
         serverLabel.setText(String.format("Current Server URL: %s", AppContext.getServerUrl()));
+    }
+
+    private void updateVersionLabel() {
+        versionLabel.setText(String.format("Current App Version: %s", AppConfig.getAppVersion()));
     }
 
     public void writeStatusLabel(String message) {
