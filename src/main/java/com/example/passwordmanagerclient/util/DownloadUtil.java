@@ -26,6 +26,15 @@ import java.util.HexFormat;
 
 public class DownloadUtil {
 
+    public static void verifyVersionsSignature(String latestVersionUrl) throws Exception {
+        byte[] versionsBytes = VersionService.getBytes(latestVersionUrl + "versions.json");
+        byte[] signatureBytes = VersionService.getBytes(latestVersionUrl + "versions.sig");
+        boolean isValidSignature = verifySignature(versionsBytes, signatureBytes);
+        if (!isValidSignature) {
+            throw new Exception("Signature versions verification failed");
+        }
+    }
+
     public static Task<Void> downloadAndInstall(String latestVersionUrl) {
 
         return new Task<>() {
@@ -53,14 +62,13 @@ public class DownloadUtil {
 
                 // download installer
                 updateMessage("Downloading installer...");
-                // TODO change this later once jenkins is done
                 Path installerPath = Path.of(
                         System.getProperty("java.io.tmpdir"),
                         "SeguraPass-Setup.exe"
                 );
                 Files.deleteIfExists(installerPath);
                 downloadInstaller(
-                        latestVersionUrl + "WirelessLan_DCH_Realtek_Z_V2024.10.143.0_42585_1.exe",
+                        latestVersionUrl + "SeguraPass-Setup.exe",
                         installerPath
                 );
 

@@ -3,6 +3,7 @@ package com.example.passwordmanagerclient.controller.versions;
 import com.example.passwordmanagerclient.config.AppConfig;
 import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.service.VersionService;
+import com.example.passwordmanagerclient.util.DownloadUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +39,12 @@ public class VersionCheckController {
 
                         String bucketUrl = AppConfig.getDownloadUrl() + serverProtocolVersion + "/";
 
+                        try {
+                            DownloadUtil.verifyVersionsSignature(bucketUrl);
+                        } catch (Exception e) {
+                            showErrorVersions();
+                        }
+
                         ClientLatestVersion clientLatestVersion = VersionService.getClientLatestVersion(
                                 bucketUrl,
                                 "versions.json"
@@ -50,6 +57,12 @@ public class VersionCheckController {
                     } else if (clientProtocolVersion == serverProtocolVersion) {
 
                         String bucketUrl = AppConfig.getDownloadUrl() + clientProtocolVersion + "/";
+
+                        try {
+                            DownloadUtil.verifyVersionsSignature(bucketUrl);
+                        } catch (Exception e) {
+                            showErrorVersions();
+                        }
 
                         ClientLatestVersion clientLatestVersion = VersionService.getClientLatestVersion(
                                 bucketUrl,
@@ -169,6 +182,17 @@ public class VersionCheckController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void showErrorVersions() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+
+        alert.setTitle("Signature Verification Error");
+        alert.setHeaderText("Could not verify versions signature");
+        alert.setContentText("Closing application...");
+        alert.showAndWait();
+
+        System.exit(0);
     }
 
 }
