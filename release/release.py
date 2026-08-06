@@ -17,6 +17,8 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 )
 from cryptography.exceptions import InvalidSignature
 
+from upload import upload_file
+
 
 # --------------------------------------------------
 # CONFIG
@@ -29,11 +31,11 @@ INSTALLER = Path(sys.argv[3])
 PRIVATE_KEY = Path("keys/update-signing-private.pem")
 PUBLIC_KEY = Path("keys/update-signing-public.pem")
 
-METADATA = Path("metadata.json")
-METADATA_SIG = Path("metadata.sig")
+METADATA = Path("Output/metadata.json")
+METADATA_SIG = Path("Output/metadata.sig")
 
-VERSIONS = Path("versions.json")
-VERSIONS_SIG = Path("versions.sig")
+VERSIONS = Path("Output/versions.json")
+VERSIONS_SIG = Path("Output/versions.sig")
 
 VERSIONS_URL = (
     f"https://downloads.segurapass.xyz/protocols/{PROTOCOL}/versions.json"
@@ -137,4 +139,27 @@ for src, dst in [
     dst.write_bytes(signature)
     print(f"Signed {src.name}")
 
-print("Done.")
+print("Generated signatures")
+
+upload_file(
+    "Output/SeguraPass-Setup.exe",
+    f"protocols/{PROTOCOL}/{VERSION}/SeguraPass-Setup.exe"
+)
+upload_file(
+    "Output/metadata.json",
+    f"protocols/{PROTOCOL}/{VERSION}/metadata.json"
+)
+upload_file(
+    "Output/metadata.sig",
+    f"protocols/{PROTOCOL}/{VERSION}/metadata.sig"
+)
+upload_file(
+    "Output/versions.json",
+    f"protocols/{PROTOCOL}/versions.json"
+)
+upload_file(
+    "Output/versions.sig",
+    f"protocols/{PROTOCOL}/versions.sig"
+)
+
+print("Uploaded all files")
