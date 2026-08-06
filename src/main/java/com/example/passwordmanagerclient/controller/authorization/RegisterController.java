@@ -1,5 +1,6 @@
 package com.example.passwordmanagerclient.controller.authorization;
 
+import com.example.passwordmanagerclient.config.AppConfig;
 import com.example.passwordmanagerclient.controller.DialogManager;
 import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.controller.deletion.RemoteDeletionController;
@@ -34,6 +35,7 @@ public class RegisterController {
     @FXML private Button serverButton;
     @FXML private Label statusLabel;
     @FXML private Label serverLabel;
+    @FXML private Label versionLabel;
 
     private static final Pattern LOWERCASE = Pattern.compile(".*[a-z].*");
     private static final Pattern UPPERCASE = Pattern.compile(".*[A-Z].*");
@@ -53,6 +55,7 @@ public class RegisterController {
                 (obs, oldVal, newVal) -> checkPasswordMatch()
         );
         updateServerUrl();
+        updateVersionLabel();
     }
 
     private void updateStrength(String password) {
@@ -237,6 +240,10 @@ public class RegisterController {
 
     private void updateServerUrl() {
         serverLabel.setText(String.format("Current Server URL: %s", AppContext.getServerUrl()));
+    }
+
+    private void updateVersionLabel() {
+        versionLabel.setText(String.format("Current App Version: %s", AppConfig.getAppVersion()));
     }
 
     public void writeStatusLabel(String message) {
