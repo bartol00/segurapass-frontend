@@ -17,6 +17,7 @@ module com.example.passwordmanagerclient {
     requires segurapass.sdk;
     requires api.client;
     requires segurapass.api;
+    requires com.google.zxing;
 
     opens com.example.passwordmanagerclient to javafx.fxml;
     opens com.example.passwordmanagerclient.controller.authorization to javafx.fxml;
@@ -26,6 +27,7 @@ module com.example.passwordmanagerclient {
     opens com.example.passwordmanagerclient.controller.versions to javafx.fxml;
     opens com.example.passwordmanagerclient.controller.password_change to javafx.fxml;
     opens com.example.passwordmanagerclient.controller.uptime to javafx.fxml;
+    opens com.example.passwordmanagerclient.controller.mfa to javafx.fxml;
 
     exports com.example.passwordmanagerclient;
     exports com.example.passwordmanagerclient.controller.authorization;
@@ -35,4 +37,5 @@ module com.example.passwordmanagerclient {
     exports com.example.passwordmanagerclient.controller.versions;
     exports com.example.passwordmanagerclient.controller.password_change;
     exports com.example.passwordmanagerclient.controller.uptime;
+    exports com.example.passwordmanagerclient.controller.mfa;
 }

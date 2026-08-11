@@ -1,6 +1,7 @@
 package com.example.passwordmanagerclient.service;
 
 import com.example.passwordmanagerclient.util.*;
+import xyz.segurapass.api.authorization.LoginCompleteResp;
 import xyz.segurapass.sdk.exception.SegurapassSdkException;
 import xyz.segurapass.sdk.helpers.LoginSuccessObject;
 import xyz.segurapass.sdk.service.AuthorizationService;
@@ -34,7 +35,16 @@ public class AuthService {
 
         try {
 
-            LoginSuccessObject successObject = auth().login(email, masterPassword, AppContext.getDeviceId());
+            Object loginObject = auth().login(email, masterPassword, AppContext.getDeviceId());
+            if (loginObject instanceof LoginCompleteResp loginCompleteResp) {
+                AppContext.setPasswordChar(masterPassword);
+                AppContext.setTotpEnabled(true);
+                AppContext.setTotpCode(loginCompleteResp.getTotpCode());
+                return new OperationResult("Login successful (MFA enabled)", true);
+            }
+
+            assert loginObject instanceof LoginSuccessObject;
+            LoginSuccessObject successObject = (LoginSuccessObject) loginObject;
 
             if (!keys().isValid(successObject.getAccessToken(), AppContext.getPublicKey())) {
                 return new OperationResult("Could not verify JWT", false);
@@ -49,7 +59,7 @@ public class AuthService {
             AppContext.setSession(successObject);
             AppContext.setJwtExpiry(jwtExpiry);
 
-            return new OperationResult("Login successful", true);
+            return new OperationResult("Login successful (no MFA enabled)", true);
 
         } catch (SegurapassSdkException e) {
             return new OperationResult(e.getMessage(), false);

@@ -69,7 +69,11 @@ public class LoginController {
         task.setOnSucceeded(event -> {
             OperationResult result = task.getValue();
             if (result.passed()) {
-                switchToCredentialsView();
+                if (AppContext.isTotpEnabled()) {
+                    return;
+                } else {
+                    switchToCredentialsView();
+                }
             } else {
                 masterPasswordField.setText("");
                 statusLabel.setText(result.message());

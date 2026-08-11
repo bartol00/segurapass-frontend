@@ -1,11 +1,8 @@
 package com.example.passwordmanagerclient.util;
 
-import com.example.passwordmanagerclient.controller.key.KeyController;
 import com.example.passwordmanagerclient.controller.uptime.UptimeCheckController;
-import com.example.passwordmanagerclient.service.KeyService;
 import xyz.segurapass.sdk.helpers.LoginSuccessObject;
 import xyz.segurapass.sdk.models.DecryptedCredential;
-import com.example.passwordmanagerclient.config.AppConfig;
 import com.segurapass.api.ApiClient;
 import xyz.segurapass.sdk.SegurapassClient;
 import lombok.Getter;
@@ -14,6 +11,7 @@ import lombok.Setter;
 import java.security.PublicKey;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +26,10 @@ public class AppContext {
     @Getter
     @Setter
     private static String email;
+
+    @Getter
+    @Setter
+    private static char[] passwordChar;
 
     private static LoginSuccessObject session;
 
@@ -58,6 +60,14 @@ public class AppContext {
     @Getter
     @Setter
     private static PublicKey publicKey;
+
+    @Getter
+    @Setter
+    private static boolean totpEnabled = false;
+
+    @Getter
+    @Setter
+    private static String totpCode;
 
 
     public static void init() {
@@ -97,7 +107,15 @@ public class AppContext {
         segurapassClient.setJwt(loginSuccessObject.getAccessToken());
     }
 
+    public static void clearPasswordChar() {
+        if (passwordChar != null) {
+            Arrays.fill(passwordChar, (char) 0);
+            passwordChar = null;
+        }
+    }
+
     public static void clearSensitiveData() {
+        clearPasswordChar();
         email = null;
         if (session != null) {
             session.destroy();

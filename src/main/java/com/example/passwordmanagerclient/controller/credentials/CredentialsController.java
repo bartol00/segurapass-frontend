@@ -2,6 +2,7 @@ package com.example.passwordmanagerclient.controller.credentials;
 
 import com.example.passwordmanagerclient.config.AppConfig;
 import com.example.passwordmanagerclient.controller.DialogManager;
+import com.example.passwordmanagerclient.controller.mfa.MfaDashboardController;
 import com.example.passwordmanagerclient.controller.password_change.PasswordChangeController;
 import com.example.passwordmanagerclient.controller.uptime.ServerSelectionDialogController;
 import xyz.segurapass.sdk.models.DecryptedCredential;
@@ -436,6 +437,24 @@ public class CredentialsController {
                     );
 
             result.controller().setCredentialsController(this);
+            result.stage().showAndWait();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            onLogout();
+        }
+    }
+
+    @FXML
+    private void onMfaOptions() {
+        try {
+            DialogManager.DialogResult<MfaDashboardController> result =
+                    DialogManager.openWindow(
+                            "/com/example/passwordmanagerclient/mfa/mfa-dashboard.fxml",
+                            "MFA Dashboard",
+                            (Stage) pageLabel.getScene().getWindow(),
+                            false,
+                            MfaDashboardController.class
+                    );
             result.stage().showAndWait();
         } catch (Exception e) {
             System.err.println(e.getMessage());

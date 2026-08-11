@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.passwordmanagerclient.controller.mfa.MfaDashboardController"
+      prefWidth="400" prefHeight="250"
+      spacing="10" style="-fx-padding: 20;">
+    <Label text="MFA Status" style="-fx-font-size: 16;" wrapText="true" />
+    <HBox spacing="10">
+        <Label text="TOTP" fx:id="totpClickable" onMouseClicked="#onTotpClick" styleClass="clickable-label"/>
+        <Label text="Disabled" fx:id="totpLabel" style="-fx-text-fill: red;" />
+    </HBox>
+    <Label text="Click on the MFA method whose status you would like to change" style="-fx-font-size: 12;" wrapText="true" />
+</VBox>

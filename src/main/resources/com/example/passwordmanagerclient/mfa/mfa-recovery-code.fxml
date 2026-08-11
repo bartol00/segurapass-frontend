@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.passwordmanagerclient.controller.mfa.RecoveryCodeController"
+      prefWidth="700" prefHeight="450"
+      spacing="10" style="-fx-padding: 20;">
+    <Label text="Recovery Code" style="-fx-font-size: 16;" wrapText="true" />
+    <TextField text="recoveryCode" fx:id="recoveryCode" style="-fx-font-size: 26;" editable="false" />
+    <Label text="WARNING: This code will only be displayed once. Please store it in a secure location."
+           style="-fx-font-size: 12;" wrapText="true" />
+    <Label text="If you lose this code, you will not be able to access your account if you are also unable to use an MFA method you previously enabled."
+           style="-fx-font-size: 12;" wrapText="true" />
+    <Button text="OK" onAction="#okClick" />
+</VBox>
