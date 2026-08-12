@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.passwordmanagerclient.controller.authorization.RecoveryCodeEntryController"
+      prefWidth="450" prefHeight="350"
+      spacing="10" style="-fx-padding: 20;">
+
+    <Label text="Enter Recovery Code" style="-fx-font-size: 16;" wrapText="true" />
+
+    <Label text="WARNING: If you use the recovery code in place of an MFA method, upon successful recovery all your existing MFA methods will be disabled"
+           style="-fx-font-size: 12;" wrapText="true" />
+
+    <TextField fx:id="recoveryCodeField" promptText="Recovery Code" />
+
+    <HBox spacing="10">
+        <Button text="Enter" fx:id="enterButton" onAction="#onEnterClick" />
+        <Button text="Cancel" fx:id="cancelButton" onAction="#onCancelClick" />
+    </HBox>
+
+</VBox>

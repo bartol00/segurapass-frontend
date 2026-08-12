@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.passwordmanagerclient.controller.authorization.MfaChoiceController"
+      prefWidth="450" prefHeight="200"
+      spacing="10" style="-fx-padding: 20;">
+
+    <Label text="Choose from one of the MFA methods below" style="-fx-font-size: 16;" wrapText="true" />
+
+    <VBox spacing="10">
+        <Label text="TOTP" fx:id="totpLabel" onMouseClicked="#onTotpClick" styleClass="clickable-label"/>
+        <Label text="Recovery Code" onMouseClicked="#onRecoveryCodeClick" styleClass="clickable-label" />
+    </VBox>
+
+    <HBox spacing="10">
+        <Button text="Cancel" onAction="#onCancelClick" />
+    </HBox>
+
+</VBox>

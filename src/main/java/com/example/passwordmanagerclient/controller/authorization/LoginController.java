@@ -61,7 +61,7 @@ public class LoginController {
                 try {
                     return AuthService.login(email, masterPasswordChars);
                 } finally {
-                    clearPassword(masterPasswordChars);
+                    // clearPassword(masterPasswordChars);
                 }
             }
         };
@@ -70,7 +70,20 @@ public class LoginController {
             OperationResult result = task.getValue();
             if (result.passed()) {
                 if (AppContext.isTotpEnabled()) {
-                    return;
+                    try {
+                        DialogManager.DialogResult<MfaChoiceController> dialogResult =
+                                DialogManager.openWindow(
+                                        "/com/example/passwordmanagerclient/authorization/mfa-choice.fxml",
+                                        "MFA Dashboard",
+                                        (Stage) emailField.getScene().getWindow(),
+                                        false,
+                                        MfaChoiceController.class
+                                );
+                        dialogResult.stage().showAndWait();
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
+                        System.exit(1);
+                    }
                 } else {
                     switchToCredentialsView();
                 }
