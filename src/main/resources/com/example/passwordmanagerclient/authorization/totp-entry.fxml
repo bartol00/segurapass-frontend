@@ -8,13 +8,16 @@
       prefWidth="300" prefHeight="250"
       spacing="10" style="-fx-padding: 20;">
 
-    <Label text="Enter OTP" style="-fx-font-size: 16;" wrapText="true" />
+    <Label text="Enter the 6-digit code from your authenticator" style="-fx-font-size: 16;" wrapText="true" />
 
-    <TextField fx:id="otpField" promptText="OTP" />
+    <fx:include fx:id="otpInput"
+                source="../mfa/totp-input.fxml"/>
 
     <HBox spacing="10">
         <Button text="Enter" fx:id="enterButton" onAction="#onEnterClick" />
         <Button text="Cancel" fx:id="cancelButton" onAction="#onCancelClick" />
     </HBox>
+
+    <Label text="Status Text" fx:id="statusLabel" wrapText="true" />
 
 </VBox>

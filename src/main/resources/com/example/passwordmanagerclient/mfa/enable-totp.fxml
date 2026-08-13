@@ -9,7 +9,7 @@
       prefWidth="600" prefHeight="450"
       spacing="10" style="-fx-padding: 20;">
 
-    <Label text="Enter OTP" style="-fx-font-size: 16;" wrapText="true" />
+    <Label text="Enter the 6-digit code from your authenticator" style="-fx-font-size: 16;" wrapText="true" />
 
     <ImageView
             fx:id="totpQrCode"
@@ -17,7 +17,8 @@
             fitHeight="300"
             preserveRatio="true"/>
 
-    <TextField fx:id="otpField" promptText="OTP" />
+    <fx:include fx:id="otpInput"
+                source="totp-input.fxml"/>
 
     <HBox spacing="10">
         <Button text="Verify" fx:id="verifyButton" onAction="#onVerifyClick" />

@@ -35,8 +35,20 @@ public class MfaDashboardController {
         TokenManager.ensureValidJwt();
 
         if (AppContext.isTotpEnabled()) {
-            MfaService.removeTotp();
-            AppContext.setTotpEnabled(false);
+            try {
+                DialogManager.DialogResult<DisableMfaController> result =
+                        DialogManager.openWindow(
+                                "/com/example/passwordmanagerclient/mfa/disable-mfa.fxml",
+                                "Enable TOTP",
+                                (Stage) totpLabel.getScene().getWindow(),
+                                false,
+                                DisableMfaController.class
+                        );
+                result.controller().setMfaMethodLabel("TOTP");
+                result.stage().showAndWait();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
         } else {
             String totpUrl = MfaService.addTotp();
             try {
@@ -50,7 +62,6 @@ public class MfaDashboardController {
                         );
                 result.controller().initialize(totpUrl);
                 result.stage().showAndWait();
-                AppContext.setTotpEnabled(true);
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }

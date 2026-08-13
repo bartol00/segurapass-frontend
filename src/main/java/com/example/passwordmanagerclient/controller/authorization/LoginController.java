@@ -79,6 +79,9 @@ public class LoginController {
                                         false,
                                         MfaChoiceController.class
                                 );
+                        dialogResult.stage().setOnCloseRequest(closeEvent -> {
+                            System.exit(0);
+                        });
                         dialogResult.stage().showAndWait();
                     } catch (Exception e) {
                         System.err.println(e.getMessage());

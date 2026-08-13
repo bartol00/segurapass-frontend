@@ -1,20 +1,29 @@
 package com.example.passwordmanagerclient.controller.authorization;
 
 import com.example.passwordmanagerclient.controller.StageManager;
+import com.example.passwordmanagerclient.controller.mfa.OtpInputController;
 import com.example.passwordmanagerclient.service.MfaService;
 import com.example.passwordmanagerclient.util.AppContext;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class TotpEntryController {
 
-    @FXML private TextField otpField;
     @FXML private Button enterButton;
     @FXML private Button cancelButton;
+    @FXML private Label statusLabel;
+
+    @FXML private OtpInputController otpInputController;
 
     public boolean loggedIn = false;
+
+    @FXML
+    public void initialize(){
+        statusLabel.setText("");
+        statusLabel.setStyle("-fx-text-fill: red;");
+    }
 
     @FXML
     private void onEnterClick() {
@@ -22,11 +31,17 @@ public class TotpEntryController {
         cancelButton.setDisable(true);
 
         try {
-            MfaService.loginTotp(AppContext.getTotpCode(), otpField.getText());
+            if (otpInputController.isIncomplete()) {
+                enterButton.setDisable(false);
+                cancelButton.setDisable(false);
+                return;
+            }
+            MfaService.loginTotp(AppContext.getTotpCode(), otpInputController.getOtp());
+            otpInputController.clear();
         } catch (Exception e) {
             enterButton.setDisable(false);
             cancelButton.setDisable(false);
-            System.err.println("Error: " + e.getMessage());
+            statusLabel.setText(e.getMessage());
             return;
         }
 
@@ -36,7 +51,7 @@ public class TotpEntryController {
         try {
             StageManager.switchScene("/com/example/passwordmanagerclient/credentials/credentials-view.fxml");
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            statusLabel.setText(e.getMessage());
         }
 
         loggedIn = true;
