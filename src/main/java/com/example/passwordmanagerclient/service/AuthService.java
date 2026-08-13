@@ -35,6 +35,8 @@ public class AuthService {
 
         try {
 
+            AppContext.setEmail(email);
+
             Object loginObject = auth().login(email, masterPassword, AppContext.getDeviceId());
             if (loginObject instanceof LoginCompleteResp loginCompleteResp) {
                 AppContext.setPasswordChar(masterPassword);
@@ -55,7 +57,6 @@ public class AuthService {
                 return new OperationResult("Could not get expiry time from JWT", false);
             }
 
-            AppContext.setEmail(email);
             AppContext.setSession(successObject);
             AppContext.setJwtExpiry(jwtExpiry);
 

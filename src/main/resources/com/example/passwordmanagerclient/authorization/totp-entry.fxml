@@ -2,27 +2,22 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.ImageView?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.passwordmanagerclient.controller.mfa.EnableTotpController"
-      prefWidth="600" prefHeight="450"
+      fx:controller="com.example.passwordmanagerclient.controller.authorization.TotpEntryController"
+      prefWidth="300" prefHeight="250"
       spacing="10" style="-fx-padding: 20;">
 
     <Label text="Enter the 6-digit code from your authenticator" style="-fx-font-size: 16;" wrapText="true" />
 
-    <ImageView
-            fx:id="totpQrCode"
-            fitWidth="300"
-            fitHeight="300"
-            preserveRatio="true"/>
-
     <fx:include fx:id="otpInput"
-                source="totp-input.fxml"/>
+                source="../mfa/totp-input.fxml"/>
 
     <HBox spacing="10">
-        <Button text="Verify" fx:id="verifyButton" onAction="#onVerifyClick" />
+        <Button text="Enter" fx:id="enterButton" onAction="#onEnterClick" />
         <Button text="Cancel" fx:id="cancelButton" onAction="#onCancelClick" />
     </HBox>
+
+    <Label text="Status Text" fx:id="statusLabel" wrapText="true" />
 
 </VBox>

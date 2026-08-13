@@ -119,3 +119,10 @@
 .clickable-label:hover {
     -fx-underline: true;
 }
+
+.otp-field {
+    -fx-pref-width: 45px;
+    -fx-pref-height: 50px;
+    -fx-font-size: 22px;
+    -fx-alignment: center;
+}

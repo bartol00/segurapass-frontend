@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.passwordmanagerclient.controller.mfa.DisableMfaController"
+      prefWidth="500" prefHeight="350"
+      spacing="10" style="-fx-padding: 20;">
+
+    <HBox spacing="5">
+        <Label text="Disable" fx:id="mfaMethodLabel" wrapText="true" />
+    </HBox>
+
+    <HBox spacing="10">
+        <Button text="Yes" fx:id="yesButton" onAction="#onYes" />
+        <Button text="No" fx:id="noButton" onAction="#onNo" />
+    </HBox>
+
+</VBox>
