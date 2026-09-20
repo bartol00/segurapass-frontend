@@ -17,16 +17,16 @@
 
     <Label text="Register" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
-    <TextField fx:id="emailField" promptText="Email" maxWidth="250"/>
-    <PasswordField fx:id="masterPasswordField" promptText="Master Password" maxWidth="250"/>
-    <PasswordField fx:id="confirmPasswordField" promptText="Confirm Master Password" maxWidth="250"/>
+    <TextField fx:id="emailField" promptText="Email" maxWidth="300"/>
+    <PasswordField fx:id="masterPasswordField" promptText="Master Password" maxWidth="300"/>
+    <PasswordField fx:id="confirmPasswordField" promptText="Confirm Master Password" maxWidth="300"/>
 
-    <VBox spacing="5" maxWidth="250" alignment="CENTER_LEFT">
-        <ProgressBar fx:id="strengthBar" prefWidth="250" progress="0.0"/>
+    <VBox spacing="5" maxWidth="300" alignment="CENTER_LEFT">
+        <ProgressBar fx:id="strengthBar" prefWidth="300" progress="0.0"/>
         <Label fx:id="strengthLabel" text="Password strength: " style="-fx-font-size: 11px;"/>
     </VBox>
 
-    <VBox spacing="4" maxWidth="250" alignment="CENTER_LEFT" style="-fx-font-size: 12px;">
+    <VBox spacing="4" maxWidth="300" alignment="CENTER_LEFT" style="-fx-font-size: 12px;">
         <Label fx:id="lengthReq" text="• At least 14 characters" textFill="gray"/>
         <Label fx:id="lowercaseReq" text="• At least one lowercase letter" textFill="gray"/>
         <Label fx:id="uppercaseReq" text="• At least one uppercase letter" textFill="gray"/>

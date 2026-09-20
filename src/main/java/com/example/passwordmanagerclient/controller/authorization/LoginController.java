@@ -33,6 +33,7 @@ public class LoginController {
         masterPasswordField.textProperty().addListener(
                 (obs, oldVal, newVal) -> disableLoginButton()
         );
+        remoteDeleteButton.setDisable(!AppContext.isEmailClientActive());
         updateServerUrl();
         updateVersionLabel();
     }
@@ -90,7 +91,7 @@ public class LoginController {
             statusLabel.setStyle("-fx-text-fill: red;");
             masterPasswordField.setText("");
             switchRegisterButton.setDisable(false);
-            remoteDeleteButton.setDisable(false);
+            remoteDeleteButton.setDisable(!AppContext.isEmailClientActive());
             serverButton.setDisable(false);
         });
 

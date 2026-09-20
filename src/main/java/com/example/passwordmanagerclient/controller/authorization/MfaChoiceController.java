@@ -23,7 +23,7 @@ public class MfaChoiceController {
                     );
             result.stage().showAndWait();
 
-            if(result.controller().loggedIn) {
+            if (result.controller().loggedIn) {
                 Stage stage = (Stage) totpLabel.getScene().getWindow();
                 stage.close();
             }
@@ -46,7 +46,7 @@ public class MfaChoiceController {
                     );
             result.stage().showAndWait();
 
-            if(result.controller().loggedIn) {
+            if (result.controller().loggedIn) {
                 AppContext.setTotpEnabled(false);
                 Stage stage = (Stage) totpLabel.getScene().getWindow();
                 stage.close();

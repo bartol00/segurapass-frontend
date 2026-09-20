@@ -30,6 +30,7 @@ public class DeleteConfirmationController {
     private void onYesDelete() {
         yesButton.setDisable(true);
         noButton.setDisable(true);
+
         try {
             TokenManager.ensureValidJwt();
         } catch (Exception e) {

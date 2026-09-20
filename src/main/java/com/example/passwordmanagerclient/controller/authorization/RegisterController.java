@@ -55,6 +55,7 @@ public class RegisterController {
         confirmPasswordField.textProperty().addListener(
                 (obs, oldVal, newVal) -> checkPasswordMatch()
         );
+        remoteDeleteButton.setDisable(!AppContext.isEmailClientActive());
         updateServerUrl();
         updateVersionLabel();
     }
@@ -243,7 +244,7 @@ public class RegisterController {
         masterPasswordField.setText("");
         confirmPasswordField.setText("");
         switchLoginButton.setDisable(false);
-        remoteDeleteButton.setDisable(false);
+        remoteDeleteButton.setDisable(!AppContext.isEmailClientActive());
         serverButton.setDisable(false);
     }
 

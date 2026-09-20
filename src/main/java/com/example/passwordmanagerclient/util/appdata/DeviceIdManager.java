@@ -1,9 +1,8 @@
-package com.example.passwordmanagerclient.util;
+package com.example.passwordmanagerclient.util.appdata;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
 
 public class DeviceIdManager {
@@ -12,7 +11,7 @@ public class DeviceIdManager {
 
     public static String getDeviceId() {
         try {
-            Path folderPath = getAppDataFolder();
+            Path folderPath = FilepathConstants.APPDATA_PATH;
             Path filePath = folderPath.resolve(FILE_NAME);
 
             if (Files.exists(filePath)) {
@@ -28,7 +27,4 @@ public class DeviceIdManager {
         }
     }
 
-    private static Path getAppDataFolder() {
-        return Paths.get(System.getenv("APPDATA"), "SeguraPass");
-    }
 }

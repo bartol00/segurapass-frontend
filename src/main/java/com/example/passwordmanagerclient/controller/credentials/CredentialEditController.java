@@ -40,10 +40,10 @@ public class CredentialEditController {
     private void onSave() {
         saveButton.setDisable(true);
         cancelButton.setDisable(true);
+
         try {
             TokenManager.ensureValidJwt();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
             parentController.handleChildExceptions();
             return;
         }
