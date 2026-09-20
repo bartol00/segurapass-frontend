@@ -3,7 +3,6 @@ package com.example.passwordmanagerclient.controller.deletion;
 import com.example.passwordmanagerclient.controller.FieldHelpers;
 import com.example.passwordmanagerclient.controller.credentials.CredentialsController;
 import com.example.passwordmanagerclient.service.DeletionService;
-import com.example.passwordmanagerclient.util.OperationResult;
 import com.example.passwordmanagerclient.util.TokenManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -43,22 +42,22 @@ public class AuthorizedDeletionController {
         }
 
         char[] masterPasswordChars = FieldHelpers.extractPassword(masterPassword);
-        OperationResult result = DeletionService.deleteAuthorized(masterPasswordChars);
-        FieldHelpers.clearPassword(masterPasswordChars);
 
-        if (!result.passed()) {
+        try {
+            DeletionService.deleteAuthorized(masterPasswordChars);
+            Stage stage = (Stage) deleteButton.getScene().getWindow();
+            stage.close();
+            if (parentController != null) {
+                parentController.handleChildExceptions();
+            }
+        } catch (Exception e) {
             masterPassword.setText("");
-            statusLabel.setText(result.message());
+            statusLabel.setText(e.getMessage());
             statusLabel.setStyle("-fx-text-fill: red;");
             deleteButton.setDisable(false);
             cancelButton.setDisable(false);
-            return;
-        }
-
-        Stage stage = (Stage) deleteButton.getScene().getWindow();
-        stage.close();
-        if (parentController != null) {
-            parentController.handleChildExceptions();
+        } finally {
+            FieldHelpers.clearPassword(masterPasswordChars);
         }
     }
 

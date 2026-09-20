@@ -69,6 +69,10 @@ public class AppContext {
     @Setter
     private static String totpCode;
 
+    @Getter
+    @Setter
+    private static boolean emailClientActive = false;
+
 
     public static void init() {
         deviceId = UUID.fromString(DeviceIdManager.getDeviceId());

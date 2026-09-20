@@ -7,10 +7,10 @@ import com.example.passwordmanagerclient.controller.deletion.RemoteDeletionContr
 import com.example.passwordmanagerclient.controller.uptime.ServerSelectionDialogController;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.util.AppContext;
-import com.example.passwordmanagerclient.util.OperationResult;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.concurrent.Task;
 
 import static com.example.passwordmanagerclient.controller.FieldHelpers.*;
 
@@ -55,69 +55,46 @@ public class LoginController {
         serverButton.setDisable(true);
 
         char[] masterPasswordChars = extractPassword(masterPasswordField);
-        javafx.concurrent.Task<OperationResult> task = new javafx.concurrent.Task<>() {
+        Task<Void> task = new Task<>() {
             @Override
-            protected OperationResult call() {
-                try {
-                    return AuthService.login(email, masterPasswordChars);
-                } finally {
-                    // clearPassword(masterPasswordChars);
-                }
+            protected Void call() throws Exception {
+                AuthService.login(email, masterPasswordChars);
+                return null;
             }
         };
 
         task.setOnSucceeded(event -> {
-            OperationResult result = task.getValue();
-            if (result.passed()) {
-                if (AppContext.isTotpEnabled()) {
-                    try {
-                        DialogManager.DialogResult<MfaChoiceController> dialogResult =
-                                DialogManager.openWindow(
-                                        "/com/example/passwordmanagerclient/authorization/mfa-choice.fxml",
-                                        "MFA Dashboard",
-                                        (Stage) emailField.getScene().getWindow(),
-                                        false,
-                                        MfaChoiceController.class
-                                );
-                        dialogResult.stage().setOnCloseRequest(closeEvent -> {
-                            System.exit(0);
-                        });
-                        dialogResult.stage().showAndWait();
-                    } catch (Exception e) {
-                        System.err.println(e.getMessage());
-                        System.exit(1);
-                    }
-                } else {
-                    switchToCredentialsView();
+            if (AppContext.isTotpEnabled()) {
+                try {
+                    DialogManager.DialogResult<MfaChoiceController> dialogResult =
+                            DialogManager.openWindow(
+                                    "/com/example/passwordmanagerclient/authorization/mfa-choice.fxml",
+                                    "MFA Dashboard",
+                                    (Stage) emailField.getScene().getWindow(),
+                                    false,
+                                    MfaChoiceController.class
+                            );
+                    dialogResult.stage().setOnCloseRequest(closeEvent -> System.exit(0));
+                    dialogResult.stage().showAndWait();
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                    System.exit(1);
                 }
             } else {
-                masterPasswordField.setText("");
-                statusLabel.setText(result.message());
-                statusLabel.setStyle("-fx-text-fill: red;");
-                switchRegisterButton.setDisable(false);
-                remoteDeleteButton.setDisable(false);
-                serverButton.setDisable(false);
+                switchToCredentialsView();
             }
         });
 
         task.setOnFailed(event -> {
-            statusLabel.setText("Login failed due to a system error");
+            statusLabel.setText(task.getException().getMessage());
             statusLabel.setStyle("-fx-text-fill: red;");
             masterPasswordField.setText("");
             switchRegisterButton.setDisable(false);
             remoteDeleteButton.setDisable(false);
             serverButton.setDisable(false);
-            System.err.println(task.getException().getMessage());
         });
 
         new Thread(task).start();
-    }
-
-    private void disableLoginButton() {
-        String email = emailField.getText();
-        String password = masterPasswordField.getText();
-
-        loginButton.setDisable(email.isBlank() || password.isBlank());
     }
 
     @FXML
@@ -166,6 +143,13 @@ public class LoginController {
         } finally {
             updateServerUrl();
         }
+    }
+
+    private void disableLoginButton() {
+        String email = emailField.getText();
+        String password = masterPasswordField.getText();
+
+        loginButton.setDisable(email.isBlank() || password.isBlank());
     }
 
     private void updateServerUrl() {
