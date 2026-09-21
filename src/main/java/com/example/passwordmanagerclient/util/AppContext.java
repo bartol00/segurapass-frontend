@@ -75,6 +75,10 @@ public class AppContext {
     @Setter
     private static boolean emailClientActive = false;
 
+    @Getter
+    @Setter
+    private static int credentialsLimit;
+
 
     public static void init() {
         deviceId = UUID.fromString(DeviceIdManager.getDeviceId());

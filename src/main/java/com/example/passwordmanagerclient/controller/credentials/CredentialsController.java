@@ -42,6 +42,8 @@ public class CredentialsController {
     @FXML private Button logoutButton;
     @FXML private Button changePasswordButton;
     @FXML private Button deleteAccountButton;
+    @FXML private Button addCredentialsButton;
+    @FXML private Label limitLabel;
     @FXML private Label pageLabel;
     @FXML private ComboBox<Integer> pageSizeCombo;
 
@@ -93,6 +95,12 @@ public class CredentialsController {
 
         var subList = cache.subList(fromIndex, toIndex);
         credentialsTable.setItems(FXCollections.observableArrayList(subList));
+
+        limitLabel.setText(String.format("Credentials count limit: %d / %d",
+                cache.size(),
+                AppContext.getCredentialsLimit()
+        ));
+        addCredentialsButton.setDisable(cache.size() >= AppContext.getCredentialsLimit());
 
         pageLabel.setText(String.format("Page %d (%d–%d of %d)",
                 currentPage + 1,
