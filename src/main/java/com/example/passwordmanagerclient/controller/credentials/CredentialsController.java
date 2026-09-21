@@ -303,7 +303,7 @@ public class CredentialsController {
             DialogManager.DialogResult<AddCredentialController> result =
                     DialogManager.openWindow(
                             "/com/example/passwordmanagerclient/credentials/add-credentials-view.fxml",
-                            "Add New Credentials",
+                            "Add Credentials",
                             (Stage) pageLabel.getScene().getWindow(),
                             false,
                             AddCredentialController.class
@@ -325,7 +325,7 @@ public class CredentialsController {
             DialogManager.DialogResult<CredentialEditController> result =
                     DialogManager.openWindow(
                             "/com/example/passwordmanagerclient/credentials/credential-edit-view.fxml",
-                            "Update Existing Credentials",
+                            "Update Credentials",
                             (Stage) pageLabel.getScene().getWindow(),
                             false,
                             CredentialEditController.class
@@ -349,7 +349,7 @@ public class CredentialsController {
             DialogManager.DialogResult<DeleteConfirmationController> result =
                     DialogManager.openWindow(
                             "/com/example/passwordmanagerclient/credentials/delete-confirmation-view.fxml",
-                            "Confirm Deletion",
+                            "Delete Credentials",
                             (Stage) pageLabel.getScene().getWindow(),
                             false,
                             DeleteConfirmationController.class

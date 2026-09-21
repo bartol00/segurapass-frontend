@@ -13,11 +13,11 @@
     <fx:include fx:id="otpInput"
                 source="../mfa/totp-input.fxml"/>
 
+    <Label fx:id="statusLabel" wrapText="true" />
+
     <HBox spacing="10">
         <Button text="Enter" fx:id="enterButton" onAction="#onEnterClick" />
         <Button text="Cancel" fx:id="cancelButton" onAction="#onCancelClick" />
     </HBox>
-
-    <Label text="Status Text" fx:id="statusLabel" wrapText="true" />
 
 </VBox>

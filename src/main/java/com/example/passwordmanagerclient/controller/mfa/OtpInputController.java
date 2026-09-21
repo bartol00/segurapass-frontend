@@ -1,5 +1,7 @@
 package com.example.passwordmanagerclient.controller.mfa;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -17,6 +19,8 @@ public class OtpInputController {
     @FXML private TextField otp6;
 
     private TextField[] fields;
+
+    private final BooleanProperty complete = new SimpleBooleanProperty(false);
 
     @FXML
     private void initialize() {
@@ -49,6 +53,7 @@ public class OtpInputController {
                                 && index < fields.length - 1) {
                             fields[index + 1].requestFocus();
                         }
+                        updateComplete();
                     }
             );
 
@@ -81,14 +86,17 @@ public class OtpInputController {
         }
     }
 
+    private void updateComplete() {
+        complete.set(
+                Arrays.stream(fields)
+                        .noneMatch(field -> field.getText().isEmpty())
+        );
+    }
+
     public String getOtp() {
         return Arrays.stream(fields)
                 .map(TextField::getText)
                 .collect(Collectors.joining());
-    }
-
-    public boolean isIncomplete() {
-        return getOtp().length() != 6;
     }
 
     public void clear() {
@@ -101,4 +109,9 @@ public class OtpInputController {
     public void focus() {
         otp1.requestFocus();
     }
+
+    public BooleanProperty completeProperty() {
+        return complete;
+    }
+
 }

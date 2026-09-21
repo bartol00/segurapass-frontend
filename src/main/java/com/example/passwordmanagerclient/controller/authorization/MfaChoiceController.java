@@ -16,7 +16,7 @@ public class MfaChoiceController {
             DialogManager.DialogResult<TotpEntryController> result =
                     DialogManager.openWindow(
                             "/com/example/passwordmanagerclient/authorization/totp-entry.fxml",
-                            "MFA Dashboard",
+                            "TOTP",
                             (Stage) totpLabel.getScene().getWindow(),
                             false,
                             TotpEntryController.class

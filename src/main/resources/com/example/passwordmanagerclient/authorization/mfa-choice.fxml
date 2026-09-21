@@ -12,10 +12,12 @@
 
     <VBox spacing="10">
         <Label text="TOTP" fx:id="totpLabel" onMouseClicked="#onTotpClick" styleClass="clickable-label"/>
-        <Label text="Recovery Code" onMouseClicked="#onRecoveryCodeClick" styleClass="clickable-label" />
     </VBox>
 
     <HBox spacing="10">
+        <Button text="MFA Recovery"
+                onAction="#onRecoveryCodeClick"
+                style="-fx-background-color: red; -fx-text-fill: white; -fx-font-weight: bold;"/>
         <Button text="Cancel" onAction="#onCancelClick" />
     </HBox>
 

@@ -39,7 +39,7 @@ public class MfaDashboardController {
                 DialogManager.DialogResult<DisableMfaController> result =
                         DialogManager.openWindow(
                                 "/com/example/passwordmanagerclient/mfa/disable-mfa.fxml",
-                                "Enable TOTP",
+                                "Disable TOTP",
                                 (Stage) totpLabel.getScene().getWindow(),
                                 false,
                                 DisableMfaController.class

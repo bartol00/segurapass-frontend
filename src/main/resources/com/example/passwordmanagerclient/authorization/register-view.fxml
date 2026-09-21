@@ -22,8 +22,8 @@
     <PasswordField fx:id="confirmPasswordField" promptText="Confirm Master Password" maxWidth="300"/>
 
     <VBox spacing="5" maxWidth="300" alignment="CENTER_LEFT">
-        <ProgressBar fx:id="strengthBar" prefWidth="300" progress="0.0"/>
         <Label fx:id="strengthLabel" text="Password strength: " style="-fx-font-size: 11px;"/>
+        <ProgressBar fx:id="strengthBar" prefWidth="300" progress="0.0"/>
     </VBox>
 
     <VBox spacing="4" maxWidth="300" alignment="CENTER_LEFT" style="-fx-font-size: 12px;">
