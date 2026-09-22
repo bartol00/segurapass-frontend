@@ -25,6 +25,8 @@ public class ServerSelectionDialogController {
     @Setter
     private boolean exitAppOnClose = false;
 
+    public boolean serverChanged = false;
+
     public void initialize() {
         serverBtn.setDisable(true);
         urlField.textProperty().addListener(
@@ -78,6 +80,7 @@ public class ServerSelectionDialogController {
             }
 
             AppContext.setServerUrl(url);
+            serverChanged = true;
 
             Stage stage = (Stage) serverStatus.getScene().getWindow();
             stage.close();
