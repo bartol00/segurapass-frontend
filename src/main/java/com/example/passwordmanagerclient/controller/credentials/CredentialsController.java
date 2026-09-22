@@ -42,6 +42,8 @@ public class CredentialsController {
     @FXML private Button logoutButton;
     @FXML private Button changePasswordButton;
     @FXML private Button deleteAccountButton;
+    @FXML private Button addCredentialsButton;
+    @FXML private Label limitLabel;
     @FXML private Label pageLabel;
     @FXML private ComboBox<Integer> pageSizeCombo;
 
@@ -93,6 +95,12 @@ public class CredentialsController {
 
         var subList = cache.subList(fromIndex, toIndex);
         credentialsTable.setItems(FXCollections.observableArrayList(subList));
+
+        limitLabel.setText(String.format("Credentials count limit: %d / %d",
+                cache.size(),
+                AppContext.getCredentialsLimit()
+        ));
+        addCredentialsButton.setDisable(cache.size() >= AppContext.getCredentialsLimit());
 
         pageLabel.setText(String.format("Page %d (%d–%d of %d)",
                 currentPage + 1,
@@ -303,7 +311,7 @@ public class CredentialsController {
             DialogManager.DialogResult<AddCredentialController> result =
                     DialogManager.openWindow(
                             "/com/example/passwordmanagerclient/credentials/add-credentials-view.fxml",
-                            "Add New Credentials",
+                            "Add Credentials",
                             (Stage) pageLabel.getScene().getWindow(),
                             false,
                             AddCredentialController.class
@@ -325,7 +333,7 @@ public class CredentialsController {
             DialogManager.DialogResult<CredentialEditController> result =
                     DialogManager.openWindow(
                             "/com/example/passwordmanagerclient/credentials/credential-edit-view.fxml",
-                            "Update Existing Credentials",
+                            "Update Credentials",
                             (Stage) pageLabel.getScene().getWindow(),
                             false,
                             CredentialEditController.class
@@ -349,7 +357,7 @@ public class CredentialsController {
             DialogManager.DialogResult<DeleteConfirmationController> result =
                     DialogManager.openWindow(
                             "/com/example/passwordmanagerclient/credentials/delete-confirmation-view.fxml",
-                            "Confirm Deletion",
+                            "Delete Credentials",
                             (Stage) pageLabel.getScene().getWindow(),
                             false,
                             DeleteConfirmationController.class

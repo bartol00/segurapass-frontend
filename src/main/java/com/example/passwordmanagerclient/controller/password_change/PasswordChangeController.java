@@ -3,7 +3,6 @@ package com.example.passwordmanagerclient.controller.password_change;
 import com.example.passwordmanagerclient.controller.FieldHelpers;
 import com.example.passwordmanagerclient.controller.credentials.CredentialsController;
 import com.example.passwordmanagerclient.service.PasswordChangeService;
-import com.example.passwordmanagerclient.util.OperationResult;
 import com.example.passwordmanagerclient.util.TokenManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -164,26 +163,25 @@ public class PasswordChangeController {
 
         char[] oldPasswordBytes = FieldHelpers.extractPassword(oldPassword);
         char[] newPasswordBytes = FieldHelpers.extractPassword(newPassword);
-        OperationResult result = PasswordChangeService.changePassword(oldPasswordBytes, newPasswordBytes);
-        FieldHelpers.clearPassword(oldPasswordBytes);
-        FieldHelpers.clearPassword(newPasswordBytes);
 
-        if (!result.passed()) {
+        try {
+            PasswordChangeService.changePassword(oldPasswordBytes, newPasswordBytes);
+            Stage stage = (Stage) passwordChangeButton.getScene().getWindow();
+            stage.close();
+            if (parentController != null) {
+                parentController.handleChildExceptions();
+            }
+        } catch (Exception e) {
             oldPassword.setText("");
             newPassword.setText("");
             repeatNewPassword.setText("");
-            statusLabel.setText(result.message());
             statusLabel.setStyle("-fx-text-fill: red;");
+            statusLabel.setText(e.getMessage());
             passwordChangeButton.setDisable(false);
             cancelButton.setDisable(false);
-            return;
-        }
-
-        Stage stage = (Stage) passwordChangeButton.getScene().getWindow();
-        stage.close();
-
-        if (parentController != null) {
-            parentController.handleChildExceptions();
+        } finally {
+            FieldHelpers.clearPassword(oldPasswordBytes);
+            FieldHelpers.clearPassword(newPasswordBytes);
         }
     }
 

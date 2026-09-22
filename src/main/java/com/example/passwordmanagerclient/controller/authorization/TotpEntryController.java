@@ -4,6 +4,7 @@ import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.controller.mfa.OtpInputController;
 import com.example.passwordmanagerclient.service.MfaService;
 import com.example.passwordmanagerclient.util.AppContext;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,40 +22,41 @@ public class TotpEntryController {
 
     @FXML
     public void initialize(){
-        statusLabel.setText("");
-        statusLabel.setStyle("-fx-text-fill: red;");
+        enterButton.disableProperty()
+                .bind(otpInputController.completeProperty().not());
     }
 
     @FXML
     private void onEnterClick() {
-        enterButton.setDisable(true);
         cancelButton.setDisable(true);
 
-        try {
-            if (otpInputController.isIncomplete()) {
-                enterButton.setDisable(false);
-                cancelButton.setDisable(false);
-                return;
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                MfaService.loginTotp(AppContext.getTotpCode(), otpInputController.getOtp());
+                return null;
             }
-            MfaService.loginTotp(AppContext.getTotpCode(), otpInputController.getOtp());
-            otpInputController.clear();
-        } catch (Exception e) {
-            enterButton.setDisable(false);
+        };
+
+        task.setOnSucceeded(event -> {
+            Stage stage = (Stage) enterButton.getScene().getWindow();
+            stage.close();
+            try {
+                StageManager.switchScene("/com/example/passwordmanagerclient/credentials/credentials-view.fxml");
+            } catch (Exception e) {
+                statusLabel.setText(e.getMessage());
+            }
+            loggedIn = true;
+        });
+
+        task.setOnFailed(event -> {
             cancelButton.setDisable(false);
-            statusLabel.setText(e.getMessage());
-            return;
-        }
+            statusLabel.setText("TOTP verification failed");
+            statusLabel.setStyle("-fx-text-fill: red;");
+            otpInputController.clear();
+        });
 
-        Stage stage = (Stage) enterButton.getScene().getWindow();
-        stage.close();
-
-        try {
-            StageManager.switchScene("/com/example/passwordmanagerclient/credentials/credentials-view.fxml");
-        } catch (Exception e) {
-            statusLabel.setText(e.getMessage());
-        }
-
-        loggedIn = true;
+        new Thread(task).start();
     }
 
     @FXML

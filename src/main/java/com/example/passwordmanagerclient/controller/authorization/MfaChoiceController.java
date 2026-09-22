@@ -16,14 +16,14 @@ public class MfaChoiceController {
             DialogManager.DialogResult<TotpEntryController> result =
                     DialogManager.openWindow(
                             "/com/example/passwordmanagerclient/authorization/totp-entry.fxml",
-                            "MFA Dashboard",
+                            "TOTP",
                             (Stage) totpLabel.getScene().getWindow(),
                             false,
                             TotpEntryController.class
                     );
             result.stage().showAndWait();
 
-            if(result.controller().loggedIn) {
+            if (result.controller().loggedIn) {
                 Stage stage = (Stage) totpLabel.getScene().getWindow();
                 stage.close();
             }
@@ -46,7 +46,7 @@ public class MfaChoiceController {
                     );
             result.stage().showAndWait();
 
-            if(result.controller().loggedIn) {
+            if (result.controller().loggedIn) {
                 AppContext.setTotpEnabled(false);
                 Stage stage = (Stage) totpLabel.getScene().getWindow();
                 stage.close();

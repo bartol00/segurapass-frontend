@@ -7,6 +7,7 @@ import com.example.passwordmanagerclient.controller.deletion.RemoteDeletionContr
 import com.example.passwordmanagerclient.controller.uptime.ServerSelectionDialogController;
 import com.example.passwordmanagerclient.service.AuthService;
 import com.example.passwordmanagerclient.util.*;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
@@ -54,6 +55,7 @@ public class RegisterController {
         confirmPasswordField.textProperty().addListener(
                 (obs, oldVal, newVal) -> checkPasswordMatch()
         );
+        remoteDeleteButton.setDisable(!AppContext.isEmailClientActive());
         updateServerUrl();
         updateVersionLabel();
     }
@@ -140,21 +142,27 @@ public class RegisterController {
             return;
         }
 
+        statusLabel.setText("Registering...");
+        statusLabel.setStyle("-fx-text-fill: blue;");
         registerButton.setDisable(true);
         switchLoginButton.setDisable(true);
         remoteDeleteButton.setDisable(true);
         serverButton.setDisable(true);
 
-        statusLabel.setText("Registering...");
-        statusLabel.setStyle("-fx-text-fill: blue;");
-
         char[] masterPasswordChars = extractPassword(masterPasswordField);
 
-        javafx.concurrent.Task<OperationResult> task = new javafx.concurrent.Task<>() {
+        Task<Void> task = getVoidTask(email, masterPasswordChars);
+
+        new Thread(task).start();
+    }
+
+    private Task<Void> getVoidTask(String email, char[] masterPasswordChars) {
+        Task<Void> task = new Task<>() {
             @Override
-            protected OperationResult call() {
+            protected Void call() throws Exception {
                 try {
-                    return AuthService.register(email, masterPasswordChars);
+                    AuthService.register(email, masterPasswordChars);
+                    return null;
                 } finally {
                     clearPassword(masterPasswordChars);
                 }
@@ -162,32 +170,18 @@ public class RegisterController {
         };
 
         task.setOnSucceeded(event -> {
-            OperationResult result = task.getValue();
-            statusLabel.setStyle("-fx-text-fill: red;");
-            if (result.passed()) {
-                emailField.setText("");
-                statusLabel.setStyle("-fx-text-fill: green;");
-            }
-            statusLabel.setText(result.message());
-            masterPasswordField.setText("");
-            confirmPasswordField.setText("");
-            switchLoginButton.setDisable(false);
-            remoteDeleteButton.setDisable(false);
-            serverButton.setDisable(false);
+            statusLabel.setStyle("-fx-text-fill: green;");
+            statusLabel.setText(registrationSuccessMessage());
+            emailField.setText("");
+            postRegister();
         });
 
         task.setOnFailed(event -> {
-            statusLabel.setText("Registration failed due to a system error");
-            statusLabel.setStyle("-fx-text-fill: green;");
-            masterPasswordField.setText("");
-            confirmPasswordField.setText("");
-            System.err.println(task.getException().getMessage());
-            switchLoginButton.setDisable(false);
-            remoteDeleteButton.setDisable(false);
-            serverButton.setDisable(false);
+            statusLabel.setStyle("-fx-text-fill: red;");
+            statusLabel.setText(task.getException().getMessage());
+            postRegister();
         });
-
-        new Thread(task).start();
+        return task;
     }
 
     @FXML
@@ -236,6 +230,22 @@ public class RegisterController {
         } finally {
             updateServerUrl();
         }
+    }
+
+    private String registrationSuccessMessage() {
+        String message = "Registration successful";
+        if (AppContext.isEmailClientActive()) {
+            message += ". Please verify the email address you entered before attempting to log in";
+        }
+        return message;
+    }
+
+    private void postRegister() {
+        masterPasswordField.setText("");
+        confirmPasswordField.setText("");
+        switchLoginButton.setDisable(false);
+        remoteDeleteButton.setDisable(!AppContext.isEmailClientActive());
+        serverButton.setDisable(false);
     }
 
     private void updateServerUrl() {

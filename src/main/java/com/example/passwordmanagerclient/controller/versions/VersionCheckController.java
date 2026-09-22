@@ -3,6 +3,7 @@ package com.example.passwordmanagerclient.controller.versions;
 import com.example.passwordmanagerclient.config.AppConfig;
 import com.example.passwordmanagerclient.controller.StageManager;
 import com.example.passwordmanagerclient.service.VersionService;
+import com.example.passwordmanagerclient.util.AppContext;
 import com.example.passwordmanagerclient.util.DownloadUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -29,7 +30,12 @@ public class VersionCheckController {
                 if (versionModel == null) {
                     throw new RuntimeException("Null version info");
                 }
+
+                AppContext.setEmailClientActive(versionModel.isEmailClientActive());
+                AppContext.setCredentialsLimit(versionModel.getCredentialsLimit());
+
                 int serverProtocolVersion = Integer.parseInt(versionModel.getProtocolVersion());
+
                 int clientProtocolVersion = AppConfig.getProtocolVersion();
                 String currentAppVersion = AppConfig.getAppVersion();
 

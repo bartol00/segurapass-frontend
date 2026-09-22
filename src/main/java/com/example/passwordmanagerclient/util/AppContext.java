@@ -1,6 +1,8 @@
 package com.example.passwordmanagerclient.util;
 
 import com.example.passwordmanagerclient.controller.uptime.UptimeCheckController;
+import com.example.passwordmanagerclient.util.appdata.DeviceIdManager;
+import com.example.passwordmanagerclient.util.appdata.ServerUrlManager;
 import xyz.segurapass.sdk.helpers.LoginSuccessObject;
 import xyz.segurapass.sdk.models.DecryptedCredential;
 import com.segurapass.api.ApiClient;
@@ -68,6 +70,14 @@ public class AppContext {
     @Getter
     @Setter
     private static String totpCode;
+
+    @Getter
+    @Setter
+    private static boolean emailClientActive = false;
+
+    @Getter
+    @Setter
+    private static int credentialsLimit;
 
 
     public static void init() {

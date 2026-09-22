@@ -1,9 +1,8 @@
-package com.example.passwordmanagerclient.util;
+package com.example.passwordmanagerclient.util.appdata;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class ServerUrlManager {
 
@@ -11,7 +10,7 @@ public class ServerUrlManager {
 
     public static String readServerUrl() {
         try {
-            Path folderPath = getAppDataFolder();
+            Path folderPath = FilepathConstants.APPDATA_PATH;
             Path filePath = folderPath.resolve(FILE_NAME);
 
             if (Files.exists(filePath)) {
@@ -26,7 +25,7 @@ public class ServerUrlManager {
 
     public static void writeServerUrl(String url) {
         try {
-            Path folderPath = getAppDataFolder();
+            Path folderPath = FilepathConstants.APPDATA_PATH;
             Path filePath = folderPath.resolve(FILE_NAME);
 
             if (!Files.exists(filePath)) {
@@ -37,10 +36,6 @@ public class ServerUrlManager {
         } catch (IOException e) {
             throw new RuntimeException("Failed to write server URL file", e);
         }
-    }
-
-    private static Path getAppDataFolder() {
-        return Paths.get(System.getenv("APPDATA"), "SeguraPass");
     }
 
 }

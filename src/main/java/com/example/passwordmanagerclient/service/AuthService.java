@@ -1,6 +1,7 @@
 package com.example.passwordmanagerclient.service;
 
-import com.example.passwordmanagerclient.util.*;
+import com.example.passwordmanagerclient.util.AppContext;
+import com.example.passwordmanagerclient.util.TokenManager;
 import xyz.segurapass.api.authorization.LoginCompleteResp;
 import xyz.segurapass.sdk.exception.SegurapassSdkException;
 import xyz.segurapass.sdk.helpers.LoginSuccessObject;
@@ -11,96 +12,52 @@ import java.time.Instant;
 
 public class AuthService {
 
-    public static OperationResult register(String email, char[] masterPassword) {
-
-        try {
-
-            auth().register(email, masterPassword, AppContext.getDeviceId());
-            return new OperationResult(
-                    "Registration successful. " +
-                            "Please verify the email address you entered before attempting to log in",
-                    true);
-
-        } catch (SegurapassSdkException e) {
-            return new OperationResult(e.getMessage(), false);
-        } catch (Exception e) {
-            return new OperationResult(
-                    "Exception occurred during registration: " + e.getMessage(),
-                    false
-            );
-        }
+    public static void register(String email, char[] masterPassword) throws Exception {
+        auth().register(email, masterPassword, AppContext.getDeviceId());
     }
 
-    public static OperationResult login(String email, char[] masterPassword) {
+    public static void login(String email, char[] masterPassword) throws Exception {
+        AppContext.setEmail(email);
 
-        try {
-
-            AppContext.setEmail(email);
-
-            Object loginObject = auth().login(email, masterPassword, AppContext.getDeviceId());
-            if (loginObject instanceof LoginCompleteResp loginCompleteResp) {
-                AppContext.setPasswordChar(masterPassword);
-                AppContext.setTotpEnabled(true);
-                AppContext.setTotpCode(loginCompleteResp.getTotpCode());
-                return new OperationResult("Login successful (MFA enabled)", true);
-            }
-
-            assert loginObject instanceof LoginSuccessObject;
-            LoginSuccessObject successObject = (LoginSuccessObject) loginObject;
-
-            if (!keys().isValid(successObject.getAccessToken(), AppContext.getPublicKey())) {
-                return new OperationResult("Could not verify JWT", false);
-            }
-
-            Instant jwtExpiry = TokenManager.getJwtExpiry(successObject.getAccessToken());
-            if (jwtExpiry == null) {
-                return new OperationResult("Could not get expiry time from JWT", false);
-            }
-
-            AppContext.setSession(successObject);
-            AppContext.setJwtExpiry(jwtExpiry);
-
-            return new OperationResult("Login successful (no MFA enabled)", true);
-
-        } catch (SegurapassSdkException e) {
-            return new OperationResult(e.getMessage(), false);
-        } catch (Exception e) {
-            return new OperationResult(
-                    "Exception occurred during login: " + e.getMessage(),
-                    false
-            );
+        Object loginObject = auth().login(email, masterPassword, AppContext.getDeviceId());
+        if (loginObject instanceof LoginCompleteResp loginCompleteResp) {
+            AppContext.setPasswordChar(masterPassword);
+            AppContext.setTotpEnabled(true);
+            AppContext.setTotpCode(loginCompleteResp.getTotpCode());
+            return;
         }
+
+        assert loginObject instanceof LoginSuccessObject;
+        LoginSuccessObject successObject = (LoginSuccessObject) loginObject;
+
+        if (!keys().isValid(successObject.getAccessToken(), AppContext.getPublicKey())) {
+            throw new Exception("Could not verify JWT");
+        }
+
+        Instant jwtExpiry = TokenManager.getJwtExpiry(successObject.getAccessToken());
+        if (jwtExpiry == null) {
+            throw new Exception("Could not get expiry time from JWT");
+        }
+
+        AppContext.setSession(successObject);
+        AppContext.setJwtExpiry(jwtExpiry);
     }
 
-    public static OperationResult refreshJwt() {
+    public static void refreshJwt() throws Exception {
+        String accessToken = auth().refreshJwt(AppContext.getRefreshToken());
 
-        try {
-
-            String accessToken = auth().refreshJwt(AppContext.getRefreshToken());
-
-            if (!keys().isValid(accessToken, AppContext.getPublicKey())) {
-                return new OperationResult("Could not verify JWT", false);
-            }
-
-            Instant jwtExpiry = TokenManager.getJwtExpiry(accessToken);
-            if (jwtExpiry == null) {
-                return new OperationResult("Could not get expiry time from JWT", false);
-            }
-
-            AppContext.setJwtToken(accessToken);
-            AppContext.setJwtExpiry(jwtExpiry);
-            AppContext.getSegurapassClient().setJwt(accessToken);
-
-            return new OperationResult("Successfully refreshed JWT", true);
-
-        } catch (SegurapassSdkException e) {
-            return new OperationResult(e.getMessage(), false);
-        } catch (Exception e) {
-            return new OperationResult(
-                    "Exception occurred during JWT refresh: " + e.getMessage(),
-                    false
-            );
+        if (!keys().isValid(accessToken, AppContext.getPublicKey())) {
+            throw new Exception("Could not verify JWT");
         }
+
+        Instant jwtExpiry = TokenManager.getJwtExpiry(accessToken);
+        if (jwtExpiry == null) {
+            throw new Exception("Could not get expiry time from JWT");
+        }
+
+        AppContext.setJwtToken(accessToken);
+        AppContext.setJwtExpiry(jwtExpiry);
+        AppContext.getSegurapassClient().setJwt(accessToken);
     }
 
     public static void logout() {

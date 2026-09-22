@@ -20,6 +20,6 @@
         <Button text="Cancel" fx:id="cancelButton" onAction="#onCancelClick" />
     </HBox>
 
-    <Label text="Status Text" fx:id="statusLabel" wrapText="true" />
+    <Label fx:id="statusLabel" wrapText="true" />
 
 </VBox>
