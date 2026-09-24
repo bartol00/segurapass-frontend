@@ -29,6 +29,6 @@ echo   Fetched protocol version: %PROTOCOL_VERSION%
 echo ===========================================
 popd
 
-python "release.py" ^
+python "versions-release.py" ^
     "%VERSION%" ^
     "%PROTOCOL_VERSION%"
