@@ -46,4 +46,4 @@ release/versions.json
 release/metadata.sig
 release/versions.sig
 release/keys/
-msix/cert/
+release/msix/cert/
