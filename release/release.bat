@@ -31,5 +31,4 @@ popd
 
 python "release.py" ^
     "%VERSION%" ^
-    "%PROTOCOL_VERSION%" ^
-    "Output\SeguraPass-Setup.exe"
+    "%PROTOCOL_VERSION%"
