@@ -28,4 +28,8 @@ public class AppConfig {
         return properties.getProperty("download.url");
     }
 
+    public static String getMainServerUrl() {
+        return properties.getProperty("main-server.url");
+    }
+
 }

@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- SeguraPass -->
-        <segurapass-sdk.version>7.0.1</segurapass-sdk.version>
+        <segurapass-sdk.version>7.0.2</segurapass-sdk.version>
         <segurapass.protocol.version>6</segurapass.protocol.version>
 
         <!-- Third Party -->

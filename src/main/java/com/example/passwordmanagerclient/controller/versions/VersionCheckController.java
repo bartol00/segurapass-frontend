@@ -58,7 +58,7 @@ public class VersionCheckController {
                         assert clientLatestVersion != null;
                         String latestAppVersion = clientLatestVersion.getLatestVersion();
 
-                        showMandatoryUpdateDialog(bucketUrl, currentAppVersion, latestAppVersion);
+                        showMandatoryUpdateDialog(clientLatestVersion.getDownloadUrl(), currentAppVersion, latestAppVersion);
 
                     } else if (clientProtocolVersion == serverProtocolVersion) {
 
@@ -78,7 +78,7 @@ public class VersionCheckController {
                         String latestAppVersion = clientLatestVersion.getLatestVersion();
 
                         if (!latestAppVersion.equals(currentAppVersion)) {
-                            showOptionalUpdateDialog(bucketUrl, currentAppVersion, latestAppVersion);
+                            showOptionalUpdateDialog(clientLatestVersion.getDownloadUrl(), currentAppVersion, latestAppVersion);
                         } else {
                             StageManager.switchScene(
                                     "/com/example/passwordmanagerclient/keys/key-loading.fxml"
@@ -104,7 +104,7 @@ public class VersionCheckController {
         }).start();
     }
 
-    private void showMandatoryUpdateDialog(String bucketUrl, String currentVersion, String latestVersion) {
+    private void showMandatoryUpdateDialog(String url, String currentVersion, String latestVersion) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/example/passwordmanagerclient/versions/mandatory-update-view.fxml")
@@ -112,7 +112,6 @@ public class VersionCheckController {
 
             Parent root = loader.load();
 
-            String url = bucketUrl + latestVersion + "/";
             MandatoryUpdateDialogController controller = loader.getController();
             controller.setData(
                     url,
@@ -134,7 +133,7 @@ public class VersionCheckController {
         }
     }
 
-    private void showOptionalUpdateDialog(String bucketUrl, String currentVersion, String latestVersion) {
+    private void showOptionalUpdateDialog(String url, String currentVersion, String latestVersion) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/example/passwordmanagerclient/versions/optional-update-view.fxml")
@@ -142,7 +141,6 @@ public class VersionCheckController {
 
             Parent root = loader.load();
 
-            String url = bucketUrl + latestVersion + "/";
             OptionalUpdateDialogController controller = loader.getController();
             controller.setData(
                     url,

@@ -27,20 +27,22 @@ public class MandatoryUpdateDialogController {
     @FXML
     private void initialize() {
         updateButton.setOnAction(event -> {
-            updateButton.setDisable(true);
-            exitButton.setDisable(true);
-
-            downloadProgressBar.setVisible(true);
-            progressLabel.setVisible(true);
-
-            Task<Void> task = DownloadUtil.downloadAndInstall(latestVersionUrl);
-
-            downloadProgressBar.progressProperty().bind(task.progressProperty());
-            progressLabel.textProperty().bind(task.messageProperty());
-
-            Thread thread = new Thread(task);
-            thread.setDaemon(true);
-            thread.start();
+//            updateButton.setDisable(true);
+//            exitButton.setDisable(true);
+//
+//            downloadProgressBar.setVisible(true);
+//            progressLabel.setVisible(true);
+//
+//            Task<Void> task = DownloadUtil.downloadAndInstall(latestVersionUrl);
+//
+//            downloadProgressBar.progressProperty().bind(task.progressProperty());
+//            progressLabel.textProperty().bind(task.messageProperty());
+//
+//            Thread thread = new Thread(task);
+//            thread.setDaemon(true);
+//            thread.start();
+            DownloadUtil.openUrl(latestVersionUrl);
+            System.exit(0);
         });
         exitButton.setOnAction(event -> System.exit(0));
     }
