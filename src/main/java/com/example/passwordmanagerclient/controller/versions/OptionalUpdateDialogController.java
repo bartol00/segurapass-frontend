@@ -29,20 +29,22 @@ public class OptionalUpdateDialogController {
     @FXML
     private void initialize() {
         updateButton.setOnAction(event -> {
-            updateButton.setDisable(true);
-            declineButton.setDisable(true);
+//            updateButton.setDisable(true);
+//            declineButton.setDisable(true);
 
-            downloadProgressBar.setVisible(true);
-            progressLabel.setVisible(true);
+//            downloadProgressBar.setVisible(true);
+//            progressLabel.setVisible(true);
 
-            Task<Void> task = DownloadUtil.downloadAndInstall(latestVersionUrl);
+//            Task<Void> task = DownloadUtil.downloadAndInstall(latestVersionUrl);
 
-            downloadProgressBar.progressProperty().bind(task.progressProperty());
-            progressLabel.textProperty().bind(task.messageProperty());
+//            downloadProgressBar.progressProperty().bind(task.progressProperty());
+//            progressLabel.textProperty().bind(task.messageProperty());
 
-            Thread thread = new Thread(task);
-            thread.setDaemon(true);
-            thread.start();
+//            Thread thread = new Thread(task);
+//            thread.setDaemon(true);
+//            thread.start();
+            DownloadUtil.openUrl(latestVersionUrl);
+            System.exit(0);
         });
         declineButton.setOnAction(event -> {
             Stage stage = (Stage) currentClientVersionLabel.getScene().getWindow();

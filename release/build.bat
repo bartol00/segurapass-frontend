@@ -64,8 +64,6 @@ rmdir /s /q SeguraPass 2>nul
 rmdir /s /q build\msix-staging 2>nul
 rmdir /s /q Output 2>nul
 
-pause
-
 echo.
 echo ===========================================
 echo   Creating runtime image with jlink...
