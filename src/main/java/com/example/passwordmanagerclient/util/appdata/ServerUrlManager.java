@@ -1,5 +1,7 @@
 package com.example.passwordmanagerclient.util.appdata;
 
+import com.example.passwordmanagerclient.config.AppConfig;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,7 +18,7 @@ public class ServerUrlManager {
             if (Files.exists(filePath)) {
                 return Files.readString(filePath).trim();
             } else {
-                return null;
+                return AppConfig.getMainServerUrl();
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to read server URL file", e);
