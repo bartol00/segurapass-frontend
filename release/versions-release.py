@@ -27,7 +27,7 @@ from upload import upload_file
 
 VERSION = sys.argv[1]
 PROTOCOL = int(sys.argv[2])
-DOWNLOAD_URL = 'https://en.wikipedia.org/wiki/Puffin'
+DOWNLOAD_URL = 'https://apps.microsoft.com/detail/9nmhj7r8rs21?hl=en-US&gl=HR'
 
 PRIVATE_KEY = Path("keys/update-signing-private.pem")
 PUBLIC_KEY = Path("keys/update-signing-public.pem")
